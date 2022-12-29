@@ -6,17 +6,33 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.2
+	Version: 0.0.2.3
 
 Description:
 	Tracks user location during 'Journey Mode'
 
 Changes:
 	Version 0.0.2.1 - Ask for location access
-	Version 0.0.2.2 - Pause/Resumt Journey
+	Version 0.0.2.2 - Pause/Resume Journey
+	Version 0.0.2.3 - Load map and show current location
 */
 $(document).ready(function()
 {
+	//Location of the user (Prague default)
+	let currentLocation = {
+		latitude : 50.0755,
+		longitude : 14.4378
+	};
+	//Creating map
+	let map = new SMap(
+		JAK.gel('Map'),
+		undefined,
+		14
+	);
+	//Adding default layer
+	map.addDefaultLayer(SMap.DEF_BASE).enable();
+
+
 	//Getting mentions
 	const mention = $('#Mentions');
 	const geolocationServiceMention = $(mention).find('#GeolocationServiceMention');
@@ -59,6 +75,17 @@ $(document).ready(function()
 	let journeyModePaused = false;
 	//Current function that handles location capturing
 	let captureIntervalFunction = undefined;
+	
+
+	//Map functions
+	function RefreshLocation()
+	{
+		let center = SMap.Coords.fromWGS84(
+			currentLocation.longitude,
+			currentLocation.latitude
+		);
+		map.setCenter(center);
+	}
 	
 
 	//Permission functions
@@ -150,29 +177,15 @@ $(document).ready(function()
 		//Prompting
 		TryGetLocation(undefined, true);
 	});
-	//Loading permissions
-	RefreshPermissions(function()
-	{
-		//Checking if geolocation supported
-		if (supportsGeolocation)
-		{
-			//Listening for permission changes
-			navigator.permissions.query(
-				{
-					name : 'geolocation'
-				}
-			).then(function(result)
-			{
-				result.onchange = () => RefreshPermissions();
-			});
-		}
-	});
 	
 	
-	//Journey functions
+	//Location functions
 	//On location successfully obtained
 	function OnLocationObtained(location, callback = undefined)
 	{
+		//Updating current location
+		currentLocation = location.coords;
+		RefreshLocation();
 		//Checking if in journey mode and not paused
 		if (journeyModeActive && !journeyModePaused)
 		{
@@ -191,7 +204,7 @@ $(document).ready(function()
 	function OnLocationNotObtained(error, callback = undefined)
 	{
 		//Checking if obtain function exists
-		if (captureIntervalFunction !== undefined)
+		/*if (captureIntervalFunction !== undefined)
 		{
 			//Stopping location capturing
 			clearInterval(captureIntervalFunction);
@@ -204,7 +217,7 @@ $(document).ready(function()
 			pauseButton.hide();
 			resumeButton.hide();
 			endButton.hide();
-		}
+		}*/
 		//Checking if callback exists
 		if (callback)
 		{
@@ -229,6 +242,9 @@ $(document).ready(function()
 			);
 		}
 	}
+
+
+	//Journey functions
 	//On start button pressed
 	$(startButton).click(function()
 	{
@@ -251,7 +267,7 @@ $(document).ready(function()
 		journeyModePaused = false;
 
 		TryGetLocation();
-		captureIntervalFunction = setInterval(TryGetLocation, 5000);
+		//captureIntervalFunction = setInterval(TryGetLocation, 5000);
 		startButton.hide();
 		pauseButton.show();
 		resumeButton.hide();
@@ -308,12 +324,12 @@ $(document).ready(function()
 			return;
 		}
 		//Checking if function exists
-		if (captureIntervalFunction !== undefined)
+		/*if (captureIntervalFunction !== undefined)
 		{
 			//Stopping location capturing
 			clearInterval(captureIntervalFunction);
 			captureIntervalFunction = undefined;
-		}
+		}*/
 		//Getting last position
 		TryGetLocation(function()
 		{
@@ -337,4 +353,30 @@ $(document).ready(function()
 			return;
 		}
 	}
+
+
+	//Loading permissions
+	RefreshPermissions(function()
+	{
+		//Checking if geolocation supported
+		if (supportsGeolocation)
+		{
+			//Listening for permission changes
+			navigator.permissions.query(
+				{
+					name : 'geolocation'
+				}
+			).then(function(result)
+			{
+				result.onchange = () => RefreshPermissions();
+			});
+			//Refreshing center of the map
+			RefreshLocation();
+			//Trying to get location now
+			TryGetLocation();
+			//Creating capture function
+			captureIntervalFunction = setInterval(TryGetLocation, 5000);
+
+		}
+	});
 });

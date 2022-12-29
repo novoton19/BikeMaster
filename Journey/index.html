@@ -1,4 +1,4 @@
-<!--
+<!--a
 Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.1
+	Version: 0.0.2.3
 
 Description:
 	Page for Journey Mode
@@ -14,23 +14,33 @@ Description:
 Changes:
 	Version 0.0.2.1 - <noscript>, Dialog for location access request
 	Version 0.0.2.2 - Pause/Resume journey buttons
+	Version 0.0.2.3 - Display map
 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!--Metas-->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="Bike Master - Journey">
 	<meta name="theme-color" content="#d17702">
 
+	<!--Links-->
 	<link rel="icon" href="../Icons/icon-192.png">
 	<link rel="stylesheet" href="main.css">
 	<link rel="apple-touch-icon" href="../Icons/icon-192.png">
 	<link rel="manifest" href="../app.webmanifest">
 
 	<title>BikeMaster - Journey</title>
+	<!--jQuery-->
 	<script src="../jquery.min.js"></script>
+	<!--Registering service worker-->
 	<script src="../registerServiceWorker.js"></script>
+	
+	<!--Api.mapy.cz-->
+	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript">Loader.load();</script>
+	<!--Tracker-->
 	<script src="main.js"></script>
 </head>
 <body>
@@ -56,6 +66,9 @@ Changes:
 			<button id="Pause">Pause Journey</button>
 			<button id="Resume">Resume Journey</button>
 			<button id="End">End Journey Mode</button>
+		</div>
+		<div id="Map">
+
 		</div>
 		<div id="Locations">
 
