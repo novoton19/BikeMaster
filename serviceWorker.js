@@ -1,20 +1,36 @@
 /*
-Version: 0.1
-*/
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 12/29/22
+	Version: 0.0.1
+Updated on
+	Version: 0.0.1
+
+Description:
+Service worker
+*/ 
 //Cache name
 const cacheName = 'pwa-assets';
 //Files to be cached
 const files =
 [
+	'/favicon.ico',
+	'/',
 	'index.html',
 	'main.css',
-	'main.js',
+	'registerServiceWorker.js',
 	'jquery.min.js',
 	'app.webmanifest',
+	'Icons/',
 	'Icons/icon-144.png',
 	'Icons/icon-192.png',
 	'Icons/icon-512.png',
-	'/favicon.ico'
+	'Journey/',
+	'Journey/index.html',
+	'Journey/main.js',
+	'Journey/main.css'
 ];
 
 //Intall event
