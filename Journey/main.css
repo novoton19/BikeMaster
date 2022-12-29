@@ -6,5 +6,9 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2
-*/ 
+	Version: 0.0.2.1
+*/
+.Invisible
+{
+	display: none;
+}

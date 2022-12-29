@@ -9,7 +9,10 @@ Updated on
 	Version: 0.0.2
 
 Description:
-Page for Journey Mode
+	Page for Journey Mode
+
+Changes:
+	Version 0.0.2.1 - <noscript>, Dialog for location access request
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +23,7 @@ Page for Journey Mode
 	<meta name="theme-color" content="#d17702">
 
 	<link rel="icon" href="../Icons/icon-192.png">
-	<link rel="css/stylesheet" href="main.css">
+	<link rel="stylesheet" href="main.css">
 	<link rel="apple-touch-icon" href="../Icons/icon-192.png">
 	<link rel="manifest" href="../app.webmanifest">
 
@@ -30,6 +33,30 @@ Page for Journey Mode
 	<script src="main.js"></script>
 </head>
 <body>
-	Hello!
+	<noscript>
+		Please allow Javascript on this page. Journey Mode will not work without Javascript.
+	</noscript>
+	<div id="Mentions" class="Invisible">
+		<div id="GeolocationServiceMention">
+			Your browser does not support geolocation. Journey Mode will unfortunately not work here.
+		</div>
+		<div id="LocationAccessMention">
+			<p>
+				Please grant location access on this page. Journey Mode will not work without location access.
+			</p>
+			<button id="PromptLocationAccessButton">
+				Grant location access
+			</button>
+		</div>
+	</div>
+	<div>
+		<div id="JourneyModeButtons" class="Invisible">
+			<button id="Start">Start Journey Mode</button>
+			<button id="End">End Journey Mode</button>
+		</div>
+		<div id="Locations">
+
+		</div>
+	</div>
 </body>
 </html>
