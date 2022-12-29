@@ -6,13 +6,14 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2
+	Version: 0.0.2.2
 
 Description:
 	Tracks user location during 'Journey Mode'
 
 Changes:
 	Version 0.0.2.1 - Ask for location access
+	Version 0.0.2.2 - Pause/Resumt Journey
 */
 $(document).ready(function()
 {
@@ -25,6 +26,8 @@ $(document).ready(function()
 	//Getting buttons
 	const buttons = $('#JourneyModeButtons');
 	const startButton = $(buttons).find('#Start');
+	const pauseButton = $(buttons).find('#Pause');
+	const resumeButton = $(buttons).find('#Resume');
 	const endButton = $(buttons).find('#End');
 	//Element containing locations
 	const locationsElem = $('#Locations');
@@ -36,6 +39,8 @@ $(document).ready(function()
 	//Removing class from buttons and hiding them
 	buttons.removeClass('Invisible');
 	startButton.hide();
+	pauseButton.hide();
+	resumeButton.hide();
 	endButton.hide();
 
 	
@@ -65,6 +70,8 @@ $(document).ready(function()
 		canRequestLocation = false;
 		//Disable start button by default
 		startButton.hide();
+		pauseButton.hide();
+		resumeButton.hide();
 		mention.hide();
 		geolocationServiceMention.hide();
 		locationAccessMention.hide();
@@ -115,6 +122,14 @@ $(document).ready(function()
 				{
 					//Showing button again
 					startButton.show();
+				}
+				else if (journeyModePaused)
+				{
+					resumeButton.show();
+				}
+				else if (!journeyModePaused)
+				{
+					pauseButton.show();
 				}
 			}
 			//Checking if callback exists
@@ -185,8 +200,10 @@ $(document).ready(function()
 			journeyModePaused = false;
 		
 			OnJourneyFinished();
-			endButton.hide();
 			startButton.show();
+			pauseButton.hide();
+			resumeButton.hide();
+			endButton.hide();
 		}
 		//Checking if callback exists
 		if (callback)
@@ -236,9 +253,53 @@ $(document).ready(function()
 		TryGetLocation();
 		captureIntervalFunction = setInterval(TryGetLocation, 5000);
 		startButton.hide();
+		pauseButton.show();
+		resumeButton.hide();
 		endButton.show();
 	});
 	//On pause button pressed
+	$(pauseButton).click(function()
+	{
+		//Checking if in journey mode
+		if (!journeyModeActive)
+		{
+			return;
+		}
+		//Checking if not paused
+		if (journeyModePaused)
+		{
+			return;
+		}
+		//Getting last location
+		TryGetLocation(function()
+		{
+			//Pausing journey mode
+			journeyModePaused = true;
+		});
+		pauseButton.hide();
+		resumeButton.show();
+	});
+	//On resume button pressed
+	$(resumeButton).click(function()
+	{
+		//Checking if in journey mode
+		if (!journeyModeActive)
+		{
+			return;
+		}
+		//Checking if paused
+		if (!journeyModePaused)
+		{
+			return;
+		}
+		//Pausing journey mode
+		journeyModePaused = false;
+		//Getting last location
+		TryGetLocation();
+		resumeButton.hide();
+		pauseButton.show();
+	});
+	//On end button pressed
 	$(endButton).click(function()
 	{
 		//Checking if journey mode active
@@ -262,8 +323,10 @@ $(document).ready(function()
 			//On journey finished
 			OnJourneyFinished();
 		});
-		endButton.hide();
 		startButton.show();
+		pauseButton.hide();
+		resumeButton.hide();
+		endButton.hide();
 	});
 	//On journey finished
 	function OnJourneyFinished()
