@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.1
+	Version: 0.0.2.3.1
 
 Description:
 Service worker
@@ -30,7 +30,8 @@ const files =
 	'Journey/',
 	'Journey/index.html',
 	'Journey/main.js',
-	'Journey/main.css'
+	'Journey/main.css',
+	'https://api.mapy.cz/loader.js'
 ];
 
 //Intall event
@@ -67,8 +68,12 @@ self.addEventListener('fetch', function(event)
 				//Fetching
 				let fetchResponse = fetch(request).then(function(response)
 				{
-					//Update
-					cache.put(request, response.clone());
+					//Checking if request method is other than post
+					if (request.method !== 'POST')
+					{
+						//Update
+						cache.put(request, response.clone());
+					}
 				}).catch(function(error)
 				{
 					//Error
