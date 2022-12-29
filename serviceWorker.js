@@ -58,29 +58,64 @@ self.addEventListener('fetch', function(event)
 	//Request
 	let request = event.request;
 	let url = request.url;
-	//Response
-	event.respondWith(
-		caches.open(cacheName).then(function(cache)
-		{
-			//Getting request from cache
-			return cache.match(request).then(function(cacheResponse)
+
+	//Checking if request is on api.mapy.cz
+	if (url.startsWith('https://api.mapy.cz/'))
+	{
+		//Network first
+		event.respondWith(
+			fetch(request).then(function(response)
 			{
-				//Fetching
-				let fetchResponse = fetch(request).then(function(response)
+				//Checking if request method is other than post
+				if (request.method !== 'POST')
 				{
-					//Checking if request method is other than post
-					if (request.method !== 'POST')
+					//Trying to cache response
+					caches.open(cacheName).then(function(cache)
 					{
 						//Update
-						cache.put(request, response.clone());
-					}
-				}).catch(function(error)
+						return cache.put(request, response.clone());
+					});
+				}
+				return response.clone();
+			}).catch(function(error)
+			{
+				console.log(error);
+				//Network failed, trying cache
+				return caches.open(cacheName).then(function(cache)
 				{
-					//Error
-					console.log('Service Worker fetch error:\nUrl: \'' + url + '\'\nError: \'' + error + '\'');
+					//Return result from cache
+					return cache.match(request);
 				});
-				return cacheResponse || fetchResponse;
-			});
-		})
-	);
+			})
+		);
+	}
+	else
+	{
+		//Stale While Revalidate
+		event.respondWith(
+			caches.open(cacheName).then(function(cache)
+			{
+				//Getting request from cache
+				return cache.match(request).then(function(cacheResponse)
+				{
+					//Fetching
+					let fetchResponse = fetch(request).then(function(response)
+					{
+						//Checking if request method is other than post
+						if (request.method !== 'POST')
+						{
+							//Update
+							cache.put(request, response.clone());
+						}
+						return response.clone();
+					}).catch(function(error)
+					{
+						//Error
+						console.log('Service Worker fetch error:\nUrl: \'' + url + '\'\nError: \'' + error + '\'');
+					});
+					return cacheResponse || fetchResponse;
+				});
+			})
+		);
+	}
 });
