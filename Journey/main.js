@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.3
+	Version: 0.0.2.3.4
 
 Description:
 	Tracks user location during 'Journey Mode'
@@ -15,10 +15,11 @@ Changes:
 	Version 0.0.2.1 - Ask for location access
 	Version 0.0.2.2 - Pause/Resume Journey
 	Version 0.0.2.3 - Load map and show current location
-	Version 0.0.2.3.3 - Add promises to functions
+	Version 0.0.2.3.3 - Add promises to functions, location watching optimization
+	Version 0.0.2.3.4 - Bug fixes, commenting
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
-
 */
+//Waiting for document to load
 $(document).ready(function()
 {
 	//Location of the user (Prague default)
@@ -39,9 +40,9 @@ $(document).ready(function()
 	const mention = $('#Mentions');
 	const geolocationServiceMention = $(mention).find('#GeolocationServiceMention');
 	const locationAccessMention = $(mention).find('#LocationAccessMention');
-	//Getting button to grant location access
+	//Getting button which is used to request location access
 	const promptLocationAccessButton = $(locationAccessMention).find('#PromptLocationAccessButton');
-	//Getting buttons
+	//Getting Journey Mode controls
 	const buttons = $('#JourneyModeButtons');
 	const startButton = $(buttons).find('#Start');
 	const pauseButton = $(buttons).find('#Pause');
@@ -51,10 +52,10 @@ $(document).ready(function()
 	const locationsElem = $('#Locations');
 	
 	
-	//Removing class from mention and hiding it
+	//Removing class from mention and hiding it by default
 	mention.removeClass('Invisible');
 	mention.hide();
-	//Removing class from buttons and hiding them
+	//Removing class from buttons and hiding them by default
 	buttons.removeClass('Invisible');
 	startButton.hide();
 	pauseButton.hide();
@@ -63,20 +64,20 @@ $(document).ready(function()
 
 	
 	//Whether this browser supports geolocation
-	let supportsGeolocation = 'geolocation' in navigator;
+	const supportsGeolocation = 'geolocation' in navigator;
 	//Whether location can be obtained
-	let canGetLocation = false;
+	var canGetLocation = false;
 	//Whether location can be requests
-	let canRequestLocation = false;
+	var canRequestLocation = false;
 
 	//Current list of locations
-	let locations = [];
+	var locations = [];
 	//Whether journey mode activated
-	let journeyModeActive = false;
+	var journeyModeActive = false;
 	//Whether journey mode paused
-	let journeyModePaused = false;
+	var journeyModePaused = false;
 	//Function that watches location of the user
-	let locationWatcher = undefined;
+	var locationWatcher = undefined;
 
 
 	//Map functions
@@ -94,15 +95,15 @@ $(document).ready(function()
 	//Refreshes the permission state
 	function RefreshPermissions()
 	{
+		//Returns promise
 		return new Promise(function(resolve, reject)
 		{
-			//Cannot get location by default
-			canGetLocation = false;
-			canRequestLocation = false;
-			//Disable start button by default
+			//Disabling elements and then enabling them based on permissions
+			//Buttons
 			startButton.hide();
 			pauseButton.hide();
 			resumeButton.hide();
+			//Mentions
 			mention.hide();
 			geolocationServiceMention.hide();
 			locationAccessMention.hide();
@@ -112,6 +113,11 @@ $(document).ready(function()
 			if (!supportsGeolocation)
 			{
 				//Geolocation not available
+				//Cannot get location nor request access
+				canGetLocation = false;
+				canRequestLocation = false;
+				
+				//Showing mention
 				mention.show();
 				geolocationServiceMention.show();
 				//Resolved
@@ -127,37 +133,39 @@ $(document).ready(function()
 			{
 				//Getting state
 				let state = result.state;
-				//Checking state
-				if (state !== 'granted')
+				//Determining privileges
+				canGetLocation = state === 'granted';
+				canRequestLocation = state === 'prompt';
+				//Checking if can get location
+				if (canGetLocation)
 				{
-					//Show mention
-					mention.show();
-					locationAccessMention.show();
-					//Checking if can be prompted
-					if (state === 'prompt')
-					{
-						canRequestLocation = true;
-						promptLocationAccessButton.show();
-					}
-				}
-				else
-				{
-					//Permission granted
-					//Everything's fine
-					canGetLocation = true;
 					//Checking if not in journey mode
 					if (!journeyModeActive)
 					{
-						//Showing button again
+						//Showing start button
 						startButton.show();
 					}
 					else if (journeyModePaused)
 					{
+						//Showing resume button
 						resumeButton.show();
 					}
 					else if (!journeyModePaused)
 					{
+						//Showing pause button
 						pauseButton.show();
+					}
+				}
+				else
+				{
+					//Showing mention
+					mention.show();
+					locationAccessMention.show();
+					//Checking if can be prompted
+					if (canRequestLocation)
+					{
+						//Showing button used to request location access
+						promptLocationAccessButton.show();
 					}
 				}
 				//Resolved
@@ -165,15 +173,16 @@ $(document).ready(function()
 			});
 		});
 	}
-	//Adding event on prompt location access button pressed
+	//Adding event to button that requests access to location
 	promptLocationAccessButton.click(function()
 	{
-		//Checking if can prompt
+		//Checking if can request location
 		if (!canRequestLocation)
 		{
 			return;
 		}
-		//Prompting
+		//Trying to get location ignoring fact we don't have access to the location yet
+		//Prompt will appear during this process
 		TryGetLocation(true).catch(error => {});
 	});
 	
@@ -182,6 +191,7 @@ $(document).ready(function()
 	//On location successfully obtained
 	function OnLocationObtained(location)
 	{
+		//Returns promise
 		return new Promise(function(resolve, reject)
 		{
 			//Updating current location
@@ -190,9 +200,9 @@ $(document).ready(function()
 			//Checking if in journey mode and not paused
 			if (journeyModeActive && !journeyModePaused)
 			{
-				//Adding location
-				locations.push(location);
 				//Adding location to the end of the list
+				locations.push(location);
+				//Display location
 				locationsElem.append('timestamp: ' + location.timestamp + ', latitude: ' + location.coords.latitude + ', longitude: ' + location.coords.longitude + ', accuracy: ' + location.coords.accuracy + '<br>');
 			}
 			//Resolved
@@ -202,34 +212,22 @@ $(document).ready(function()
 	//On location not obtained successfuly
 	function OnLocationNotObtained(error)
 	{
+		//Returns promise
 		return new Promise(function(resolve, reject)
 		{
-			//Checking if obtain function exists
-			/*if (captureIntervalFunction !== undefined)
-			{
-				//Stopping location capturing
-				clearInterval(captureIntervalFunction);
-				captureIntervalFunction = undefined;
-				journeyModeActive = false;
-				journeyModePaused = false;
-			
-				OnJourneyFinished();
-				startButton.show();
-				pauseButton.hide();
-				resumeButton.hide();
-				endButton.hide();
-			}*/
+			//Eventual resolver
 			//Resolve
 			resolve();
 		});
 	}
-	//Attempts to get location
-	function TryGetLocation(ignorePrompt = false)
+	//Attempts to get user's location
+	function TryGetLocation(allowAttempt = false)
 	{
+		//Returns promise
 		return new Promise(function(resolve, reject)
 		{
-			//Checking if can get location
-			if (canGetLocation || (ignorePrompt && canRequestLocation))
+			//Checking if can get location or if can attempt to get the location 
+			if (canGetLocation || (allowAttempt && canRequestLocation))
 			{
 				//Getting location
 				navigator.geolocation.getCurrentPosition(
@@ -244,6 +242,7 @@ $(document).ready(function()
 			}
 			else
 			{
+				//Does not have permission to get the location
 				reject('NoPermission');
 			}
 		})
@@ -263,12 +262,13 @@ $(document).ready(function()
 				locationWatcher = setInterval(
 					() =>
 					{
+						//Trying to get location
 						TryGetLocation().catch(function(error)
 						{
 							//Checking error type
 							if (error === 'NoPermission')
 							{
-								//Re-checking watcher
+								//Re-checking watcher (If the permission has really changed, this interval will get cancelled)
 								CheckLocationWatcher();
 							}
 						});
@@ -283,7 +283,7 @@ $(document).ready(function()
 			//Checking if watcher exists
 			if (locationWatcher !== undefined)
 			{
-				//Destroying watcher
+				//Destroying watcher because has no purpose
 				clearInterval(locationWatcher);
 				locationWatcher = undefined;
 				console.log('Location watcher deactivated');
@@ -299,6 +299,7 @@ $(document).ready(function()
 		//Checking if can get location
 		if (!canGetLocation)
 		{
+			//Does not have permission to get the location
 			return;
 		}
 		//Checking if journey mode active
@@ -311,12 +312,14 @@ $(document).ready(function()
 		locations = [];
 		locationsElem.text('');
 
+		//Activating the journey mode
 		journeyModeActive = true;
 		journeyModePaused = false;
 
+		//Trying to get the immediate location
 		TryGetLocation().catch(error => {});
-		//In main thread
-		//captureIntervalFunction = setInterval(TryGetLocation, 5000);
+		//Location watcher already running in main thread
+		//Changing controls
 		startButton.hide();
 		pauseButton.show();
 		resumeButton.hide();
@@ -328,14 +331,16 @@ $(document).ready(function()
 		//Checking if in journey mode
 		if (!journeyModeActive)
 		{
+			//Cannot pause anything
 			return;
 		}
 		//Checking if not paused
 		if (journeyModePaused)
 		{
+			//Already paused
 			return;
 		}
-		//Getting last location
+		//Getting immediate location
 		TryGetLocation().then(function()
 		{
 			//Pausing journey mode
@@ -343,6 +348,7 @@ $(document).ready(function()
 		}).catch(
 			error => {}
 		);
+		//Changing controls
 		pauseButton.hide();
 		resumeButton.show();
 	});
@@ -352,17 +358,20 @@ $(document).ready(function()
 		//Checking if in journey mode
 		if (!journeyModeActive)
 		{
+			//Cannot resume because no journey in progress
 			return;
 		}
 		//Checking if paused
 		if (!journeyModePaused)
 		{
+			//Cannot resume journey because already running
 			return;
 		}
-		//Pausing journey mode
+		//Resuming the journey
 		journeyModePaused = false;
-		//Getting last location
+		//Getting immediate location
 		TryGetLocation().catch(error => {});
+		//Changing controls
 		resumeButton.hide();
 		pauseButton.show();
 	});
@@ -372,26 +381,22 @@ $(document).ready(function()
 		//Checking if journey mode active
 		if (!journeyModeActive)
 		{
+			//Cannot end journey because not in progress
 			return;
 		}
-		//Checking if function exists
-		/*if (captureIntervalFunction !== undefined)
-		{
-			//Stopping location capturing
-			clearInterval(captureIntervalFunction);
-			captureIntervalFunction = undefined;
-		}*/
-		//Getting last position
+		//Location watcher does not need to be destroyed, because it's running in main thread
+		//Getting immediate location
 		TryGetLocation().then(function()
 		{
 			//Stopping journey mode
 			journeyModeActive = false;
 			journeyModePaused = false;
-			//On journey finished
+			//Calling on journey finished event
 			OnJourneyFinished();
 		}).catch(
 			error => {}
 		);
+		//Changing controls
 		startButton.show();
 		pauseButton.hide();
 		resumeButton.hide();
@@ -403,6 +408,7 @@ $(document).ready(function()
 		//Checking if ended
 		if (journeyModeActive)
 		{
+			//Journey mode in progress
 			return;
 		}
 	}
@@ -424,8 +430,10 @@ $(document).ready(function()
 				}
 			).then(function(result)
 			{
-				result.onchange = RefreshPermissions().then(function()
+				//Refreshing the permissions, because they changed
+				result.onchange = () => RefreshPermissions().then(function()
 				{
+					//Re-checking location watcher
 					CheckLocationWatcher();
 				});
 			});
