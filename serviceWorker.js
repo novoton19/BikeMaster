@@ -6,10 +6,15 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.2.3.1
+	Version: 0.0.2.3.2
 
 Description:
-Service worker
+	Service worker
+
+Changes:
+	Version 0.0.2.3.1 - Optimizations for offline mode
+	Version 0.0.2.3.2 - Optimizations for offline mode
+	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
 */ 
 //Cache name
 const cacheName = 'pwa-assets';
