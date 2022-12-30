@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.3
+	Version: 0.0.2.3.5
 
 Description:
 	Page for Journey Mode
@@ -15,6 +15,7 @@ Changes:
 	Version 0.0.2.1 - <noscript>, Dialog for location access request
 	Version 0.0.2.2 - Pause/Resume journey buttons
 	Version 0.0.2.3 - Display map
+	Version 0.0.2.3.5 - Added 'locationManager.js' and 'journeyModeManager.js' scripts
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +41,11 @@ Changes:
 	<!--Api.mapy.cz-->
 	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
     <script type="text/javascript">Loader.load();</script>
-	<!--Tracker-->
+	<!--Location Manager-->
+	<script src="locationManager.js"></script>
+	<!--Journey Mode Manager-->
+	<script src="journeyModeManager.js"></script>
+	<!--Main Script-->
 	<script src="main.js"></script>
 </head>
 <body>

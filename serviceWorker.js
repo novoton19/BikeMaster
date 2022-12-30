@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.2.3.2
+	Version: 0.0.2.3.5
 
 Description:
 	Service worker
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.0.2.3.1 - Optimizations for offline mode
 	Version 0.0.2.3.2 - Optimizations for offline mode
+	Version 0.0.2.3.5 - Added 'Journey/locationManager.js' and 'Journey/journeyModeManager.js' files
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
 */ 
 //Cache name
@@ -34,8 +35,10 @@ const files =
 	'Icons/icon-512.png',
 	'Journey/',
 	'Journey/index.html',
-	'Journey/main.js',
 	'Journey/main.css',
+	'Journey/main.js',
+	'Journey/locationManager.js',
+	'Journey/journeyModeManager.js',
 	'https://api.mapy.cz/loader.js'
 ];
 
