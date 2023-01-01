@@ -22,7 +22,6 @@ const cacheName = 'pwa-assets';
 //Files to be cached
 const files =
 [
-	'journeyModeMaintainer.js',
 	'/favicon.ico',
 	'/',
 	'index.html',
