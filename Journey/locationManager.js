@@ -6,13 +6,13 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.3.5
 Updated on
-	Version: 0.0.2.3.5
+	Version: 0.0.2.5
 
 Description:
 	Responsible for keeping track of permissions and locations
 
 Changes:
-	
+	Version 0.0.2.5 - Bug fix (mostRecentLocation undefined by default, reading timestamp)
 */
 //Whether this browser supports geolocation
 const supportsGeolocation = 'geolocation' in navigator;
@@ -100,7 +100,7 @@ function tryGetLocation(options = { enableHighAccuracy : true, maximumAge : 1000
 	return new Promise(function(resolve, reject)
 	{
 		//Checking if most recent location can be used
-		if (Date.now() - mostRecentLocation.timestamp <= options.maximumAge)
+		if (mostRecentLocation !== undefined && Date.now() - mostRecentLocation.timestamp <= options.maximumAge)
 		{
 			//Serving older location
 			resolve(mostRecentLocation);

@@ -19,6 +19,7 @@ Changes:
 	Version 0.0.2.3.4 - Bug fixes, commenting
 	Version 0.0.2.3.5 - Functionality of this file moved to 'locationManager.js' and 'journeyModeManager.js'
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
+	Version 0.0.2.5 - Save and Delete buttons, Support OOP Journey Mode
 */
 //Waiting for document to load
 $(document).ready(function()
@@ -44,6 +45,8 @@ $(document).ready(function()
 	const pauseButton = $(buttons).find('#Pause');
 	const resumeButton = $(buttons).find('#Resume');
 	const endButton = $(buttons).find('#End');
+	const saveButton = $(buttons).find('#Save');
+	const deleteButton = $(buttons).find('#Delete');
 	//Element containing locations
 	const locationsElem = $('#Locations');
 
@@ -57,6 +60,8 @@ $(document).ready(function()
 	pauseButton.hide();
 	resumeButton.hide();
 	endButton.hide();
+	saveButton.hide();
+	deleteButton.hide();
 
 	//Map functions
 	function refreshLocation()
@@ -68,10 +73,11 @@ $(document).ready(function()
 		map.setCenter(center);
 	}
 	
-	
+
 	//Refreshes the elements
 	function refreshElements()
 	{
+		console.log('Refresh elements');
 		//Disable everything by default
 		mention.hide();
 		geolocationServiceMention.hide();
@@ -81,6 +87,8 @@ $(document).ready(function()
 		pauseButton.hide();
 		resumeButton.hide();
 		endButton.hide();
+		saveButton.hide();
+		deleteButton.hide();
 		
 		if (!supportsGeolocation)
 		{
@@ -99,41 +107,77 @@ $(document).ready(function()
 				promptLocationAccessButton.show();
 			}
 		}
-		if (journeyModeActive)
+		//Getting current journey
+		let journey = jmManager.journey;
+		//Checking if journey exists
+		if (journey !== undefined)
 		{
-			//Journey Mode active
-			//Showing end button
-			endButton.show();
-			//Checking if paused
-			if (journeyModePaused)
+			//Getting journey status
+			let status = journey.status;
+			//Checking if running or paused
+			if (status === jmStatuses.Running || status === jmStatuses.Paused)
 			{
+				//Journey Mode active
+				//Showing end button
+				endButton.show();
+				//Checking if paused
+				if (status === jmStatuses.Paused)
+				{
+					//Checking if can get location
+					if (canGetLocation)
+					{
+						//Showing resume button
+						resumeButton.show();
+					}
+				}
+				else
+				{
+					//Journey not paused
+					//Showing pause button
+					pauseButton.show();
+				}
+			}
+			else if (status === jmStatuses.Idle)
+			{
+				//Journey not started
 				//Checking if can get location
 				if (canGetLocation)
 				{
-					//Showing resume button
-					resumeButton.show();
+					//Show start button
+					startButton.show();
 				}
 			}
-			else
+			else if (status === jmStatuses.Finished)
 			{
-				//Journey not paused
-				//Showing pause button
-				pauseButton.show();
-			}
-		}
-		else
-		{
-			//Checking if can get location
-			if (canGetLocation)
-			{
-				//Show start button
-				startButton.show();
+				//Journey finished
+				saveButton.show();
+				deleteButton.show();
 			}
 		}
 	}
+	function updateJourney()
+	{
+		//Getting journey
+		let journey = jmManager.journey;
+		//Checking if journey exists
+		if (!journey)
+		{
+			return;
+		}
+		//Adding state changes event
+		journey.addEventListener('onStatusChanged', refreshElements);
+	}
+
 	//Listening for permission updates
 	document.addEventListener('onPermissionsUpdated', refreshElements);
-	document.addEventListener('onJourneyModeStateChanged', refreshElements);
+	//Listening for journey changes
+	jmManager.addEventListener('onJourneyChanged', () =>
+	{
+		updateJourney();
+		//Refreshing elements
+		refreshElements();
+	});
+	updateJourney();
 	//Refreshing elements at start
 	refreshElements();
 
@@ -153,12 +197,17 @@ $(document).ready(function()
 	
 
 	//Journey controls
+	//Require arrow functions to work
 	//On start button pressed
-	$(startButton).click(startJourneyMode);
+	$(startButton).click(() => jmManager.journey.start());
 	//On pause button pressed
-	$(pauseButton).click(pauseJourneyMode);
+	$(pauseButton).click(() => jmManager.journey.pause());
 	//On resume button pressed
-	$(resumeButton).click(resumeJourneyMode);
+	$(resumeButton).click(() => jmManager.journey.resume());
 	//On end button pressed
-	$(endButton).click(endJourneyMode);
+	$(endButton).click(() => jmManager.journey.end());
+	//On save button pressed
+	//$(saveButton).click();
+	//On delete button pressed
+	$(deleteButton).click(() => jmManager.createNewJourney());
 });
