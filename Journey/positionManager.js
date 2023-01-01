@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.3.5
 Updated on
-	Version: 0.0.2.6
+	Version: 0.0.2.7
 
 Description:
 	Responsible for keeping track of permissions and position of this device
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.0.2.5 - Bug fix (mostRecentPosition undefined by default, reading timestamp)
 	Version 0.0.2.6 - Convert to OOP, rename file to 'positionManager.js'
+	Version 0.0.2.7 - Removed promises, added onPositionUpdated and onPositionNotUpdated events
 */
 //Position manager
 class PositionManager extends EventTarget
@@ -31,10 +32,14 @@ class PositionManager extends EventTarget
 		longitude : 14.4378
 	};
 	//Most recent position of the user
-	mostRecentPosition = undefined;
+	mostRecentPosition = {
+		coords : this.mostRecentCoordinates
+	};
 
 	//On permissions updated
-	permissionsUpdatedEvent = new Event('onPermissionsUpdated');
+	#permissionsUpdatedEvent = new Event('onPermissionsUpdated');
+	#positionUpdatedEvent = new Event('onPositionUpdated');
+	#positionNotUpdatedEventName = 'onPositionNotUpdated';
 
 
 	//Constructor
@@ -51,7 +56,7 @@ class PositionManager extends EventTarget
 				{
 					name : 'geolocation'
 				}
-			).then(function(result)
+			).then((result) =>
 			{
 				//Adding event on change
 				result.onchange = () => this.#refreshPermissions();
@@ -71,7 +76,7 @@ class PositionManager extends EventTarget
 			this.canGetPosition = false;
 			this.canRequestPosition = false;
 			//Dispatching event
-			this.dispatchEvent(this.permissionsUpdatedEvent);
+			this.dispatchEvent(this.#permissionsUpdatedEvent);
 			return;
 		}
 		//Getting permission state
@@ -87,71 +92,51 @@ class PositionManager extends EventTarget
 			this.canGetPosition = state === 'granted';
 			this.canRequestPosition = state === 'prompt';
 			//Dispatching event
-			this.dispatchEvent(this.permissionsUpdatedEvent);
+			this.dispatchEvent(this.#permissionsUpdatedEvent);
 		});
 	}
 	//On position obtained
 	#onPositionObtained(position)
 	{
-		//Return promise
-		return new Promise(function(resolve, reject)
-		{
-			//Updating current position
-			this.mostRecentPosition = position;
-			this.mostRecentCoordinates = position.coords;
-			//Resolve
-			resolve();
-		});
+		//Updating current position
+		this.mostRecentPosition = position;
+		this.mostRecentCoordinates = position.coords;
+		//Calling event
+		this.dispatchEvent(this.#positionUpdatedEvent);
 	}
 	//On position not obtained
 	#onPositionNotObtained(error)
 	{
-		return new Promise(function(resolve, reject)
-		{
-			//Eventual resolver
-			//Resolve
-			resolve(this.mostRecentPosition);
-		});
-	}
-	//Tries to get position
-	tryGetPosition(options = { enableHighAccuracy : true, maximumAge : 1000, timeout : 5000 }, allowAttempt = false)
-	{
-		//Return promise
-		return new Promise(function(resolve, reject)
-		{
-			//Checking if most recent position exists
-			if (this.mostRecentPosition !== undefined)
+		//Eventual resolver
+		//Dispatching event
+		this.dispatchEvent(new CustomEvent(
+			this.#positionNotUpdatedEventName,
 			{
-				//Checking if the timestamp of last position is younger than maximum age
-				if (Date.now() - this.mostRecentPosition.timestamp <= options.maximumAge)
-				{
-					//Serving older position
-					resolve(mostRecentPosition);
-					return;
+				detail : {
+					error : error
 				}
 			}
-			//Checking if can get position or if can attempt to get the position 
-			if (this.canGetPosition || (allowAttempt && this.canRequestPosition))
-			{
-				//Getting position
-				navigator.geolocation.getCurrentPosition(
-					(position) => this.onPositionObtained(position).then(() => resolve(position)),
-					(error) => this.onPositionNotObtained(error).then((position) => reject(error, position)),
-					options
-				);
-			}
-			else
-			{
-				let error = new Error('Permission denied');
-				error.code = GeolocationPositionError.PERMISSION_DENIED;
-				//Does not have permission to get the position
-				this.onPositionNotObtained(error).then((position) =>
-				{
-					reject(error, position);
-				});
-			}
-		});
+		));
+	}
+	//Attempts to update position
+	tryUpdatePosition(options = { enableHighAccuracy : true, maximumAge : 1000, timeout : 5000 }, allowAttempt = false)
+	{
+		//Checking if can get position or if can attempt to get the position 
+		if (this.canGetPosition || (allowAttempt && this.canRequestPosition))
+		{
+			//Getting position
+			navigator.geolocation.getCurrentPosition(
+				(position) => this.#onPositionObtained(position),
+				(error) => this.#onPositionNotObtained(error),
+				options
+			);
+		}
+		else
+		{
+			let error = new Error('Permission denied');
+			error.code = GeolocationPositionError.PERMISSION_DENIED;
+			//Does not have permission to get the position
+			this.#onPositionNotObtained(error);
+		}
 	}
 }
-//Creating position manager
-const positionManager = new PositionManager();

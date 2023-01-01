@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.3.5
+	Version: 0.0.2.7
 
 Description:
 	Tracks user location during 'Journey Mode'
@@ -21,18 +21,17 @@ Changes:
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
 	Version 0.0.2.5 - Save and Delete buttons, Support OOP Journey Mode
 	Version 0.0.2.6 - Support OOP positionManager
+	Version 0.0.2.7 - Added MapManager support
 */
 //Waiting for document to load
 $(document).ready(function()
 {
-	//Creating map
-	let map = new SMap(
-		JAK.gel('Map'),
-		undefined,
-		14
-	);
-	//Adding default layer
-	map.addDefaultLayer(SMap.DEF_BASE).enable();
+	//Creating new PositionManager
+	const positionManager = new PositionManager();
+	//Creating new MapManager
+	const mapManager = new MapManager('map');
+	//Creating new JourneyModeManager
+	const journeyModeManager = new JourneyModeManager();
 
 	//Getting mentions
 	const mention = $('#Mentions');
@@ -61,16 +60,6 @@ $(document).ready(function()
 	endButton.hide();
 	saveButton.hide();
 	deleteButton.hide();
-
-	//Map functions
-	function refreshLocation()
-	{
-		let center = SMap.Coords.fromWGS84(
-			positionManager.mostRecentCoordinates.longitude,
-			positionManager.mostRecentCoordinates.latitude
-		);
-		map.setCenter(center);
-	}
 	
 
 	//Refreshes the elements
@@ -107,7 +96,7 @@ $(document).ready(function()
 			}
 		}
 		//Getting current journey
-		let journey = jmManager.journey;
+		let journey = journeyModeManager.journey;
 		//Checking if journey exists
 		if (journey !== undefined)
 		{
@@ -157,7 +146,7 @@ $(document).ready(function()
 	function updateJourney()
 	{
 		//Getting journey
-		let journey = jmManager.journey;
+		let journey = journeyModeManager.journey;
 		//Checking if journey exists
 		if (!journey)
 		{
@@ -166,11 +155,10 @@ $(document).ready(function()
 		//Adding state changes event
 		journey.addEventListener('onStatusChanged', refreshElements);
 	}
-
 	//Listening for permission updates
 	positionManager.addEventListener('onPermissionsUpdated', refreshElements);
 	//Listening for journey changes
-	jmManager.addEventListener('onJourneyChanged', () =>
+	journeyModeManager.addEventListener('onJourneyChanged', () =>
 	{
 		updateJourney();
 		//Refreshing elements
@@ -198,15 +186,15 @@ $(document).ready(function()
 	//Journey controls
 	//Require arrow functions to work
 	//On start button pressed
-	$(startButton).click(() => jmManager.journey.start());
+	$(startButton).click(() => journeyModeManager.journey.start());
 	//On pause button pressed
-	$(pauseButton).click(() => jmManager.journey.pause());
+	$(pauseButton).click(() => journeyModeManager.journey.pause());
 	//On resume button pressed
-	$(resumeButton).click(() => jmManager.journey.resume());
+	$(resumeButton).click(() => journeyModeManager.journey.resume());
 	//On end button pressed
-	$(endButton).click(() => jmManager.journey.end());
+	$(endButton).click(() => journeyModeManager.journey.end());
 	//On save button pressed
 	//$(saveButton).click();
 	//On delete button pressed
-	$(deleteButton).click(() => jmManager.createNewJourney());
+	$(deleteButton).click(() => journeyModeManager.createNewJourney());
 });
