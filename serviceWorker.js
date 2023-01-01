@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.2.3.5
+	Version: 0.0.2.5.1
 
 Description:
 	Service worker
@@ -16,6 +16,7 @@ Changes:
 	Version 0.0.2.3.2 - Optimizations for offline mode
 	Version 0.0.2.3.5 - Added 'Journey/locationManager.js' and 'Journey/journeyModeManager.js' files
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
+	Version 0.0.2.5.1 - Remove non-existent file list of cached files
 */
 //Cache name
 const cacheName = 'pwa-assets';

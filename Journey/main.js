@@ -20,6 +20,7 @@ Changes:
 	Version 0.0.2.3.5 - Functionality of this file moved to 'locationManager.js' and 'journeyModeManager.js'
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
 	Version 0.0.2.5 - Save and Delete buttons, Support OOP Journey Mode
+	Version 0.0.2.6 - Support OOP positionManager
 */
 //Waiting for document to load
 $(document).ready(function()
@@ -47,8 +48,6 @@ $(document).ready(function()
 	const endButton = $(buttons).find('#End');
 	const saveButton = $(buttons).find('#Save');
 	const deleteButton = $(buttons).find('#Delete');
-	//Element containing locations
-	const locationsElem = $('#Locations');
 
 	
 	//Removing class from mention and hiding it by default
@@ -67,8 +66,8 @@ $(document).ready(function()
 	function refreshLocation()
 	{
 		let center = SMap.Coords.fromWGS84(
-			mostRecentLocation.longitude,
-			mostRecentLocation.latitude
+			positionManager.mostRecentCoordinates.longitude,
+			positionManager.mostRecentCoordinates.latitude
 		);
 		map.setCenter(center);
 	}
@@ -90,19 +89,19 @@ $(document).ready(function()
 		saveButton.hide();
 		deleteButton.hide();
 		
-		if (!supportsGeolocation)
+		if (!positionManager.supportsGeolocation)
 		{
 			//Does not support geolocation
 			mention.show();
 			geolocationServiceMention.show();
 		}
-		else if (!canGetLocation)
+		else if (!positionManager.canGetPosition)
 		{
 			//Not given permission
 			mention.show();
 			locationAccessMention.show();
 			//Checking if can request location access
-			if (canRequestLocation)
+			if (positionManager.canRequestPosition)
 			{
 				promptLocationAccessButton.show();
 			}
@@ -123,8 +122,8 @@ $(document).ready(function()
 				//Checking if paused
 				if (status === jmStatuses.Paused)
 				{
-					//Checking if can get location
-					if (canGetLocation)
+					//Checking if can get position
+					if (positionManager.canGetPosition)
 					{
 						//Showing resume button
 						resumeButton.show();
@@ -140,8 +139,8 @@ $(document).ready(function()
 			else if (status === jmStatuses.Idle)
 			{
 				//Journey not started
-				//Checking if can get location
-				if (canGetLocation)
+				//Checking if can get position
+				if (positionManager.canGetPosition)
 				{
 					//Show start button
 					startButton.show();
@@ -169,7 +168,7 @@ $(document).ready(function()
 	}
 
 	//Listening for permission updates
-	document.addEventListener('onPermissionsUpdated', refreshElements);
+	positionManager.addEventListener('onPermissionsUpdated', refreshElements);
 	//Listening for journey changes
 	jmManager.addEventListener('onJourneyChanged', () =>
 	{
@@ -185,14 +184,14 @@ $(document).ready(function()
 	//Adding event to button that requests access to location
 	promptLocationAccessButton.click(function()
 	{
-		//Checking if can request location
-		if (!canRequestLocation)
+		//Checking if can request location access
+		if (!positionManager.canRequestPosition)
 		{
 			return;
 		}
 		//Trying to get location ignoring fact we don't have access to the location yet
 		//Prompt will appear during this process
-		tryGetLocation(true).catch((error, mostRecentLocation) => {});
+		positionManager.tryGetPosition(true).catch((error, mostRecentPosition) => {});
 	});
 	
 

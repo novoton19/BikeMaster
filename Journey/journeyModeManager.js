@@ -13,6 +13,7 @@ Description:
 
 Changes:
 	Version 0.0.2.5 - Convert to OOP
+	Version 0.0.2.6 - Support OOP positionManager
 */
 //Journey Mode statuses
 const jmStatuses = {
@@ -56,8 +57,8 @@ class Journey extends EventTarget
 	status = jmStatuses.Idle;
 
 	//Private variables
-	//Current location watcher
-	#locationWatcher = undefined;
+	//Current position watcher
+	#positionWatcher = undefined;
 	//On track changed
 	#trackChangedEvent = new Event('onTrackChanged');
 	//On status changed event
@@ -69,28 +70,27 @@ class Journey extends EventTarget
 	constructor()
 	{
 		super();
-		//Listening for permission changes and checking location watcher on event
-		//Must be a function becuase if called directly, this would be overwritten
-		document.addEventListener('onPermissionsUpdated', () =>
+		//Listening for permission changes and checking position watcher on event
+		positionManager.addEventListener('onPermissionsUpdated', () =>
 		{
-			this.#updateLocationWatcher();
+			this.#updatePositionWatcher();
 		});
 	}
-	//Updates location watcher
-	#updateLocationWatcher()
+	//Updates position watcher
+	#updatePositionWatcher()
 	{
 		//Checking status
-		if (this.status === jmStatuses.Running && canGetLocation)
+		if (this.status === jmStatuses.Running && positionManager.canGetPosition)
 		{
-			//Journey is running and can get location
-			//Checking if location watcher not exists
-			if (this.#locationWatcher === undefined)
+			//Journey is running and can get position
+			//Checking if position watcher not exists
+			if (this.#positionWatcher === undefined)
 			{
-				//Creating a new location watcher
-				this.#locationWatcher = setInterval(() =>
+				//Creating a new position watcher
+				this.#positionWatcher = setInterval(() =>
 				{
-					//Trying to get location
-					tryGetLocation().then((geolocationPosition) =>
+					//Trying to get position
+					positionManager.tryGetPosition().then((geolocationPosition) =>
 					{
 						//Adding point to the track
 						this.track.push(
@@ -98,29 +98,29 @@ class Journey extends EventTarget
 						);
 						//Dispatching track changed event
 						this.dispatchEvent(this.#trackChangedEvent);
-					}).catch((error, mostRecentLocation) =>
+					}).catch((error, mostRecentPosition) =>
 					{
 						//Checking error
 						if (error.code == GeolocationPositionError.PERMISSION_DENIED)
 						{
-							//Re-checking location watcher
-							this.#updateLocationWatcher();
+							//Re-checking position watcher
+							this.#updatePositionWatcher();
 						}
 					});
 				}, 5000);
-				console.log('Location watcher activated');
+				console.log('Position watcher activated');
 			}
 		}
 		else
 		{
-			//Journey is not running or cannot get location
-			//Checking if location watcher exists
-			if (this.#locationWatcher !== undefined)
+			//Journey is not running or cannot get position
+			//Checking if position watcher exists
+			if (this.#positionWatcher !== undefined)
 			{
-				//Disabling location watcher
-				clearInterval(this.#locationWatcher);
-				this.#locationWatcher = undefined;
-				console.log('Location watcher deactivated');
+				//Disabling position watcher
+				clearInterval(this.#positionWatcher);
+				this.#positionWatcher = undefined;
+				console.log('Position watcher deactivated');
 			}
 		}
 	}
@@ -130,19 +130,19 @@ class Journey extends EventTarget
 		//Checking if Journey running
 		if (this.status !== jmStatuses.Idle)
 		{
-			//Trying to get immediate location
-			tryGetLocation().then((geolocationPosition) =>
+			//Trying to get immediate position
+			positionManager.tryGetPosition().then((geolocationPosition) =>
 			{
-				//Adding location
+				//Adding position
 				this.track.push(
 					new TrackPoint(geolocationPosition)
 				);
 				//Dispatching track changed event
 				this.dispatchEvent(this.#trackChangedEvent);
-			}).catch((error, mostRecentLocation) => {});
+			}).catch((error, mostRecentPosition) => {});
 		}
-		//Updating location watcher
-		this.#updateLocationWatcher();
+		//Updating position watcher
+		this.#updatePositionWatcher();
 		//Dispatching event
 		this.dispatchEvent(this.#statusChangedEvent);
 		//Checking if finished
@@ -155,10 +155,10 @@ class Journey extends EventTarget
 	//Start journey
 	start()
 	{
-		//Checking if can get location
-		if (!canGetLocation)
+		//Checking if can get position
+		if (!positionManager.canGetPosition)
 		{
-			//Cannot get location to start
+			//Cannot get position to start
 			return;
 		}
 		//Checking status
@@ -189,10 +189,10 @@ class Journey extends EventTarget
 	//Resume journey
 	resume()
 	{
-		//Checking if can get location
-		if (!canGetLocation)
+		//Checking if can get position
+		if (!positionManager.canGetPosition)
 		{
-			//Cannot get location to start
+			//Cannot get position to start
 			return;
 		}
 		//Checking if Journey Mode is paused

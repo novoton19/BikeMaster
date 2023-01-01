@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.3.5
+	Version: 0.0.2.6
 
 Description:
 	Page for Journey Mode
@@ -17,6 +17,7 @@ Changes:
 	Version 0.0.2.3 - Display map
 	Version 0.0.2.3.5 - Added 'locationManager.js' and 'journeyModeManager.js' scripts
 	Version 0.0.2.5 - Added Save and Delete buttons
+	Version 0.0.2.6 - Rename 'locationManager.js' to 'positionManager.js'
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -42,8 +43,8 @@ Changes:
 	<!--Api.mapy.cz-->
 	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
     <script type="text/javascript">Loader.load();</script>
-	<!--Location Manager-->
-	<script src="locationManager.js"></script>
+	<!--Position Manager-->
+	<script src="positionManager.js"></script>
 	<!--Journey Mode Manager-->
 	<script src="journeyModeManager.js"></script>
 	<!--Main Script-->
@@ -76,9 +77,6 @@ Changes:
 			<button id="Delete">Delete Journey</button>
 		</div>
 		<div id="Map">
-
-		</div>
-		<div id="Locations">
 
 		</div>
 	</div>
