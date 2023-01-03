@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.2.5.1
+	Version: 0.0.3
 
 Description:
 	Service worker
@@ -17,6 +17,7 @@ Changes:
 	Version 0.0.2.3.5 - Added 'Journey/locationManager.js' and 'Journey/journeyModeManager.js' files
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
 	Version 0.0.2.5.1 - Remove non-existent file list of cached files
+	Version 0.0.3 - Added Account files
 */
 //Cache name
 const cacheName = 'pwa-assets';
@@ -34,12 +35,18 @@ const files =
 	'Icons/icon-144.png',
 	'Icons/icon-192.png',
 	'Icons/icon-512.png',
+	'Account/',
+	'Account/register.html',
+	'Account/register.js',
+	'Account/login.html',
+	'Account/main.css',
 	'Journey/',
 	'Journey/index.html',
 	'Journey/main.css',
 	'Journey/main.js',
-	'Journey/locationManager.js',
+	'Journey/positionManager.js',
 	'Journey/journeyModeManager.js',
+	'Journey/mapManager.js',
 	'https://api.mapy.cz/loader.js'
 ];
 

@@ -1,0 +1,59 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/01/23 02:48pm
+	Version: 0.0.3
+Updated on
+	Version: 0.0.3
+
+Description:
+	Page for account login
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="icon" href="../Icons/icon-192.png">
+	<link rel="stylesheet" href="main.css">
+	<link rel="apple-touch-icon" href="../Icons/icon-192.png">
+	<link rel="manifest" href="../app.webmanifest">
+
+	<title>BikeMaster</title>
+	<!--jQuery-->
+	<script src="../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../registerServiceWorker.js"></script>
+	<!--Loading Javascript for this page-->
+	<script src="login.js"></script>
+</head>
+<body>
+	<form id="LoginForm" method="post" js-action="../Api/Account/login.php">
+		<div id="Reason">
+
+		</div>
+		<div>
+			<label for="UsernameOrEmail"> Username or E-mail: </label>
+			<input id="UsernameOrEmail" type="text" name="UsernameOrEmail" placeholder="Your username or e-mail">
+		</div>
+		<div>
+			<label for="Password"> Password: </label>
+			<input id="Password" type="password" name="Password" placeholder="Password">
+		</div>
+		<div>
+			<input id="SubmitButton" type="submit" name="SubmitButton">
+			<label for="SubmitButton" id="SubmitButtonReason"></label>
+		</div>
+	</form>
+</body>
+</html>
