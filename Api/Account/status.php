@@ -7,7 +7,7 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.3.2
+		Version: 0.0.3.2.1
 
 	Description:
 		Verifies login and returns information about login
@@ -91,7 +91,6 @@
 		$userID = GeneralFunctions::getValue($login, 'UserID');
 		$loginTime = GeneralFunctions::getValue($login, 'Time', $time);
 		$timeout = GeneralFunctions::getValue($login, 'Timeout', $time);
-		
 		#Checking status
 		if ($status === true)
 		{
@@ -105,6 +104,7 @@
 				{
 					#Valid login
 					$loggedIn = true;
+					$reasonID = $reasonIDs->Accepted;
 				}
 				elseif (!$success)
 				{
@@ -141,6 +141,7 @@
 	elseif (!$reasonIDs->success)
 	{
 		#Cannot get reason IDs
+		$reasonID = -1;
 		$reason = 'Server experienced an error while processing the request (2)';
 	}
 	else#if (!$settings->success)

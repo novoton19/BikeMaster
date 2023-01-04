@@ -7,13 +7,13 @@
 		Date: 01/04/23 10:27pm
 		Version: 0.0.3.2
 	Updated on
-		Version: 0.0.3.2
+		Version: 0.0.3.2.1
 
 	Description:
 		Class containing all settings
 
 	Changes:
-
+		Version 0.0.3.2.1 - Settings row ID was set as value instead of Value
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -35,9 +35,9 @@
 		{
 			#Creating a new database connection
 			$db = new Db();
-			#Getting all reason IDs
+			#Getting all settings
 			list($success, $result,) = $db->getData(
-				'SELECT ID, NameID From Settings'
+				'SELECT Value, NameID From Settings'
 			);
 			#Set success
 			$this->success = $success;
@@ -46,16 +46,16 @@
 			{
 				#Loading settings
 				foreach ($result as $key => $reason) {
-					#Getting ID and NameID
-					$id = intval(GeneralFunctions::GetValue(
+					#Getting Value and NameID
+					$value = GeneralFunctions::GetValue(
 						$reason,
-						'ID'
-					));
+						'Value'
+					);
 					$nameID = GeneralFunctions::GetValue(
 						$reason,
 						'NameID'
 					);
-					$this->$nameID = $id;
+					$this->$nameID = $value;
 				}
 			}
 		}
