@@ -7,13 +7,13 @@
 		Date: 01/01/23 02:48pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3
+		Version: 0.0.3.1
 
 	Description:
 		Class containing functions which execute sql queries on database
 
 	Changes:
-
+		Version 0.0.3.1 - Add getUserByIDSecure
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))

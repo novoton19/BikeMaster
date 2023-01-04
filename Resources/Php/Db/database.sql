@@ -16,3 +16,14 @@ Create Table BikeMaster.Users (
     	Not Null,
     RegistrationTime int Unsigned Default Unix_Timestamp() Not Null
 );
+
+Create Table BikeMaster.ReasonIDs (
+  	ID int
+    	Unsigned
+    	Primary Key
+    	Auto_Increment
+    	Not Null,
+    NameID varchar(32)
+		Unique
+    	Not Null
+);

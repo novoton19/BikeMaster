@@ -7,13 +7,14 @@
 		Date: 01/03/23 10:14pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3.1
+		Version: 0.0.3.1.1
 
 	Description:
 		Login
 
 	Changes:
 		Version 0.0.3.1 - Set login timeout
+		Version 0.0.3.1.1 - Use ReasonIDs from database
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -25,23 +26,21 @@
 	header('Content-Type: application/json; charset=utf-8');
 	#Require database
 	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
+	#Require reason IDs
+	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
 	#Require input validation
 	require_once(__DIR__.'/../../Resources/Php/InputValidation/login.php');
 	
 	#Creating UsersDb
 	$usersDb = new UsersDb();
+	#Creating ReasonIDsDb
+	$reasonIDs = new ReasonIDsDb();
 	#Creating LoginValidation
 	$validation = new LoginValidation();
 
 	#Session project name
 	$projectName = 'BikeMaster';
 
-	#List or reason IDs
-	$reasonIDs = [
-		'NoPost' => 0,
-		'InvalidCredentials' => 1,
-		'DatabaseError' => 2
-	];
 	#Whether succeeded
 	$success = false;
 	$passwordsMatch = false;
@@ -99,7 +98,7 @@
 			#Checking if match
 			if (!$passwordsMatch)
 			{
-				$reasonID = $reasonIDs['InvalidCredentials'];
+				$reasonID = $reasonIDs->InvalidCredentials;
 				$reason = 'Invalid credentials';
 			}
 			else
@@ -110,18 +109,18 @@
 		}
 		elseif ($queried and !$querySuccess)
 		{
-			$reasonID = $reasonIDs['DatabaseError'];
+			$reasonID = $reasonIDs->DatabaseError;
 			$reason = 'Server experienced an error while getting user account';
 		}
 		else
 		{
-			$reasonID = $reasonIDs['InvalidCredentials'];
+			$reasonID = $reasonIDs->InvalidCredentials;
 			$reason = 'Invalid credentials';
 		}
 	}
 	else
 	{
-		$reasonID = $reasonIDs['NoPost'];
+		$reasonID = $reasonIDs->NoPost;
 		$reason = 'Missing information';
 		$inputs = [
 			'UsernameOrEmail' => null

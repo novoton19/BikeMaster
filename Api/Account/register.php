@@ -7,13 +7,13 @@
 		Date: 01/02/23
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3
+		Version: 0.0.3.1.1
 
 	Description:
 		Registration
 
 	Changes:
-
+		Version 0.0.3.1.1 - Use ReasonIDs from database
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -24,20 +24,18 @@
 	header('Content-Type: application/json; charset=utf-8');
 	#Require database
 	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
+	#Require reason IDs
+	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
 	#Require input validation
 	require_once(__DIR__.'/../../Resources/Php/InputValidation/registration.php');
 	
 	#Creating UsersDb
 	$usersDb = new UsersDb();
+	#Creating ReasonIDsDb
+	$reasonIDs = new ReasonIDsDb();
 	#Creating RegistrationValidation
 	$validation = new RegistrationValidation();
 
-	#List or reason IDs
-	$reasonIDs = [
-		'NoPost' => 0,
-		'InvalidInputs' => 1,
-		'DatabaseError' => 2
-	];
 	#Whether succeeded
 	$success = false;
 	#Request reason ID
@@ -93,18 +91,18 @@
 			#Checking if error
 			if (!$success)
 			{
-				$reasonID = $reasonIDs['DatabaseError'];
+				$reasonID = $reasonIDs->DatabaseError;
 				$reason = 'Server experienced an error while creating an account';
 			}
 		}
 		else
 		{
-			$reasonID = $reasonIDs['InvalidInputs'];
+			$reasonID = $reasonIDs->InvalidInputs;
 		}
 	}
 	else
 	{
-		$reasonID = $reasonIDs['NoPost'];
+		$reasonID = $reasonIDs->NoPost;
 		$reason = 'Missing information';
 		$inputs = [
 			'Username' => null,

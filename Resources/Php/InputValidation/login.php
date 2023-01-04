@@ -7,51 +7,42 @@
 		Date: 01/02/23 10:24pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3
+		Version: 0.0.3.1.1
 
 	Description:
 		Validation of login form inputs
 
 	Changes:
-
+		Version 0.0.3.1.1 - Use ReasonIDs from database
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
 	{
 		return;
 	}
+	#Require reason IDs
+	require_once(__DIR__.'/../Db/reasonIDsDb.php');
 
 	#Validation class
 	class LoginValidation
 	{
 		#Database
 		private $usersDb;
-		#Reason IDs for username validation
-		public static $usernameReasonIDs = [
-			'IsNull' => 0,
-			'InvalidType' => 1,
-			'UsernameNotTaken' => 2,
-			'DatabaseError' => 3
-		];
-		#Reason IDs for email validation
-		public static $emailReasonIDs = [
-			'IsNull' => 0,
-			'InvalidType' => 1,
-			'InvalidEmail' => 2,
-			'EmailNotTaken' => 3,
-			'DatabaseError' => 4
-		];
+		#Reason IDs
+		private $reasonIDs;
 		#Constructor
 		public function __construct()
 		{
 			#Create database
 			$this->usersDb = new UsersDb();
+			#Creating ReasonIDsDb
+			$this->reasonIDs = new ReasonIDsDb();
 		}
 
 		public function validateUsername($username)
 		{
 			#Reasons
-			$reasonIDs = self::$usernameReasonIDs;
+			$reasonIDs = $this->reasonIDs;
 			#Whether is valid
 			$isValid = false;
 			#ReasonID
@@ -60,12 +51,12 @@
 			#Checking if exists
 			if (is_null($username))
 			{
-				$reasonID = $reasonIDs['IsNull'];
+				$reasonID = $reasonIDs->IsNull;
 				$reason = 'Username is required';
 			}
 			elseif (gettype($username) !== 'string')
 			{
-				$reasonID = $reasonIDs['InvalidType'];
+				$reasonID = $reasonIDs->InvalidType;
 				$reason = 'Username is not a string';
 			}
 			else
@@ -75,12 +66,12 @@
 				#Checking if success
 				if (!$success)
 				{
-					$reasonID = $reasonIDs['DatabaseError'];
+					$reasonID = $reasonIDs->DatabaseError;
 					$reason = 'The availability of username could not be verified';
 				}
 				elseif (!$resultExists)
 				{
-					$reasonID = $reasonIDs['UsernameNotTaken'];
+					$reasonID = $reasonIDs->UsernameNotTaken;
 					$reason = 'Account with this username doesn\'t exist';
 				}
 				else
@@ -98,7 +89,7 @@
 		public function validateEmail($email)
 		{
 			#Reasons
-			$reasonIDs = self::$emailReasonIDs;
+			$reasonIDs = $this->reasonIDs;
 			#Whether is valid
 			$isValid = false;
 			#ReasonID
@@ -107,19 +98,19 @@
 			#Checking if exists
 			if (is_null($email))
 			{
-				$reasonID = $reasonIDs['IsNull'];
+				$reasonID = $reasonIDs->IsNull;
 				$reason = 'E-mail is required';
 			}
 			elseif (gettype($email) !== 'string')
 			{
-				$reasonID = $reasonIDs['InvalidType'];
+				$reasonID = $reasonIDs->InvalidType;
 				$reason = 'E-mail is not a string';
 			}
 			else
 			{
 				#Checking format
 				if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-					$reasonID = $reasonIDs['InvalidEmail'];
+					$reasonID = $reasonIDs->InvalidEmail;
 					$reason = 'E-mail not valid';
 				}
 				else
@@ -129,12 +120,12 @@
 					#Checking if success
 					if (!$success)
 					{
-						$reasonID = $reasonIDs['DatabaseError'];
+						$reasonID = $reasonIDs->DatabaseError;
 						$reason = 'The availability of e-mail could not be verified';
 					}
 					elseif (!$resultExists)
 					{
-						$reasonID = $reasonIDs['EmailNotTaken'];
+						$reasonID = $reasonIDs->EmailNotTaken;
 						$reason = 'E-mail isn\'t registered';
 					}
 					else

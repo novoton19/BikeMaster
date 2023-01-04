@@ -4,16 +4,16 @@
 	Contact: contact.bike@novotnyondrej.com
 
 	Created on
-		Date: 01/03/23 10:14pm
-		Version: 0.0.3
+		Date: 01/04/23 10:00am
+		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.3
+		Version: 0.0.3.1.1
 
 	Description:
-		Login
+		Verifies login and returns information about login
 
 	Changes:
-
+		Version 0.0.3.1.1 - Use ReasonIDs from database
 	*/
 	#Whether is being included
 	$isIncluded = count(debug_backtrace());
@@ -29,28 +29,24 @@
 	if (!$isIncluded)
 	{
 		#Return json
-		#header('Content-Type: application/json; charset=utf-8');
+		header('Content-Type: application/json; charset=utf-8');
 	}
-	#General functions
-	require_once(__DIR__.'/../../Resources/Php/general.php');
 	#Users database
 	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
+	#Require reason IDs
+	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
+	#General functions
+	require_once(__DIR__.'/../../Resources/Php/general.php');
 
 	#Creating users database
 	$usersDb = new UsersDb();
+	#Creating ReasonIDsDb
+	$reasonIDs = new ReasonIDsDb();
 
 	#Session project name
 	$projectName = 'BikeMaster';
 	#Current time
 	$time = time();
-
-	#Status reason IDs
-	$reasonIDs = [
-		'NotLoggedIn' => 0,
-		'TimedOut' => 1,
-		'InvalidLogin' => 2,
-		'DatabaseError' => 3
-	];
 
 	#Whether logged in
 	$loggedIn = false;
@@ -95,32 +91,32 @@
 			elseif (!$success)
 			{
 				#Database error
-				$reasonID = $reasonIDs['DatabaseError'];
+				$reasonID = $reasonIDs->DatabaseError;
 				$reason = 'Error while verifying login';
 			}
 			else
 			{
 				#Invalid login
-				$reasonID = $reasonIDs['InvalidLogin'];
+				$reasonID = $reasonIDs->InvalidLogin;
 				$reason = 'Invalid login information';
 			}
 		}
 		elseif ($loginTime >= $time)
 		{
 			#Invalid login
-			$reasonID = $reasonIDs['InvalidLogin'];
+			$reasonID = $reasonIDs->InvalidLogin;
 			$reason = 'Invalid login information';
 		}
 		else
 		{
 			#Timed out
-			$reasonID = $reasonIDs['TimedOut'];
+			$reasonID = $reasonIDs->TimedOut;
 			$reason = 'Session timed out';
 		}
 	}
 	else
 	{
-		$reasonID = $reasonIDs['NotLoggedIn'];
+		$reasonID = $reasonIDs->NotLoggedIn;
 		$reason = 'Not logged in';
 	}
 	#Result
