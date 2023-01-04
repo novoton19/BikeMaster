@@ -7,13 +7,14 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.3.1.1
+		Version: 0.0.3.2
 
 	Description:
 		Verifies login and returns information about login
 
 	Changes:
 		Version 0.0.3.1.1 - Use ReasonIDs from database
+		Version 0.0.3.2 - Bug fix, support settingsDb, error prevention
 	*/
 	#Whether is being included
 	$isIncluded = count(debug_backtrace());
@@ -31,100 +32,134 @@
 		#Return json
 		header('Content-Type: application/json; charset=utf-8');
 	}
-	#Users database
-	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
+	#Require settings
+	require_once(__DIR__.'/../../Resources/Php/Db/settingsDb.php');
 	#Require reason IDs
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
+	#Users database
+	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
 	#General functions
 	require_once(__DIR__.'/../../Resources/Php/general.php');
 
-	#Creating users database
-	$usersDb = new UsersDb();
+	#SettingsDb
+	$settings = new SettingsDb();
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
+	#Creating users database
+	$usersDb = new UsersDb();
 
-	#Session project name
-	$projectName = 'BikeMaster';
 	#Current time
 	$time = time();
-
+	
 	#Whether logged in
 	$loggedIn = false;
 	#ReasonID
 	$reasonID = null;
 	#Reason
 	$reason = null;
-
+	
 	#Getting project
-	$project = GeneralFunctions::getValue($_SESSION, $projectName, []);
+	$project = null;
 	#Getting login information
-	$login = GeneralFunctions::getValue($project, 'Login', []);
+	$login = null;
 	#Getting login status
-	$status = GeneralFunctions::getValue($login, 'Status', false);
+	$status = null;
 	#Getting login ID
-	$userID = GeneralFunctions::getValue($login, 'UserID');
+	$userID = null;
 	#Getting login time
-	$loginTime = GeneralFunctions::getValue($login, 'Time', $time);
+	$loginTime = null;
 	#Getting timeout
 	#Default to time, which triggers timeout
-	$timeout = GeneralFunctions::getValue($login, 'Timeout', $time);
+	$timeout = null;
 	
 	#Other variables
+	#Session project name
+	$projectName = null;
 	$success = null;
 	$account = null;
 	$accountExists = null;
 	
-	#Checking status
-	if ($status === true)
+	#Checking if succeeded to get reasonIDs and settings
+	if ($reasonIDs->success and $settings->success)
 	{
-		#Checking login time and timeout
-		if ($loginTime < $time and $time < $timeout)
+		#Session project name
+		$projectName = $settings->ProjectName;
+		#Getting login information
+		$project = GeneralFunctions::getValue($_SESSION, $projectName, []);
+		$login = GeneralFunctions::getValue($project, 'Login', []);
+		$status = GeneralFunctions::getValue($login, 'Status', false);
+		$userID = GeneralFunctions::getValue($login, 'UserID');
+		$loginTime = GeneralFunctions::getValue($login, 'Time', $time);
+		$timeout = GeneralFunctions::getValue($login, 'Timeout', $time);
+		
+		#Checking status
+		if ($status === true)
 		{
-			#Trying to get user by ID
-			list($success, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
-			#Checking if success
-			if ($success and $accountExists)
+			#Checking login time and timeout
+			if ($loginTime < $time and $time < $timeout)
 			{
-				#Valid login
-				$loggedIn = true;
+				#Trying to get user by ID
+				list($success, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
+				#Checking if success
+				if ($success and $accountExists)
+				{
+					#Valid login
+					$loggedIn = true;
+				}
+				elseif (!$success)
+				{
+					#Database error
+					$reasonID = $reasonIDs->DatabaseError;
+					$reason = 'Server experienced an error while processing the request (1)';
+				}
+				else
+				{
+					#Invalid login
+					$reasonID = $reasonIDs->InvalidLogin;
+					$reason = 'Invalid login information';
+				}
 			}
-			elseif (!$success)
-			{
-				#Database error
-				$reasonID = $reasonIDs->DatabaseError;
-				$reason = 'Error while verifying login';
-			}
-			else
+			elseif ($loginTime >= $time)
 			{
 				#Invalid login
 				$reasonID = $reasonIDs->InvalidLogin;
 				$reason = 'Invalid login information';
 			}
-		}
-		elseif ($loginTime >= $time)
-		{
-			#Invalid login
-			$reasonID = $reasonIDs->InvalidLogin;
-			$reason = 'Invalid login information';
+			else
+			{
+				#Timed out
+				$reasonID = $reasonIDs->TimedOut;
+				$reason = 'Session timed out';
+			}
 		}
 		else
 		{
-			#Timed out
-			$reasonID = $reasonIDs->TimedOut;
-			$reason = 'Session timed out';
+			$reasonID = $reasonIDs->NotLoggedIn;
+			$reason = 'Not logged in';
 		}
 	}
-	else
+	elseif (!$reasonIDs->success)
 	{
-		$reasonID = $reasonIDs->NotLoggedIn;
-		$reason = 'Not logged in';
+		#Cannot get reason IDs
+		$reason = 'Server experienced an error while processing the request (2)';
+	}
+	else#if (!$settings->success)
+	{
+		#Set reasonID
+		$reasonID = $reasonIDs->DatabaseError;
+		$reason = 'Server experienced an error while processing the request (3)';
+	}
+	#Checking if reasonID exists
+	if (is_null($reasonID))
+	{
+		$reasonID = $reasonIDs->NoReasonAvailable;
 	}
 	#Result
 	$result = [
 		'LoggedIn' => $loggedIn,
 		'ReasonID' => $reasonID,
 		'Reason' => $reason,
-		'Timeout' => (($loggedIn or $reasonID === $reasonIDs['TimedOut']) ? $timeout : null),
+		'Timeout' => (($loggedIn or $reasonID === $reasonIDs->TimedOut) ? $timeout : null),
 		'Account' => [
 			'ID' => intval(GeneralFunctions::getValue($account, 'ID')),
 			'Username' => GeneralFunctions::getvalue($account, 'Username'),
@@ -154,6 +189,7 @@
 		$isIncluded,
 		$sessionActiveAtStart,
 		$usersDb,
+		$settings,
 		$projectName,
 		$time,
 		$reasonIDs,
