@@ -14,6 +14,5 @@ Create Table BikeMaster.Users (
     	Not Null,
     Password varchar(255)
     	Not Null,
-    RegistrationTime int Unsigned Default Unix_Timestamp() Not Null,
-    LoginTime int Unsigned Default Null
+    RegistrationTime int Unsigned Default Unix_Timestamp() Not Null
 );

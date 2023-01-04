@@ -7,13 +7,13 @@
 		Date: 01/03/23 10:14pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3
+		Version: 0.0.3.1
 
 	Description:
 		Login
 
 	Changes:
-
+		Version 0.0.3.1 - Set login timeout
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -138,8 +138,10 @@
 		}
 		#Adding login information
 		$_SESSION[$projectName]['Login'] = [
-			'LoginTime' => time(),
-			'AccountID' => $accountID
+			'Status' => true,
+			'UserID' => intval($accountID),
+			'Time' => time(),
+			'Timeout' => time() + 3600
 		];
 		#Set success
 		$success = true;

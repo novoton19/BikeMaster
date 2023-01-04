@@ -41,7 +41,7 @@
 		{
 			#Insert a new record
 			list($success, , ) = $this->db->getData(
-				'Insert Into Users (Username, Email, Password) Values (:Username, :Email, :Password)',
+				'INSERT Into Users (Username, Email, Password) Values (:Username, :Email, :Password)',
 				[
 					':Username' => $username,
 					':Email' => $email,
@@ -51,12 +51,24 @@
 			#Return result
 			return $success;
 		}
-		#Get user by username
-		public function getUserByUsername($username = '')
+		#Get user by ID
+		public function getUserByIDSecure($id)
 		{
 			#Return result
 			return $this->db->getData(
-				'Select * From Users Where Username = :Username Limit 1',
+				'SELECT ID, Username, Email, RegistrationTime From Users Where ID = :ID Limit 1',
+				[
+					':ID' => $id
+				],
+				true
+			);
+		}
+		#Get user by username
+		public function getUserByUsername($username)
+		{
+			#Return result
+			return $this->db->getData(
+				'SELECT * From Users Where Username = :Username Limit 1',
 				[
 					':Username' => $username
 				],
@@ -64,11 +76,11 @@
 			);
 		}
 		#Get user by e-mail
-		public function getUserByEmail($email = '')
+		public function getUserByEmail($email)
 		{
 			#Return result
 			return $this->db->getData(
-				'Select * From Users Where Email = :Email Limit 1',
+				'SELECT * From Users Where Email = :Email Limit 1',
 				[
 					':Email' => $email
 				],
@@ -76,11 +88,11 @@
 			);
 		}
 		#Get user by username or email
-		public function getUserByUsernameOrEmail($username = '', $email = '')
+		public function getUserByUsernameOrEmail($username, $email)
 		{
 			#Return result
 			return $this->db->getData(
-				'Select * From Users Where Username = :Username Or Email = :Email Limit 1',
+				'SELECT * From Users Where Username = :Username Or Email = :Email Limit 1',
 				[
 					':Username' => $username,
 					':Email' => $email
