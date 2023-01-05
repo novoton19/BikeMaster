@@ -44,7 +44,7 @@ $(document).ready(() =>
 			Object.keys(inputReasons).forEach(inputName =>
 				{
 					//Displaying reason
-					$('#' + inputName + 'Reason').text(inputReasons[inputName].reason);
+					$('#' + inputName.charAt(0).toUpperCase() + inputName.slice(1) + 'Reason').text(inputReasons[inputName].reason);
 				}
 			);
 			//Checking if success

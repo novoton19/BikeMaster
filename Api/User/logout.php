@@ -4,26 +4,29 @@
 	Contact: contact.bike@novotnyondrej.com
 
 	Created on
-		Date: 01/04/23 11:11pm
-		Version: 0.0.3.2.1
+		Date: 01/04/23 10:20pm
+		Version: 0.0.3.2
 	Updated on
-		Version: 0.0.3.2.1
+		Version: 0.0.3.3
 
 	Description:
-		Get account information
+		Logout
 
 	Changes:
-
+		Version 0.0.3.3 - Correct standards
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
 	{
 		return;
 	}
+	session_start();
 	#Return json
 	header('Content-Type: application/json; charset=utf-8');
 	#Require reason IDs
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
+	#Require settings
+	require_once(__DIR__.'/../../Resources/Php/Db/settingsDb.php');
 	#Require status
 	require_once(__DIR__.'/status.php');
 	#Require general functions
@@ -31,26 +34,33 @@
 	
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
+	#Creating settingsDb
+	$settings = new SettingsDb();
 
 	#Default reasonID
 	$reasonID = null;
 	$reason = null;
+	#Whether logout succeeded
+	$loggedOut = false;
 	#Other variables
 	#$loginStatusResult from status.php
 	$loggedIn = false;
-	$account = null;
+	$projectName = null;
+	$projectNameSession = null;
 	
 
-	#Checking if succeeded to get reasonIDs
-	if ($reasonIDs->success)
+	#Checking if succeeded to get reasonIDs and settings
+	if ($reasonIDs->success and $settings->success)
 	{
+		#Session project name
+		$projectName = $settings->ProjectName;
 		#Getting login status
-		$loggedIn = $loginStatusResult['LoggedIn'];
-		#Getting account
-		$account = $loginStatusResult['Account'];
+		$loggedIn = $loginStatusResult['loggedIn'];
 		#Checking if logged in
 		if ($loggedIn)
 		{
+			#Logging out
+			unset($_SESSION[$projectName]['login']);
 			#Set reason ID
 			$reasonID = $reasonIDs->Accepted;
 		}
@@ -60,11 +70,17 @@
 			$reason = 'Not logged in';
 		}
 	}
-	else#if (!$reasonIDs->success)
+	elseif (!$reasonIDs->success)
 	{
 		#Cannot get reason IDs
 		$reasonID = -1;
 		$reason = 'Server experienced an error while processing the request (1)';
+	}
+	else#if (!$settings->success)
+	{
+		#Set reasonID
+		$reasonID = $reasonIDs->DatabaseError;
+		$reason = 'Server experienced an error while processing the request (2)';
 	}
 	#Checking if reasonID exists
 	if (is_null($reasonID))
@@ -73,18 +89,23 @@
 	}
 	#Echo result
 	echo json_encode([
-		'Account' => $account,
-		'ReasonID' => $reasonID,
-		'Reason' => $reason,
-		'LoginStatusResult' => $loginStatusResult
+		'success' => $loggedOut,
+		'reasonID' => $reasonID,
+		'reason' => $reason,
+		'loginStatusResult' => $loginStatusResult
 	]);
+	#Close session
+	session_write_close();
 	#Unset unnecessary variables
 	unset(
+		$settings,
 		$reasonIDs,
 		$reasonID,
 		$reason,
+		$loggedOut,
 		$loginStatusResult,
 		$loggedIn,
-		$account
+		$projectName,
+		$projectNameSession
 	);
 ?>

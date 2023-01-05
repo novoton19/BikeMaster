@@ -7,7 +7,7 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.3.2.1
+		Version: 0.0.3.3
 
 	Description:
 		Verifies login and returns information about login
@@ -15,6 +15,7 @@
 	Changes:
 		Version 0.0.3.1.1 - Use ReasonIDs from database
 		Version 0.0.3.2 - Bug fix, support settingsDb, error prevention
+		Version 0.0.3.3 - Correct standards
 	*/
 	#Whether is being included
 	$isIncluded = count(debug_backtrace());
@@ -32,19 +33,19 @@
 		#Return json
 		header('Content-Type: application/json; charset=utf-8');
 	}
-	#Require settings
-	require_once(__DIR__.'/../../Resources/Php/Db/settingsDb.php');
 	#Require reason IDs
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
+	#Require settings
+	require_once(__DIR__.'/../../Resources/Php/Db/settingsDb.php');
 	#Users database
 	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
 	#General functions
 	require_once(__DIR__.'/../../Resources/Php/general.php');
 
-	#SettingsDb
-	$settings = new SettingsDb();
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
+	#SettingsDb
+	$settings = new SettingsDb();
 	#Creating users database
 	$usersDb = new UsersDb();
 
@@ -157,15 +158,15 @@
 	}
 	#Result
 	$result = [
-		'LoggedIn' => $loggedIn,
-		'ReasonID' => $reasonID,
-		'Reason' => $reason,
-		'Timeout' => (($loggedIn or $reasonID === $reasonIDs->TimedOut) ? $timeout : null),
-		'Account' => [
-			'ID' => intval(GeneralFunctions::getValue($account, 'ID')),
-			'Username' => GeneralFunctions::getvalue($account, 'Username'),
-			'Email' => GeneralFunctions::getValue($account, 'Email'),
-			'RegistrationTime' => intval(GeneralFunctions::getValue($account, 'RegistrationTime'))
+		'loggedIn' => $loggedIn,
+		'reasonID' => $reasonID,
+		'reason' => $reason,
+		'timeout' => (($loggedIn or $reasonID === $reasonIDs->TimedOut) ? $timeout : null),
+		'account' => [
+			'id' => intval(GeneralFunctions::getValue($account, 'ID')),
+			'username' => GeneralFunctions::getvalue($account, 'Username'),
+			'email' => GeneralFunctions::getValue($account, 'Email'),
+			'registrationTime' => intval(GeneralFunctions::getValue($account, 'RegistrationTime'))
 		]
 	];
 	#Checking if included

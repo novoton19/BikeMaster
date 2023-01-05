@@ -3,17 +3,16 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 01/01/23 02:48pm
-	Version: 0.0.3
+	Date: 01/05/23 06:33pm
+	Version: 0.0.3.3
 Updated on
 	Version: 0.0.3.3
 
 Description:
-	Page for account login
+	Display user information
 
 Changes:
-	Version 0.0.3.2.2 - Update path to icons, added back and registration link
-	Version 0.0.3.3 - Update Api path
+
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -28,9 +27,8 @@ Changes:
 	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../../app.webmanifest">
-	<link rel="stylesheet" href="main.css">
 
-	<title>BikeMaster - Log in</title>
+	<title>BikeMaster - View Account</title>
 	<!--jQuery-->
 	<script src="../../jquery.min.js"></script>
 	<!--Registering service worker-->
@@ -40,26 +38,29 @@ Changes:
 </head>
 <body>
 	<a href="../../">Back to homepage</a>
-	<a href="../Register/">Register</a>
-	<div class="Invisible OfflineMention">
-		You are currently offline
-	</div>
-	<form id="LoginForm" method="post" js-action="../../Api/User/login.php">
-		<div id="Reason">
+	<div>
+		<div>
+			User ID
+		</div>
+		<div id="UserID">
 
 		</div>
+	</div>
+	<div>
 		<div>
-			<label for="UsernameOrEmail"> Username or E-mail: </label>
-			<input id="UsernameOrEmail" type="text" name="usernameOrEmail" placeholder="Your username or e-mail">
+			Username
 		</div>
+		<div id="Username">
+
+		</div>
+	</div>
+	<div>
 		<div>
-			<label for="Password"> Password: </label>
-			<input id="Password" type="password" name="password" placeholder="Password">
+			Registration date
 		</div>
-		<div>
-			<input id="SubmitButton" type="submit" name="submitButton">
-			<label for="SubmitButton" id="SubmitButtonReason"></label>
+		<div id="RegistrationDate">
+
 		</div>
-	</form>
+	</div>
 </body>
 </html>
