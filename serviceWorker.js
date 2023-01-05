@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.3
+	Version: 0.0.3.2.2
 
 Description:
 	Service worker
@@ -18,11 +18,13 @@ Changes:
 	//Version 0.0.2.4 - Track location in the background - turned out to be impossible
 	Version 0.0.2.5.1 - Remove non-existent file list of cached files
 	Version 0.0.3 - Added Account files
+	Version 0.0.3.2.2 - Temporarily disable cached files list because it's become hard to manage
 */
 //Cache name
 const cacheName = 'pwa-assets';
 //Files to be cached
-const files =
+const files = [];
+/*const files =
 [
 	'/favicon.ico',
 	'/',
@@ -48,7 +50,7 @@ const files =
 	'Journey/journeyModeManager.js',
 	'Journey/mapManager.js',
 	'https://api.mapy.cz/loader.js'
-];
+];*/
 
 //Intall event
 self.addEventListener('install', function(event)

@@ -6,13 +6,13 @@ Created on
 	Date: 01/02/23
 	Version: 0.0.3
 Updated on
-	Version: 0.0.3
+	Version: 0.0.3.2.2
 
 Description:
 	Registration
 
 Changes:
-
+	Version 0.0.3.2.2 - Update redirect url
 */
 $(document).ready(() =>
 {
@@ -50,8 +50,8 @@ $(document).ready(() =>
 			//Checking if success
 			if (success)
 			{
-				//Redirect to login.html
-				location.href = 'login.html';
+				//Redirect to successful registration page
+				location.href = '../RegistrationComplete/';
 			}
 		});
 	});

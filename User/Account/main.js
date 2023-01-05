@@ -3,16 +3,16 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 01/03/23 10:13pm
-	Version: 0.0.3
+	Date: 01/05/23 03:52pm
+	Version: 0.0.3.2.2
 Updated on
-	Version: 0.0.3
+	Version: 0.0.3.2.2
 
 Description:
-	Login
+	Load account information
 
 Changes:
-
+	 
 */
 $(document).ready(() =>
 {

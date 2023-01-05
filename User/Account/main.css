@@ -1,0 +1,90 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/05/23 03:58pm
+	Version: 0.0.3.2.2
+Updated on
+	Version: 0.0.3.2.2
+*/
+/*Loading font*/
+@font-face {
+	font-family: Roboto;
+	src: url(../../Assets/Fonts/Roboto/Roboto-Regular.ttf);
+}
+*
+{
+	box-sizing: border-box;
+	float: left;
+}
+body
+{
+	width: 100vw;
+	margin: 0px;
+
+	font-family: Roboto;	
+	background-color: #f7f7f7;
+	color: #333;
+}
+
+/*Noscript style*/
+noscript#UpperWarning
+{
+	position: sticky;
+	top: 0px;
+	left: 0px;
+
+	width: 100%;
+	height: auto;
+
+	padding: 10px 15px;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	text-align: justify;
+	background-color: #f7d095;
+}
+noscript#UpperWarning .ShortMessage
+{
+	display: none;
+}
+@media only screen and (max-width: 350px)
+{
+	noscript#UpperWarning
+	{
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+}
+@media only screen and (max-width: 320px)
+{
+	noscript#UpperWarning
+	{
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	noscript#UpperWarning .Message
+	{
+		display: none;
+	}
+	noscript#UpperWarning .ShortMessage
+	{
+		display: block;
+	}
+} 
+
+/*Headings*/
+h1
+{
+	margin: 0px;
+}
+/*Body*/
+#Body
+{
+	width: 100%;
+
+	padding: 20px;
+}

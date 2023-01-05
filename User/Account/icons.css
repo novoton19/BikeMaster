@@ -1,0 +1,26 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/05/23 03:58pm
+	Version: 0.0.3.2.2
+Updated on
+	Version: 0.0.3.2.2
+*/
+i.WarningIcon
+{
+	min-width: 20px;
+	min-height: 20px;
+
+	margin: 0px 10px;
+
+	background-image: url(../../Assets/Icons/Google/Warning.png);
+	background-repeat: no-repeat;
+	background-size: contain;
+	background-position: center;
+}
+i.Icon.NoLeftMargin
+{
+	margin-left: 0px;
+}
