@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:09pm
 	Version: 0.0.2.3.5
 Updated on
-	Version: 0.0.2.7
+	Version: 0.0.4
 
 Description:
 	Responsible for Journey Mode location tracking and backing up
@@ -15,6 +15,7 @@ Changes:
 	Version 0.0.2.5 - Convert to OOP
 	Version 0.0.2.6 - Support OOP positionManager
 	Version 0.0.2.7 - Create custom positionManager on new Journey
+	Version 0.0.4 - Add Segment
 */
 //Journey Mode statuses
 const jmStatuses = {
@@ -49,11 +50,28 @@ class TrackPoint
 		this.timestamp = geolocationPosition.timestamp;
 	}
 }
+//Segment
+class Segment
+{
+	//List of points
+	points;
+
+	//Constructor
+	constructor(points = [])
+	{
+		this.points = points;
+	}
+	//Adds a point to the end of the list
+	addPoint(point)
+	{
+		this.points.push(point);
+	}
+}
 //Journey
 class Journey extends EventTarget
 {
-	//List of points along the way
-	track;
+	//List of segments
+	segments = [];
 	//Status of the journey
 	status;
 
@@ -69,15 +87,15 @@ class Journey extends EventTarget
 	#journeyFinishedEvent = new Event('onFinish');
 
 	//Constructor
-	constructor(track = [], status = jmStatuses.Idle)
+	constructor(segments = [], status = jmStatuses.Idle)
 	{
 		super();
 		//Creating position manager
 		let positionManager = new PositionManager();
 		
 		//Adding information
-		//Creating track
-		this.track = track;
+		//Creating segments
+		this.segments = segments;
 		//Adding status
 		this.status = status;
 		//Adding position manager
@@ -92,8 +110,10 @@ class Journey extends EventTarget
 		//On position updated
 		positionManager.addEventListener('onPositionUpdated', () =>
 		{
+			//Getting last segment
+			let lastSegment = this.segments[this.segments.length - 1];
 			//Adding point
-			this.track.push(new TrackPoint(positionManager.mostRecentPosition));
+			lastSegment.addPoint(new TrackPoint(positionManager.mostRecentPosition));
 		})
 		//On position not updated
 		positionManager.addEventListener('onPositionNotUpdated', (event) =>
@@ -187,6 +207,8 @@ class Journey extends EventTarget
 			//Cannot start Journey, because it's already started
 			return;
 		}
+		//Create new segment
+		this.segments.push(new Segment());
 		//Changing status to running
 		this.status = jmStatuses.Running;
 		//Calling on change event
@@ -221,6 +243,8 @@ class Journey extends EventTarget
 			//Journey not paused, nothing to resume
 			return;
 		}
+		//Create new segment
+		this.segments.push(new Segment());
 		//Resuming Journey Mode
 		this.status = jmStatuses.Running;
 		//Calling on change event
@@ -237,6 +261,7 @@ class Journey extends EventTarget
 		}
 		//Finishing Journey
 		this.status = jmStatuses.Finished;
+		console.log(this);
 		//Updating
 		this.#onStatusChanged();
 	}

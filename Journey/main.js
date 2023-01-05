@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.2.7
+	Version: 0.0.4
 
 Description:
 	Tracks user location during 'Journey Mode'
@@ -22,7 +22,10 @@ Changes:
 	Version 0.0.2.5 - Save and Delete buttons, Support OOP Journey Mode
 	Version 0.0.2.6 - Support OOP positionManager
 	Version 0.0.2.7 - Added MapManager support
+	Version 0.0.4 - Send api request to save journey
 */
+//Api url
+const journeyApiUrl = '../Api/Journey/save.php';
 //Waiting for document to load
 $(document).ready(function()
 {
@@ -194,7 +197,18 @@ $(document).ready(function()
 	//On end button pressed
 	$(endButton).click(() => journeyModeManager.journey.end());
 	//On save button pressed
-	//$(saveButton).click();
+	$(saveButton).click(() =>
+	{
+		//Getting journey
+		let journey = journeyModeManager.journey;
+		//Converting to json
+		let jsonJourney = JSON.stringify(journey);
+		//Send api request
+		$.post(journeyApiUrl, {track : JSON.parse(jsonJourney)}, function(result)
+		{
+			console.log(result);
+		});
+	});
 	//On delete button pressed
 	$(deleteButton).click(() => journeyModeManager.createNewJourney());
 });

@@ -87,11 +87,11 @@
 		$projectName = $settings->ProjectName;
 		#Getting login information
 		$project = GeneralFunctions::getValue($_SESSION, $projectName, []);
-		$login = GeneralFunctions::getValue($project, 'Login', []);
-		$status = GeneralFunctions::getValue($login, 'Status', false);
-		$userID = GeneralFunctions::getValue($login, 'UserID');
-		$loginTime = GeneralFunctions::getValue($login, 'Time', $time);
-		$timeout = GeneralFunctions::getValue($login, 'Timeout', $time);
+		$login = GeneralFunctions::getValue($project, 'login', []);
+		$status = GeneralFunctions::getValue($login, 'status', false);
+		$userID = GeneralFunctions::getValue($login, 'userID');
+		$loginTime = GeneralFunctions::getValue($login, 'time', $time);
+		$timeout = GeneralFunctions::getValue($login, 'timeout', $time);
 		#Checking status
 		if ($status === true)
 		{
