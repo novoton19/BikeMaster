@@ -7,13 +7,13 @@
 		Date: 01/05/23 10:45pm
 		Version: 0.0.4
 	Updated on
-		Version: 0.0.4
+		Version: 0.0.4.1
 
 	Description:
 		Contains track, segment and trackPoint classes
 
 	Changes:
-
+		Version 0.0.4.1 - Add startTime and endTime, speed
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -29,13 +29,13 @@
 		public $accuracy;
 		public $altitude;
 		public $altitudeAccuracy;
-		public $milisecondTime;
+		public $timestamp;
 		#Constructor
 		public function __construct(
 			$latitude,
 			$longitude,
 			$accuracy,
-			$milisecondTime,
+			$timestamp,
 			$altitude = null,
 			$altitudeAccuracy = null,
 		)
@@ -45,7 +45,7 @@
 			$this->accuracy = $accuracy;
 			$this->altitude = $altitude;
 			$this->altitudeAccuracy = $altitudeAccuracy;
-			$this->milisecondTime = $milisecondTime;
+			$this->timestamp = $timestamp;
 		}
 		#Returns distance to point in meters
 		#https://www.geeksforgeeks.org/program-distance-two-points-earth/
@@ -76,14 +76,31 @@
 		#Attributes
 		public $points;
 		public $length;
+		public $startTime;
+		public $endTime;
+		public $time;
+		public $speed;
 		#Constructor
 		public function __construct($points)
 		{
-			$this->points = $points;
+			#Segment start and end time
+			$startTime = null;
+			$endTime = null;
+			$time = null;
+			#Getting amount of points
+			$pointsCount = count($points);
+			#Checking if has any points
+			if ($pointsCount > 0)
+			{
+				$startTime = $points[0]->timestamp;
+				$endTime = end($points)->timestamp;
+				$time = $endTime - $startTime;
+			}
+			
 			#Length of the segment
 			$length = 0;
 			#Calculating length of segment
-			for ($pointNum = 1; $pointNum < count($points); $pointNum++)
+			for ($pointNum = 1; $pointNum < $pointsCount; $pointNum++)
 			{
 				#Getting points
 				$previousPoint = $points[$pointNum - 1];
@@ -91,8 +108,13 @@
 				#Adding distance
 				$length += $previousPoint->getDistanceTo($thisPoint);
 			}
-			#Set length
+
+			#Adding values
+			$this->points = $points;
 			$this->length = $length;
+			$this->startTime = $startTime;
+			$this->endTime = $endTime;
+			$this->time = $time;
 		}
 	}
 	#Track
@@ -101,19 +123,44 @@
 		#Attributes
 		public $segments;
 		public $length;
+		public $startTime;
+		public $endTime;
+		public $time;
+		public $speed;
 		#Constructor
 		public function __construct($segments = [])
 		{
-			$this->segments = $segments;
+			#Track start and end time
+			$startTime = null;
+			$endTime = null;
+			#Getting amount of segments
+			$segmentsCount = count($segments);
+			#Checking if has any points
+			if ($segmentsCount > 0)
+			{
+				$startTime = $segments[0]->startTime;
+				$endTime = end($segments)->endTime;
+				$time = $endTime - $startTime;
+			}
+			
 			#Length of the track
 			$length = 0;
+			#Total time on track
+			$time = 0;
 			#Calculating length of track
 			foreach ($segments as $key => $segment)
 			{
 				$length += $segment->length;
+				$time += $segment->time;
 			}
-			#Add length
+
+			#Adding values
+			$this->segments = $segments;
 			$this->length = $length;
+			$this->startTime = $startTime;
+			$this->endTime = $endTime;
+			$this->time = $time;
+			$this->speed = ($time == 0) ? -1 : ($length / $time);
 		}
 	}
 ?>

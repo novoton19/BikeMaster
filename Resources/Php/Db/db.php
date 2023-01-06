@@ -7,13 +7,13 @@
 		? Taken from another project
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3
+		Version: 0.0.4.1
 
 	Description:
 		Database connection, Sql executor
 
 	Changes:
-
+		Version 0.0.4.1 - Function getLastInsertID
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -89,6 +89,11 @@
 			}
 			#Default value
 			return $defaultValue;
+		}
+		#Returns last inserted ID
+		public function getLastInsertedID()
+		{
+			return $this->db->lastInsertId();
 		}
 	}
 ?>

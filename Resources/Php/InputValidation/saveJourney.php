@@ -7,13 +7,13 @@
 		Date: 01/05/23 08:48pm
 		Version: 0.0.4
 	Updated on
-		Version: 0.0.4
+		Version: 0.0.4.1
 
 	Description:
 		Validation of journey
 
 	Changes:
-
+		Version 0.0.4.1 - Better way of returning result, more clear validation procedure
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -50,7 +50,7 @@
 			#Whether valid
 			$valid = false;
 			#Filtered result
-			$filteredLatitude = null;
+			$latitudeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -63,7 +63,7 @@
 				#Valid
 				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$filteredLatitude = round($latitude, 7);
+				$latitudeValue = round($latitude, 7);
 			}
 			else#if ($latitude < -90 or $latitude > 90)
 			{
@@ -73,10 +73,13 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'filter' => $filteredLatitude
+				'value' => $latitudeValue,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason
+				]
 			];
 		}
 		#Validates longitude
@@ -87,7 +90,7 @@
 			#Whether valid
 			$valid = false;
 			#Filtered result
-			$filteredLongitude = null;
+			$longitudeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -100,7 +103,7 @@
 				#Valid
 				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$filteredLongitude = round($longitude, 7);
+				$longitudeValue = round($longitude, 7);
 			}
 			else#if ($longitude < -90 or $longitude > 90)
 			{
@@ -110,10 +113,13 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'filter' => $filteredLongitude
+				'value' => $longitudeValue,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason
+				]
 			];
 		}
 		#Validates accuracy
@@ -130,7 +136,7 @@
 			#Whether valid
 			$valid = false;
 			#Filtered result
-			$filteredAccuracy = null;
+			$accuracyValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -143,7 +149,7 @@
 				#Valid
 				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$filteredAccuracy = round($accuracy, 3);
+				$accuracyValue = round($accuracy, 3);
 			}
 			elseif ($accuracy > $maximumAccuracy)
 			{
@@ -151,7 +157,7 @@
 				$reasonID = $reasonIDs->OutOfRange;
 				$reason = 'Out of range, capped';
 				$valid = true;
-				$filteredAccuracy = $maximumAccuracy;
+				$accuracyValue = $maximumAccuracy;
 			}
 			else#if ($accuracy < 0)
 			{
@@ -161,10 +167,13 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'filter' => $filteredAccuracy
+				'value' => $accuracyValue,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason
+				]
 			];
 		}
 		#Validates altitude
@@ -183,43 +192,58 @@
 			#Whether valid
 			$valid = false;
 			#Filtered result
-			$filteredAltitude = null;
+			$altitudeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
 
-			$altitude = doubleval($altitude);
-				
-			#Checking range
-			if ($altitude >= $minimumAltitude and $altitude <= $maximumAltitude)
+			#Checking if set
+			if ((!is_null($altitude)) and !empty($altitude))
 			{
-				#Valid
-				$reasonID = $reasonIDs->Accepted;
-				$valid = true;
-				$filteredAltitude = round($altitude, 3);
+				#Convert to double
+				$altitude = doubleval($altitude);
+				#Checking range
+				if ($altitude >= $minimumAltitude and $altitude <= $maximumAltitude)
+				{
+					#Valid
+					$reasonID = $reasonIDs->Accepted;
+					$valid = true;
+					$altitudeValue = round($altitude, 3);
+				}
+				elseif ($altitude > $maximumAltitude)
+				{
+					#Not necessarily marked as invalid, rather capped
+					$reasonID = $reasonIDs->OutOfRange;
+					$reason = 'Out of range, capped';
+					$valid = true;
+					$altitudeValue = $maximumAltitude;
+				}
+				else#if ($altitude < $minimumAltitude)
+				{
+					#Not necessarily marked as invalid, rather capped
+					$reasonID = $reasonIDs->OutOfRange;
+					$reason = 'Out of range, capped';
+					$valid = true;
+					$altitudeValue = $minimumAltitude;
+				}
 			}
-			elseif ($altitude > $maximumAltitude)
+			else#if (is_null($altitude) or empty($altitude))
 			{
-				#Not necessarily marked as invalid, rather capped
-				$reasonID = $reasonIDs->OutOfRange;
-				$reason = 'Out of range, capped';
+				#Can be null
 				$valid = true;
-				$filteredAltitude = $maximumAltitude;
-			}
-			else#if ($altitude < $minimumAltitude)
-			{
-				#Not necessarily marked as invalid, rather capped
-				$reasonID = $reasonIDs->OutOfRange;
-				$reason = 'Out of range, capped';
-				$valid = true;
-				$filteredAltitude = $minimumAltitude;
+				$altitudeValue = null;
+				$reasonID = $reasonIDs->IsNull;
+				$reason = 'Not set';
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'filter' => $filteredAltitude
+				'value' => $altitudeValue,
+				'status' => 
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason
+				]
 			];
 		}
 		#Validates altitude
@@ -237,48 +261,64 @@
 
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$filteredAccuracy = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
+			#Filtered result
+			$accuracyValue = null;
 
-			$accuracy = doubleval($accuracy);
-			
-			#Checking range
-			if ($accuracy >= $minimumAccuracy and $accuracy <= $maximumAccuracy)
+			#Checking if set
+			if ((!is_null($accuracy)) and !empty($accuracy))
 			{
-				#Valid
-				$reasonID = $reasonIDs->Accepted;
-				$valid = true;
-				$filteredAccuracy = round($accuracy, 3);
+				#Convert to double
+				$accuracy = doubleval($accuracy);
+				#Checking range
+				if ($accuracy >= $minimumAccuracy and $accuracy <= $maximumAccuracy)
+				{
+					#Valid
+					$valid = true;
+					$accuracyValue = round($accuracy, 3);
+					$reasonID = $reasonIDs->Accepted;
+				}
+				elseif ($accuracy > $maximumAccuracy)
+				{
+					#Not necessarily marked as invalid, rather capped
+					$valid = true;
+					$accuracyValue = $maximumAccuracy;
+					$reasonID = $reasonIDs->OutOfRange;
+					$reason = 'Out of range, capped';
+				}
+				else#if ($accuracy < $minimumAccuracy)
+				{
+					#Not necessarily marked as invalid, rather capped
+					$valid = true;
+					$accuracyValue = $minimumAccuracy;
+					$reasonID = $reasonIDs->OutOfRange;
+					$reason = 'Out of range, capped';
+				}
 			}
-			elseif ($accuracy > $maximumAccuracy)
+			else#if (is_null($accuracy) or empty($accuracy))
 			{
-				#Not necessarily marked as invalid, rather capped
-				$reasonID = $reasonIDs->OutOfRange;
-				$reason = 'Out of range, capped';
+				#Can be null
 				$valid = true;
-				$filteredAccuracy = $maximumAccuracy;
+				$accuracyValue = null;
+				$reasonID = $reasonIDs->IsNull;
+				$reason = 'Not set';
 			}
-			else#if ($accuracy < $minimumAccuracy)
-			{
-				#Not necessarily marked as invalid, rather capped
-				$reasonID = $reasonIDs->OutOfRange;
-				$reason = 'Out of range, capped';
-				$valid = true;
-				$filteredAccuracy = $minimumAccuracy;
-			}
+
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'filter' => $filteredAccuracy
+				'value' => $accuracyValue,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason
+				]
 			];
 		}
 		#Validates time
-		private function validateTime($time)
+		private function validateTime($time, $timeFrom)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
@@ -287,25 +327,33 @@
 
 			#Getting minimum time
 			$minimumTime = intval($settingsDb->MinimumTime);
+			#Checking if timeFrom exists
+			if (!is_null($timeFrom))
+			{
+				#Comparing times
+				if ($timeFrom > $minimumTime)
+				{
+					$minimumTime = $timeFrom;
+				}
+			}
 
 			#Whether valid
 			$valid = false;
 			#Filtered result
-			$filteredTime = null;
+			$timeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
 
 			$time = intval($time);
-			
 			#Checking range
 			#Maximum time: Time right now
 			if ($time >= $minimumTime and $time <= time() * 1000)
 			{
 				#Valid
-				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$filteredTime = $time;
+				$timeValue = $time;
+				$reasonID = $reasonIDs->Accepted;
 			}
 			else#if ($time < $minimumTime or $time > time() * 1000)
 			{
@@ -315,24 +363,29 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'filter' => $filteredTime
+				'value' => $timeValue,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason
+				]
 			];
 		}
 		#Validates track point
-		private function validatePoint($point)
+		private function validatePoint($point, $timeFrom)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
+
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$filteredResult = [];
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
+			#Result pointObject
+			$pointObject = null;
+
 			#Attribute reasons
 			$attributeReasons = [];
 
@@ -353,37 +406,45 @@
 				$accuracyValidation = $this->validateAccuracy($accuracy);
 				$altitudeValidation = $this->validateAltitude($altitude);
 				$altitudeAccuracyValidation = $this->validateAltitudeAccuracy($altitudeAccuracy);
-				$timestampValidation = $this->validateTime($timestamp);
+				$timestampValidation = $this->validateTime($timestamp, $timeFrom);
+
+				#Getting statuses
+				$latitudeStatus = $latitudeValidation['status'];
+				$longitudeStatus = $longitudeValidation['status'];
+				$accuracyStatus = $accuracyValidation['status'];
+				$altitudeStatus = $altitudeValidation['status'];
+				$altitudeAccuracyStatus = $altitudeAccuracyValidation['status'];
+				$timestampStatus = $timestampValidation['status'];
 
 				#Adding attribute reasons
 				$attributeReasons = [
-					'latitude' => $latitudeValidation,
-					'longitude' => $longitudeValidation,
-					'accuracy' => $accuracyValidation,
-					'altitude' => $altitudeValidation,
-					'altitudeAccuracy' => $altitudeAccuracyValidation,
-					'timestamp' => $timestampValidation
+					'latitude' => $latitudeStatus,
+					'longitude' => $longitudeStatus,
+					'accuracy' => $accuracyStatus,
+					'altitude' => $altitudeStatus,
+					'altitudeAccuracy' => $altitudeAccuracyStatus,
+					'timestamp' => $timestampStatus
 				];
 				#Whether valid
 				$valid = (
-					$latitudeValidation['valid'] and
-					$longitudeValidation['valid'] and
-					$accuracyValidation['valid'] and
-					$altitudeValidation['valid'] and
-					$altitudeAccuracyValidation['valid'] and
-					$timestampValidation['valid']
+					$latitudeStatus['valid'] and
+					$longitudeStatus['valid'] and
+					$accuracyStatus['valid'] and
+					$altitudeStatus['valid'] and
+					$altitudeAccuracyStatus['valid'] and
+					$timestampStatus['valid']
 				);
 				#Checking if valid
 				if ($valid)
 				{
 					#Creating point
-					$filteredResult = new TrackPoint(
-						$latitudeValidation['filter'],
-						$longitudeValidation['filter'],
-						$accuracyValidation['filter'],
-						$timestampValidation['filter'],
-						$altitudeValidation['filter'],
-						$altitudeAccuracyValidation['filter']
+					$pointObject = new TrackPoint(
+						$latitudeValidation['value'],
+						$longitudeValidation['value'],
+						$accuracyValidation['value'],
+						$timestampValidation['value'],
+						$altitudeValidation['value'],
+						$altitudeAccuracyValidation['value']
 					);
 					$reasonID = $reasonIDs->Accepted;
 				}
@@ -412,15 +473,18 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'attributeReasons' => $attributeReasons,
-				'filter' => $filteredResult
+				'object' => $pointObject,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason,
+					'inputReasons' => $attributeReasons
+				]
 			];
 		}
 		#Validates segment
-		private function validateSegment($segment)
+		private function validateSegment($segment, $timeFrom)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
@@ -435,131 +499,190 @@
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
+			#Resulting segments
+			$segmentObjects = [];
 			#Point reasons
 			$pointReasons = [];
-			#Resulting segments
-			$filteredSegments = [];
-
+			
 			#Checking type
 			if (gettype($segment) === 'array')
 			{
 				#Getting points
-				$pointsInSegment = GeneralFunctions::getValue($segment, 'points', []);
-				#Checking if there are any points
-				if (!empty($pointsInSegment))
+				$points = GeneralFunctions::getValue($segment, 'points');
+				#Checking type
+				if (gettype($points) === 'array')
 				{
 					#Whether points are valid (default true)
 					$pointsValid = true;
-					#Filtered points
-					$filteredPoints = [];
-					#Validating points
-					foreach ($pointsInSegment as $key => $point)
+					#Points objects
+					$pointObjects = [];
+					#Getting pointObjects
+					foreach ($points as $pointNum => $point)
 					{
 						#Validating point
-						$pointValidation = $this->validatePoint($point);
-						#Updating status
-						$pointsValid = ($pointsValid and $pointValidation['valid']);
-						#Adding point to the list
-						array_push($filteredPoints, $pointValidation['filter']);
-						#Removing filter from list
-						$pointValidation['filter'] = null;
-						#Adding point reason
-						array_push($pointReasons, $pointValidation);
+						$pointValidation = $this->validatePoint($point, $timeFrom);
+						#Getting pointObject
+						$pointObject = $pointValidation['object'];
+						#Getting status
+						$pointStatus = $pointValidation['status'];
+						$pointValid = $pointStatus['valid'];
+
+						#Adding point to pointReasons
+						array_push($pointReasons, $pointStatus);
+						#Checking if point valid
+						if ($pointValid)
+						{
+							#Adding point to pointObjects
+							array_push($pointObjects, $pointObject);
+							#Getting object time
+							$timeFrom = $pointObject->timestamp;
+						}
+						else#if (!$pointValid)
+						{
+							#Points are not valid
+							$pointsValid = false;
+						}
 					}
 					#Checking if points are valid
 					if ($pointsValid)
 					{
-						#Points separated into smaller segments on invalid speed
-						$segmentedPoints = [];
-						#Current segment
-						$currentSegment = [
-							$filteredPoints[0]
+						#Current points to be added to the next segment
+						$segmentPointObjects = [
+							$pointObjects[0]
 						];
-						#Amount of filtered points
-						$filteredPointsCount = count($filteredPoints);
-						#Grouping points by valid speed
-						for ($pointNum = 1; $pointNum < $filteredPointsCount; $pointNum++)
+						#Getting pointsCount
+						$pointObjectsCount = count($pointObjects);
+						#Creating segmentObjects
+						for ($pointNum = 1; $pointNum < $pointObjectsCount; $pointNum++)
 						{
 							#Getting points
-							$previousPoint = $filteredPoints[$pointNum - 1];
-							$thisPoint = $filteredPoints[$pointNum];
-							
-							#Getting distance
-							$distance = $previousPoint->getDistanceTo($thisPoint);
-							#Getting time difference
-							$timeDifference = $thisPoint->milisecondTime - $previousPoint->milisecondTime;
-							#Checking time difference
-							if ($timeDifference < 0)
-							{
-								#Invalid time difference
-								$pointsValid = false;
-								break;
-							}
+							$prevPointObject = $pointObjects[$pointNum - 1];
+							$thisPointObject = $pointObjects[$pointNum];
+
+							#Getting distance (meters)
+							$distance = $prevPointObject->getDistanceTo($thisPointObject);
 							#Taking into account accuracy difference (worst case scenario)
-							$distance -= $previousPoint->accuracy + $thisPoint->accuracy;
-							#Checking if distance is still positive
-							if ($distance > 0)
+							$distance -= $prevPointObject->accuracy + $thisPointObject->accuracy;
+							#Getting time difference (seconds)
+							$timeDifference = ($thisPointObject->timestamp - $prevPointObject->timestamp) / 1000;
+
+							#Checking if there is any distance between the points
+							if ($distance == 0)
 							{
-								#Getting speed m/s
-								$speed = $distance / $timeDifference;
-								#Convert speed to km/h
-								$speed /= 3.6;
-								#Checking speed
-								if ($speed > $maximumSpeed)
+								#Points are identical
+								if ($timeDifference > 0)
 								{
-									#Create new segment
-									array_push($segmentedPoints, $currentSegment);
-									$currentSegment = [];
+									#Points have different times
+									#Adding point to the list
+									array_push($segmentPointObjects, $thisPointObject);
+								}
+								else#if ($timeDifference <= 0)
+								{
+									#Do not add point, because points are completely identical
 								}
 							}
-							#Adding this point to the current segment
-							array_push($currentSegment, $thisPoint);
-							#Checking if this is the last point in segment
-							if ($pointNum == $filteredPointsCount - 1)
+							elseif ($distance > 0)
 							{
-								#Add last segment
-								array_push($segmentedPoints, $currentSegment);
-								$currentSegment = [];
+								#Checking time
+								if ($timeDifference > 0)
+								{
+									#Calculating speed (m/s) => (km/h)
+									$speed = ($distance / $timeDifference) / 3.6;
+									#Checking speed
+									if ($speed <= $maximumSpeed)
+									{
+										#Point is valid, add it to the list
+										array_push($segmentPointObjects, $thisPointObject);
+									}
+									else#if ($speed > $maximumSpeed)
+									{
+										#Too high speed, split segments
+										#Closing segment
+										$segmentObject = new Segment($segmentPointObjects);
+										#Checking if has any distance
+										if ($segmentObject->length > 0)
+										{
+											#Adding to segments
+											array_push($segmentObjects, $segmentObject);
+										}
+										#Resetting array starting with current point
+										$segmentPointObjects = [
+											$thisPointObject
+										];
+									}
+								}
+								else#if ($timeDifference <= 0)
+								{
+									#Teleportation, split segments
+									#Closing segment
+									$segmentObject = new Segment($segmentPointObjects);
+									#Checking if has any distance
+									if ($segmentObject->length > 0)
+									{
+										#Adding to segments
+										array_push($segmentObjects, $segmentObject);
+									}
+									#Resetting array starting with current point
+									$segmentPointObjects = [
+										$thisPointObject
+									];
+								}
+							}
+							else#if ($distance < 0)
+							{
+								#The accuracy is too low, the points can be identical => their real distance can be 0
+								#Checking if time difference is not 0
+								if ($timeDifference > 0)
+								{
+									#Adding point to the list
+									array_push($segmentPointObjects, $thisPointObject);
+								}
+								else#if ($timeDifference <= 0)
+								{
+									#Skip
+								}
 							}
 						}
-						#Checking if points are valid
-						if ($pointsValid)
+						#Finish segment
+						$segmentObject = new Segment($segmentPointObjects);
+						#Checking if has any distance
+						if ($segmentObject->length > 0)
 						{
-							#Adding filtered segments
-							foreach ($segmentedPoints as $key => $points)
-							{
-								#Creating segment
-								$filteredSegment = new Segment($points);
-								#Checking length
-								if ($filteredSegment->length > 0)
-								{
-									#Add segment
-									array_push($filteredSegments, $filteredSegment);
-								}
-							}
+							#Adding to segments
+							array_push($segmentObjects, $segmentObject);
+						}
+						#Checking if there are any segments
+						if (!empty($segmentObjects))
+						{
+							#Valid
 							$valid = true;
 							$reasonID = $reasonIDs->Accepted;
 						}
-						else#if (!$pointsValid)
+						else#if (empty($segmentObjects))
 						{
-							#Not valid time
-							$reasonID = $reasonIDs->TimeTravel;
-							$reason = 'Time travel isn\'t possible yet';
+							#Invalid speed
+							$reasonID = $reasonIDs->InvalidInputs;
+							$reason = 'There were either identical points, too high speed or teleportation between the points';
 						}
 					}
 					else#if (!$pointsValid)
 					{
-						#Not valid
+						#Invalid points
 						$reasonID = $reasonIDs->InvalidInputs;
 						$reason = 'One or more points is invalid';
-					} 
+					}
 				}
-				else#if (empty($pointsInSegment))
+				elseif (is_null($points))
 				{
-					#No points in segment
-					$reasonID = $reasonIDs->Empty;
-					$reason = 'Empty';
-					$valid = true;
+					#Not set
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Points not specified';
+				}
+				else#if (gettype($points) !== 'array')
+				{
+					#Not an array
+					$reasonID = $reasonIDs->InvalidType;
+					$reason = 'Points not an array';
 				}
 			}
 			elseif (is_null($segment))
@@ -581,11 +704,17 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'pointReasons' => $pointReasons,
-				'filter' => $filteredSegments
+				'object' => $segmentObjects,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason,
+					'inputReasons' =>
+					[
+						'points' => $pointReasons
+					]
+				]
 			];
 		}
 		#Validates track
@@ -595,11 +724,11 @@
 			$reasonIDs = $this->reasonIDs;
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$filteredTrack = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
+			#Resulting track
+			$trackObject = null;
 			#Segment reasons
 			$segmentReasons = [];
 
@@ -610,62 +739,84 @@
 				if (gettype($track) === 'array')
 				{
 					#Getting segments
-					$segments = GeneralFunctions::getvalue($track, 'segments', []);
-					#Whether segments are valid (default true)
-					$segmentsValid = true;
-					#Filtered segments
-					$filteredSegments = [];
-					#Check individual segments
-					foreach ($segments as $key => $segment)
+					$segments = GeneralFunctions::getvalue($track, 'segments');
+					#Checking type
+					if (gettype($segments) === 'array')
 					{
-						#Validating segment
-						$segmentValidation = $this->validateSegment($segment);
-						#Whether the segment is valid
-						$segmentValid = $segmentValidation['valid'];
-						$segmentsValid = ($segmentsValid and $segmentValid);
-						
-						#Segment validation can generate mode than one segment in case of invalid speed for example
-						#Getting filtered segments
-						$filteredSegments = $segmentValidation['filter'];
-						#Removing filtered segments from segment reasons
-						$segmentValidation['filter'] = null;
-						#Add segment reason
-						array_push($segmentReasons, $segmentValidation);
-
-						#Checking if was this segment valid
-						if ($segmentValid)
+						#Resulting segmentObjects
+						$segmentObjects = [];
+						#Valid segment start time
+						$timeFrom = null;
+						#Whether segments are valid
+						$segmentsValid = true;
+						#Validating segments
+						foreach ($segments as $segmentNum => $segment)
 						{
-							#Adding filtered segments to the result
-							foreach ($filteredSegments as $key => $filteredSegment)
+							#Getting segment validation
+							$segmentValidation = $this->validateSegment($segment, $timeFrom);
+							#Getting segmentObject
+							$segmentValidationObjects = $segmentValidation['object'];
+							#Getting status
+							$segmentStatus = $segmentValidation['status'];
+							$segmentValid = $segmentStatus['valid'];
+
+							#Adding segment to segmentReasons
+							array_push($segmentReasons, $segmentStatus);
+							#Checking if segment is valid
+							if ($segmentValid)
 							{
-								#Adding filtered segment to the result
-								array_push($filteredSegments, $filteredSegment);
+								#Adding objects
+								foreach ($segmentValidationObjects as $segmentNum => $segmentObject)
+								{
+									#Adding segment to segmentObjects
+									array_push($segmentObjects, $segmentObject);
+								}
+								#Getting segment start time
+								$timeFrom = end($segmentValidationObjects)->endTime;
+							}
+							else#if (!$segmentValid)
+							{
+								#Segments are not valid
+								$segmentsValid = false;
 							}
 						}
-					}
-					#Checking if segments are valid
-					if ($segmentsValid)
-					{
-						#Creating track
-						$filteredTrack = new Track($filteredSegments);
-						#Checking if any segments made it to the track
-						if ($filteredTrack->length > 0)
+						#Checking if segments are valid
+						if ($segmentsValid)
 						{
-							#Valid track
-							$valid = true;
-							$reasonID = $reasonIDs->Accepted;
+							#Creating trackObject
+							$trackObject = new Track($segmentObjects);
+							#Checking length of track
+							if ($trackObject->length > 0)
+							{
+								#Valid
+								$valid = true;
+								$reasonID = $reasonIDs->Accepted;
+							}
+							else#if ($trackObject->length <= 0)
+							{
+								#Invalid
+								$reasonID = $reasonIDs->Empty;
+								$reason = 'Does not have any distance';
+							}
 						}
-						else#if ($filteredTrack->length <= 0)
+						else#if (!$segmentsValid)
 						{
-							#Does not have segments
-							$reasonID = $reasonIDs->Empty;
-							$reason = 'Does not have any distance';
+							#Invalid
+							$reasonID = $reasonIDs->InvalidInputs;
+							$reason = 'One or more segments is invalid';
 						}
 					}
-					else#if (!$segmentsValid)
+					elseif (is_null($segments))
 					{
-						$reasonID = $reasonIDs->InvalidInputs;
-						$reason = 'One or more segments is invalid';
+						#Not set
+						$reasonID = $reasonIDs->IsNull;
+						$reason = 'Segments not specified';
+					}
+					else#if (gettype($segments) !== 'array')
+					{
+						#Not an array
+						$reasonID = $reasonIDs->InvalidType;
+						$reason = 'Segments not an array';
 					}
 				}
 				elseif (is_null($track))
@@ -700,11 +851,17 @@
 			}
 			#Return result
 			return [
-				'valid' => $valid,
-				'reasonID' => $reasonID,
-				'reason' => $reason,
-				'segmentReasons' => $segmentReasons,
-				'filter' => $filteredTrack
+				'object' => $trackObject,
+				'status' =>
+				[
+					'valid' => $valid,
+					'reasonID' => $reasonID,
+					'reason' => $reason,
+					'inputReasons' =>
+					[
+						'segments' => $segmentReasons
+					]
+				]
 			];
 		}
 	}

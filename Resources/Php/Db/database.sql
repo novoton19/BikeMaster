@@ -82,11 +82,10 @@ Create Table BikeMaster.TrackPoints(
     /*Accuracy in meters. Precision 3 decimal places (mm)*/
     AltitudeAccuracy double(7, 3)
     	Default Null,
-    MilisecondTime int
+    Timestamp bigint
     	Unsigned
     	Not Null,
-    
-    	
+
     Foreign Key (SegmentID)
     	References BikeMaster.TrackSegments(ID)
 );
