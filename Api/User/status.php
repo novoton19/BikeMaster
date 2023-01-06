@@ -7,7 +7,7 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.3.3
+		Version: 0.0.4.0.1
 
 	Description:
 		Verifies login and returns information about login
@@ -16,6 +16,7 @@
 		Version 0.0.3.1.1 - Use ReasonIDs from database
 		Version 0.0.3.2 - Bug fix, support settingsDb, error prevention
 		Version 0.0.3.3 - Correct standards
+		Version 0.0.4.0.1 - Send account information on session timeout
 	*/
 	#Whether is being included
 	$isIncluded = count(debug_backtrace());
@@ -113,27 +114,29 @@
 					$reasonID = $reasonIDs->DatabaseError;
 					$reason = 'Server experienced an error while processing the request (1)';
 				}
-				else
+				else#if (!$accountExists)
 				{
 					#Invalid login
 					$reasonID = $reasonIDs->InvalidLogin;
-					$reason = 'Invalid login information';
+					$reason = 'Invalid login information (1)';
 				}
 			}
 			elseif ($loginTime >= $time)
 			{
 				#Invalid login
 				$reasonID = $reasonIDs->InvalidLogin;
-				$reason = 'Invalid login information';
+				$reason = 'Invalid login information (2)';
 			}
-			else
+			else#if ($time >= timeout)
 			{
 				#Timed out
 				$reasonID = $reasonIDs->TimedOut;
 				$reason = 'Session timed out';
+				#Trying to get user by ID
+				list($success, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
 			}
 		}
-		else
+		else#if (!$status)
 		{
 			$reasonID = $reasonIDs->NotLoggedIn;
 			$reason = 'Not logged in';
