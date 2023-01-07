@@ -6,19 +6,21 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.7
 Updated on
-	Version: 0.0.2.7
+	Version: 0.0.4.2
 
 Description:
 	Loads a map, displays current location on a map
 
 Changes:
-
+	Version 0.0.4.2 - Show track on a map
 */
 //Map manager
 class MapManager
 {
 	//Loaded map
 	map;
+	//Loaded gpx layer
+	#gpxLayer;
 	
 	//Position manager
 	#positionManager;
@@ -30,13 +32,14 @@ class MapManager
 	{
 		//Creating map
 		let map = new SMap(
-			JAK.gel('Map'),
+			JAK.gel(mapElementID),
 			undefined,
-			14
+			15
 		);
 		//Adding default layer
-		map.addDefaultLayer(SMap.DEF_BASE).enable();
-		
+		map.addDefaultLayer(SMap.DEF_TURIST).enable();
+		//map.addDefaultControls();
+
 		//Creating position manager
 		let positionManager = new PositionManager();
 		
@@ -79,6 +82,24 @@ class MapManager
 		});
 		//Updating position watcher manually
 		this.#updatePositionWatcher();
+	}
+	//Creates a GPX layer
+	loadGpx(gpx)
+	{
+		//Checking if gpx layer exists
+		if (this.#gpxLayer !== undefined)
+		{
+			//Removing layer
+			this.map.removeLayer(this.#gpxLayer);
+		}
+		//Creating xml document
+		let xmlDocument = JAK.XML.createDocument(gpx);
+		//Creating layer
+		let layer = new SMap.Layer.GPX(xmlDocument);
+		//Adding layer
+		this.map.addLayer(layer);
+		//Enabling layer
+		layer.enable();
 	}
 	//Updates the position
 	#updatePosition(coords)

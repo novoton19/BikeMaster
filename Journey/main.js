@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22 04:26pm
 	Version: 0.0.2
 Updated on
-	Version: 0.0.4
+	Version: 0.0.4.2
 
 Description:
 	Tracks user location during 'Journey Mode'
@@ -23,6 +23,7 @@ Changes:
 	Version 0.0.2.6 - Support OOP positionManager
 	Version 0.0.2.7 - Added MapManager support
 	Version 0.0.4 - Send api request to save journey
+	Version 0.0.4.2 - Display track on the map
 */
 //Api url
 const journeyApiUrl = '../Api/Journey/save.php';
@@ -32,7 +33,7 @@ $(document).ready(function()
 	//Creating new PositionManager
 	const positionManager = new PositionManager();
 	//Creating new MapManager
-	const mapManager = new MapManager('map');
+	const mapManager = new MapManager('Map');
 	//Creating new JourneyModeManager
 	const journeyModeManager = new JourneyModeManager();
 
@@ -157,6 +158,14 @@ $(document).ready(function()
 		}
 		//Adding state changes event
 		journey.addEventListener('onStatusChanged', refreshElements);
+		//Listening for track changes
+		journey.addEventListener('onTrackChanged', () =>
+		{
+			//Creating GPX
+			let gpx = GpxConverter.toGpx(journey);
+			//Loading track
+			mapManager.loadGpx(gpx);
+		});
 	}
 	//Listening for permission updates
 	positionManager.addEventListener('onPermissionsUpdated', refreshElements);
@@ -170,7 +179,6 @@ $(document).ready(function()
 	updateJourney();
 	//Refreshing elements at start
 	refreshElements();
-
 
 	//Adding event to button that requests access to location
 	promptLocationAccessButton.click(function()
