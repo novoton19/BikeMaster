@@ -1,0 +1,55 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/07/23 09:34pm
+	Version: 0.0.4.3
+Updated on
+	Version: 0.0.4.3
+
+Description:
+	Homepage for logged in users showing them most recent activities
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../app.webmanifest">
+
+	<title>Home - BikeMaster</title>
+	<!--Api.mapy.cz-->
+	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript">Loader.load();</script>
+	<!--jQuery-->
+	<script src="../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../registerServiceWorker.js"></script>
+	<!--Position Manager-->
+	<script src="../Journey/positionManager.js"></script>
+	<!--Journey Mode Manager-->
+	<script src="../Journey/journeyModeManager.js"></script>
+	<!--Map Manager-->
+	<script src="../Journey/mapManager.js"></script>
+	<!--Gpx converter-->
+	<script src="../Journey/gpxConverter.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+</head>
+<body>
+	<div id="Activities">
+
+	</div>
+</body>
+</html>

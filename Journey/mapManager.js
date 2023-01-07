@@ -6,13 +6,14 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.7
 Updated on
-	Version: 0.0.4.2
+	Version: 0.0.4.3
 
 Description:
 	Loads a map, displays current location on a map
 
 Changes:
 	Version 0.0.4.2 - Show track on a map
+	Version 0.0.4.3 - Option not to watch position
 */
 //Map manager
 class MapManager
@@ -28,7 +29,7 @@ class MapManager
 	#positionWatcher;
 
 	//Constructor
-	constructor(mapElementID)
+	constructor(mapElementID, watchPosition = true)
 	{
 		//Creating map
 		let map = new SMap(
@@ -40,48 +41,53 @@ class MapManager
 		map.addDefaultLayer(SMap.DEF_TURIST).enable();
 		//map.addDefaultControls();
 
-		//Creating position manager
-		let positionManager = new PositionManager();
-		
-		//Adding map and position manager
+		//Adding map
 		this.map = map;
-		this.#positionManager = positionManager;
-		
-		//Adding position manager evnet listeners
-		//Op permissions updated
-		positionManager.addEventListener('onPermissionsUpdated', () =>
+
+		//Checking if allow watching position
+		if (watchPosition)
 		{
-			//Update positionWatcher
-			this.#updatePositionWatcher();
-		});
-		//On position updated
-		positionManager.addEventListener('onPositionUpdated', () =>
-		{
-			//Update map position
-			this.#updatePosition(positionManager.mostRecentCoordinates);
-		})
-		//On position not updated
-		positionManager.addEventListener('onPositionNotUpdated', (event) =>
-		{
-			//Getting detail
-			let detail = event.detail;
-			//Getting error
-			let error = detail.error;
-			//Checking error code
-			if (error == GeolocationPositionError.PERMISSION_DENIED)
+			//Creating position manager
+			let positionManager = new PositionManager();
+			
+			this.#positionManager = positionManager;
+			
+			//Adding position manager evnet listeners
+			//Op permissions updated
+			positionManager.addEventListener('onPermissionsUpdated', () =>
 			{
-				//Cannot get location anymore
-				//Update position watcher
+				//Update positionWatcher
 				this.#updatePositionWatcher();
-			}
-			else
+			});
+			//On position updated
+			positionManager.addEventListener('onPositionUpdated', () =>
 			{
-				//Print error
-				console.error(error);
-			}
-		});
-		//Updating position watcher manually
-		this.#updatePositionWatcher();
+				//Update map position
+				this.#updatePosition(positionManager.mostRecentCoordinates);
+			})
+			//On position not updated
+			positionManager.addEventListener('onPositionNotUpdated', (event) =>
+			{
+				//Getting detail
+				let detail = event.detail;
+				//Getting error
+				let error = detail.error;
+				//Checking error code
+				if (error == GeolocationPositionError.PERMISSION_DENIED)
+				{
+					//Cannot get location anymore
+					//Update position watcher
+					this.#updatePositionWatcher();
+				}
+				else
+				{
+					//Print error
+					console.error(error);
+				}
+			});
+			//Updating position watcher manually
+			this.#updatePositionWatcher();
+		}
 	}
 	//Creates a GPX layer
 	loadGpx(gpx)
@@ -95,11 +101,18 @@ class MapManager
 		//Creating xml document
 		let xmlDocument = JAK.XML.createDocument(gpx);
 		//Creating layer
-		let layer = new SMap.Layer.GPX(xmlDocument);
+		let layer = new SMap.Layer.GPX(xmlDocument, null, {maxPoints:500});
 		//Adding layer
 		this.map.addLayer(layer);
 		//Enabling layer
 		layer.enable();
+		//Setting layer
+		this.#gpxLayer = layer;
+	}
+	//Fits GPX to a map
+	fitGpxLayer()
+	{
+		this.#gpxLayer.fit();
 	}
 	//Updates the position
 	#updatePosition(coords)

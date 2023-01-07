@@ -7,13 +7,13 @@
 		Date: 01/06/23 12:41pm
 		Version: 0.0.4.1
 	Updated on
-		Version: 0.0.4.1
+		Version: 0.0.4.3
 
 	Description:
 		Manages the TrackPoints database
 
 	Changes:
-		
+		Version 0.0.4.3 - Return points of segment
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -57,6 +57,17 @@
 			return [
 				$success
 			];
+		}
+		#Returns points with associated segmentID
+		public function getPoints($segmentID)
+		{
+			#Return result
+			return $this->db->getData(
+				'Select * From TrackPoints Where SegmentID = :SegmentID',
+				[
+					':SegmentID' => $segmentID
+				]
+			);
 		}
 	}
 ?>

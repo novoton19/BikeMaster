@@ -9,18 +9,18 @@
 	"icons" :
 	[
 		{
-			"src" : "Icons/icon-144.png",
+			"src" : "Assets/Icons/Application/icon-144.png",
 			"type" : "image/png",
 			"sizes" : "144x144"
 		},
 		{
-			"src" : "Icons/icon-192.png",
+			"src" : "Assets/Icons/Application/icon-192.png",
 			"type" : "image/png",
 			"sizes" : "192x192",
 			"purpose" : "any maskable"
 		},
 		{
-			"src" : "Icons/icon-512.png",
+			"src" : "Assets/Icons/Application/icon-512.png",
 			"type" : "image/png",
 			"sizes" : "512x512"
 		}

@@ -7,7 +7,7 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.4.0.1
+		Version: 0.0.4.3
 
 	Description:
 		Verifies login and returns information about login
@@ -17,6 +17,7 @@
 		Version 0.0.3.2 - Bug fix, support settingsDb, error prevention
 		Version 0.0.3.3 - Correct standards
 		Version 0.0.4.0.1 - Send account information on session timeout
+		Version 0.0.4.3 - Returns success status
 	*/
 	#Whether is being included
 	$isIncluded = count(debug_backtrace());
@@ -53,6 +54,8 @@
 	#Current time
 	$time = time();
 	
+	#Whether succeeded to get information
+	$success = false;
 	#Whether logged in
 	$loggedIn = false;
 	#ReasonID
@@ -77,7 +80,7 @@
 	#Other variables
 	#Session project name
 	$projectName = null;
-	$success = null;
+	$querySuccess = null;
 	$account = null;
 	$accountExists = null;
 	
@@ -100,15 +103,16 @@
 			if ($loginTime < $time and $time < $timeout)
 			{
 				#Trying to get user by ID
-				list($success, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
+				list($querySuccess, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
 				#Checking if success
-				if ($success and $accountExists)
+				if ($querySuccess and $accountExists)
 				{
 					#Valid login
+					$success = true;
 					$loggedIn = true;
 					$reasonID = $reasonIDs->Accepted;
 				}
-				elseif (!$success)
+				elseif (!$querySuccess)
 				{
 					#Database error
 					$reasonID = $reasonIDs->DatabaseError;
@@ -130,14 +134,16 @@
 			else#if ($time >= timeout)
 			{
 				#Timed out
+				$success = true;
 				$reasonID = $reasonIDs->TimedOut;
 				$reason = 'Session timed out';
 				#Trying to get user by ID
-				list($success, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
+				list($querySuccess, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
 			}
 		}
 		else#if (!$status)
 		{
+			$success = true;
 			$reasonID = $reasonIDs->NotLoggedIn;
 			$reason = 'Not logged in';
 		}
@@ -161,6 +167,7 @@
 	}
 	#Result
 	$result = [
+		'success' => $success,
 		'loggedIn' => $loggedIn,
 		'reasonID' => $reasonID,
 		'reason' => $reason,
@@ -198,6 +205,7 @@
 		$projectName,
 		$time,
 		$reasonIDs,
+		$success,
 		$loggedIn,
 		$reasonID,
 		$reason,
@@ -207,7 +215,7 @@
 		$userID,
 		$loginTime,
 		$timeout,
-		$success,
+		$querySuccess,
 		$account,
 		$accountExists,
 		$result

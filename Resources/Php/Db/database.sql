@@ -144,6 +144,9 @@ Insert Into BikeMaster.ReasonIDs (NameID) Values
 	('OutOfRange'),
 	('TooHighSpeed'),
 	('TimeTravel'),
+	('SetDefault'),
+	('Error'),
+	('NotFound'),
 	('NoReasonAvailable');
 /*Settings*/
 Insert Into BikeMaster.Settings (NameID, Value) Values

@@ -7,13 +7,13 @@
 		Date: 01/06/23 12:10pm
 		Version: 0.0.4.1
 	Updated on
-		Version: 0.0.4.1
+		Version: 0.0.4.3
 
 	Description:
 		Manages the Journeys database
 
 	Changes:
-		
+		Version 0.0.4.3 - Get recent journeys from user
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -60,6 +60,53 @@
 			return [
 				$success,
 				$lastInsertedID
+			];
+		}
+		#Returns journey information
+		public function getJourney($journeyID)
+		{
+			#Result
+			return $this->db->getData(
+				'Select * From Journeys Where ID = :ID Limit 1',
+				[
+					':ID' => $journeyID
+				],
+				true
+			);
+		}
+		#Returns journeyIDs of user
+		public function getUserJourneyIDs($userID, $maxTime = null)
+		{
+			#Resulting journeyIDs
+			$journeyIDs = [];
+
+			#Checking if maxTime defined
+			if (is_null($maxTime))
+			{
+				$maxTime = time() * 1000;
+			}
+			#Get journeys
+			list($querySuccess, $queryResult, ) = $this->db->getData(
+				'Select ID From Journeys Where UserID = :UserID And CreationTime < :MaxTime Order By CreationTime Desc Limit 3',
+				[
+					':UserID' => $userID,
+					':MaxTime' => $maxTime
+				]
+			);
+			#Checking if query succeeded
+			if ($querySuccess)
+			{
+				#Get journeyIDs
+				foreach ($queryResult as $key => $data)
+				{
+					#Adding ID
+					array_push($journeyIDs, intval($data['ID']));
+				}
+			}
+			return [
+				$querySuccess,
+				$journeyIDs,
+				!empty($journeyIDs)
 			];
 		}
 	}

@@ -7,13 +7,13 @@
 		Date: 01/06/23 12:40pm
 		Version: 0.0.4.1
 	Updated on
-		Version: 0.0.4.1
+		Version: 0.0.4.3
 
 	Description:
 		Manages the Segments database
 
 	Changes:
-		
+		Version 0.0.4.3 - Return segments from journeyID
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -57,6 +57,17 @@
 				$success,
 				$lastInsertedID
 			];
+		}
+		#Returns segments from journeyID
+		public function getSegments($journeyID)
+		{
+			#Return result
+			return $this->db->getData(
+				'Select * From TrackSegments Where JourneyID = :JourneyID',
+				[
+					':JourneyID' => $journeyID
+				]
+			);
 		}
 	}
 ?>
