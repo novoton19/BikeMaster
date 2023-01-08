@@ -16,6 +16,7 @@ Changes:
 */
 //Path to api
 const userInformationUrl = '../../Api/Social/getUserInformation.php';
+const sendRequestUrl = '../../Api/Social/sendFriendRequest.php';
 //Getting get parameters
 const getParams = new URLSearchParams(window.location.search);
 
@@ -26,6 +27,8 @@ $(document).ready(() =>
 	let userIDElem = $('#UserID');
 	let usernameElem = $('#Username');
 	let registrationDateElem = $('#RegistrationDate');
+	//Friend request button
+	let addFriendButton = $('#AddFriendButton');
 
 	//Getting requested id
 	let userID = getParams.get('id');
@@ -55,4 +58,12 @@ $(document).ready(() =>
 			console.log('Cannot get user information', result);
 		}
 	});
+	addFriendButton.click(function(event)
+	{
+		event.preventDefault();
+		$.post(sendRequestUrl, {receiverID : userID}, function(response)
+		{
+			console.log(response);
+		});
+	})
 });

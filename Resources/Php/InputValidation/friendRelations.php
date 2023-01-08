@@ -1,0 +1,441 @@
+<?php
+	/*
+	Developer: Ondrej Novotny
+	Contact: contact.bike@novotnyondrej.com
+
+	Created on
+		Date: 01/08/23 10:50pm
+		Version: 0.0.5
+	Updated on
+		Version: 0.0.5
+
+	Description:
+		Validation of inputs for any friend relation requests
+
+	Changes:
+
+	*/
+	#Making sure that this script is running independently
+	if (count(debug_backtrace()))
+	{
+		return;
+	}
+	#Require reason IDs
+	require_once(__DIR__.'/../Db/reasonIDsDb.php');
+	#Require UsersDb
+	require_once(__DIR__.'/../Db/usersDb.php');
+	#Require FriendRelationsDb
+	require_once(__DIR__.'/../Db/friendRelations.php');
+
+	#Validation class
+	class FriendRelationsValidation
+	{
+		#Reason IDs
+		private $reasonIDs;
+		#UsersDb
+		private $usersDb;
+		#FriendRelationsDb
+		private $friendRelationsDb;
+		#Constructor
+		public function __construct()
+		{
+			#Creating ReasonIDsDb
+			$this->reasonIDs = new ReasonIDsDb();
+			#Creating UsersDb
+			$this->usersDb = new UsersDb();
+			#Creating FriendRelationsDb
+			$this->friendRelationsDb = new FriendRelationsDb();
+		}
+		#Validates userID
+		public function validateUserID($userID)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Status
+			$success = false;
+			#Whether valid
+			$valid = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Checking if is number
+				if (is_numeric($userID))
+				{
+					#Converting to number
+					$userID = intval($userID);
+					#Getting user
+					list($querySuccess, $user, $userExists) = $this->usersDb->getUserByIDSecure($userID);
+					
+					#Checking if query succeeded
+					if ($querySuccess and $userExists)
+					{
+						#Valid
+						$success = true;
+						$valid = true;
+						$reasonID = $reasonIDs->Accepted;
+					}
+					elseif (!$querySuccess)
+					{
+						#Error
+						$reasonID = $reasonIDs->DatabaseError;
+						$reason = 'Server experienced an error while processing the request (1)';
+					}
+					else#if (!$userExists)
+					{
+						$success = true;
+						$reasonID = $reasonIDs->UserNotFound;
+						$reason = 'User doesn\'t exist';
+					}
+				}
+				elseif (is_null($userID))
+				{
+					#Not set
+					$success = true;
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Not specified';
+				}
+				else#if (!is_numeric($userID))
+				{
+					#Not number
+					$success = true;
+					$reasonID = $reasonIDs->InvalidInputs;
+					$reason = 'Not a number';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
+				'success' => $success,
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates recordID
+		public function validateRecordID($recordID)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Status
+			$success = false;
+			#Whether valid
+			$valid = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Checking if is number
+				if (is_numeric($recordID))
+				{
+					#Converting to number
+					$recordID = intval($recordID);
+					#Getting relation
+					list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByID($recordID);
+					
+					#Checking if query succeeded
+					if ($querySuccess and $relationExists)
+					{
+						#Valid
+						$success = true;
+						$valid = true;
+						$reasonID = $reasonIDs->Accepted;
+					}
+					elseif (!$querySuccess)
+					{
+						#Error
+						$reasonID = $reasonIDs->DatabaseError;
+						$reason = 'Server experienced an error while processing the request (1)';
+					}
+					else#if (!$relationExists)
+					{
+						$success = true;
+						$reasonID = $reasonIDs->NotFound;
+						$reason = 'Relation doesn\'t exist';
+					}
+				}
+				elseif (is_null($recordID))
+				{
+					#Not set
+					$success = true;
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Not specified';
+				}
+				else#if (!is_numeric($recordID))
+				{
+					#Not number
+					$success = true;
+					$reasonID = $reasonIDs->InvalidInputs;
+					$reason = 'Not a number';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
+				'success' => $success,
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Determines whether relation can be created between two users
+		public function canSendRequest($senderID, $receiverID)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Status
+			$success = false;
+			#Whether operation allowed
+			$allowed = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Checking IDs
+				if ($senderID !== $receiverID)
+				{
+					#Getting relation
+					list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByUsers($senderID, $receiverID);
+					#Checking if success
+					if ($querySuccess and !$relationExists)
+					{
+						#Can send request
+						$success = true;
+						$allowed = true;
+						$reasonID = $reasonIDs->Accepted;
+					}
+					elseif (!$querySuccess)
+					{
+						#Error
+						$reasonID = $reasonIDs->DatabaseError;
+						$reason = 'Server experienced an error while processing the request (1)';
+					}
+					else#if ($relationExists)
+					{
+						#Relation already exists
+						$success = true;
+						$reasonID = $reasonIDs->AlreadyExists;
+						$reason = 'Relation already exists';
+					}
+				}
+				else#if ($senderID === $receiverID)
+				{
+					#Cannot send to themselves
+					$success = true;
+					$reasonID = $reasonIDs->NotAllowed;
+					$reason = 'Cannot send friend request to yourself';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				#ReasonIDs not loaded 
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			#Result
+			return [
+				'success' => $success,
+				'allowed' => $allowed,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Whether request can be accepted
+		public function canAcceptOrRefuseRequest($recordID, $receiverID)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Status
+			$success = false;
+			#Whether operation allowed
+			$allowed = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Getting relation
+				list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByID($recordID);
+				#Checking if success
+				if ($querySuccess and $relationExists)
+				{
+					#Getting receiverID
+					$recordReceiverID = intval($relation['ReceiverUserID']);
+					#Checking ID
+					if ($recordReceiverID === $receiverID)
+					{
+						#Getting status
+						$accepted = GeneralFunctions::toBoolean($relation['Accepted']);
+						#Checking if accepted
+						if (!$accepted)
+						{
+							#Can send request
+							$success = true;
+							$allowed = true;
+							$reasonID = $reasonIDs->Accepted;
+						}
+						else#if ($accepted)
+						{
+							$success = true;
+							$reasonID = $reasonIDs->AlreadyExists;
+							$reason = 'Request has already been accepted';
+						}
+					}
+					else#if ($recordReceiverID !== $receiverID)
+					{
+						$success = true;
+						$reasonID = $reasonIDs->DoNotMatch;
+						$reason = 'Request is not meant for this user';
+					}
+				}
+				elseif (!$querySuccess)
+				{
+					#Error
+					$reasonID = $reasonIDs->DatabaseError;
+					$reason = 'Server experienced an error while processing the request (1)';
+				}
+				else#if (!$relationExists)
+				{
+					#Relation already exists
+					$success = true;
+					$reasonID = $reasonIDs->NotFound;
+					$reason = 'Relation doesn\'t exist';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				#ReasonIDs not loaded 
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			#Result
+			return [
+				'success' => $success,
+				'allowed' => $allowed,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		public function canEndRelation($recordID, $userID)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Status
+			$success = false;
+			#Whether operation allowed
+			$allowed = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Getting relation
+				list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByID($recordID);
+				#Checking if success
+				if ($querySuccess and $relationExists)
+				{
+					#Getting senderID
+					$recordSenderID = intval($relation['SenderID']);
+					#Getting receiverID
+					$recordReceiverID = intval($relation['ReceiverUserID']);
+					#Checking ID
+					if ($recordSenderID === $userID or $recordReceiverID === $userID)
+					{
+						#Getting status
+						$accepted = intval($relation['Accepted']);
+						#Checking if accepted
+						if (!$accepted)
+						{
+							#Can send request
+							$success = true;
+							$allowed = true;
+							$reasonID = $reasonIDs->Accepted;
+						}
+						else#if ($accepted)
+						{
+							$success = true;
+							$reasonID = $reasonIDs->AlreadyExists;
+							$reason = 'Request has already been accepted';
+						}
+					}
+					else#if ($recordSenderID !== $userID and $recordReceiverID !== $userID)
+					{
+						$success = true;
+						$reasonID = $reasonIDs->DoNotMatch;
+						$reason = 'User is not partner of this relation';
+					}
+				}
+				elseif (!$querySuccess)
+				{
+					#Error
+					$reasonID = $reasonIDs->DatabaseError;
+					$reason = 'Server experienced an error while processing the request (1)';
+				}
+				else#if (!$relationExists)
+				{
+					#Relation already exists
+					$success = true;
+					$reasonID = $reasonIDs->NotFound;
+					$reason = 'Relation doesn\'t exist';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				#ReasonIDs not loaded 
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			#Result
+			return [
+				'success' => $success,
+				'allowed' => $allowed,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+	}
+?>
