@@ -7,13 +7,14 @@
 		Date: 01/01/23 02:48pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3.1
+		Version: 0.0.4.4
 
 	Description:
 		Class containing functions which execute sql queries on database
 
 	Changes:
 		Version 0.0.3.1 - Add getUserByIDSecure
+		Version 0.0.4.4 - Added function for searching for users and for getting amount of results
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -99,6 +100,40 @@
 				],
 				true
 			);
+		}
+		#Searches for users
+		public function search($username, $page = 0, $limit = 3)
+		{
+			#Return result
+			return $this->db->getData(
+				sprintf('SELECT ID, Username, Email, RegistrationTime From Users Where Username Like :Username Limit %d Offset %d', $limit, $page * $limit),
+				[
+					':Username' => '%'.$username.'%'
+				]
+			);
+		}
+		#Returns amount of search results
+		public function getSearchResultsCount($username)
+		{
+			#Resulting amout
+			$amount = null;
+			#Geting result
+			list($querySuccess, $queryResult, ) = $this->db->getData(
+				'SELECT Count(ID) As Result From Users Where Username Like :Username',
+				[
+					':Username' => '%'.$username.'%'
+				],
+				true
+			);
+			#Checking if query succeeded
+			if ($querySuccess)
+			{
+				$amount = intval($queryResult['Result']);
+			}
+			return [
+				$querySuccess,
+				$amount
+			];
 		}
 	}
 ?>
