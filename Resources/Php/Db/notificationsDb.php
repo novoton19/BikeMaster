@@ -81,16 +81,28 @@
 				]
 			);
 		}
-		#Get unread notifications count
+		#Get notifications count
 		public function getNotificationsCount($targetID)
 		{
-			#Return result
-			return $this->db->getData(
-				'SELECT Count(ID) From Notifications Where TargetUserID = :TargetUserID And Not Viewed',
+			#Amount
+			$amount = null;
+			#Get amount
+			list($querySuccess, $queryResult, ) = $this->db->getData(
+				'SELECT Count(ID) As Result From Notifications Where TargetUserID = :TargetUserID',
 				[
 					':TargetUserID' => $targetID
-				]
+				],
+				true
 			);
+			#Checking if success
+			if ($querySuccess)
+			{
+				$amount = intval($queryResult['Result']);
+			}
+			return [
+				$querySuccess,
+				$amount
+			];
 		}
 		#Get notifications
 		public function getNotifications($targetID, $page = 0, $limit = 5)

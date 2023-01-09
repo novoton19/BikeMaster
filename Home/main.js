@@ -19,6 +19,8 @@ const getActitivitiesUrl = '../Api/getActivities.php';
 //Waiting for document to load
 $(document).ready(() =>
 {
+	//Creating notification manager
+	let notificationManager = new NotificationManager($('#ShowNotificationsButton'), $('#Notifications'));
 	//Getting elements
 	let activitiesElem = $('#Activities');
 	//Getting activities
