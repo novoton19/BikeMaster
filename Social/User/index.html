@@ -6,13 +6,14 @@ Created on
 	Date: 01/05/23 06:33pm
 	Version: 0.0.3.3
 Updated on
-	Version: 0.0.3.3
+	Version: 0.0.5.1
 
 Description:
 	Display user information
 
 Changes:
-
+	Version 0.0.5 - Send friend request button
+	Version 0.0.5.1 - Cancel/Accept/Decline/Unfriend friend buttons
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -62,6 +63,12 @@ Changes:
 
 		</div>
 	</div>
-	<button id="AddFriendButton">Send friend request</button>
+	<div id="Buttons">
+		<button id="AddFriendButton" js-action="../../Api/Social/sendFriendRequest.php">Send friend request</button>
+		<button id="CancelRequestButton" js-action="../../Api/Social/unfriend.php">Cancel send</button>
+		<button id="AcceptRequestButton" js-action="../../Api/Social/respondToFriendRequest.php">Accept friend request</button>
+		<button id="DeclineRequestButton" js-action="../../Api/Social/respondToFriendRequest.php">Decline friend request</button>
+		<button id="UnfriendButton" js-action="../../Api/Social/unfriend.php">Unfriend</button>
+	</div>
 </body>
 </html>

@@ -7,7 +7,7 @@
 		Date: 01/03/23 10:14pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3.3
+		Version: 0.0.5.1
 
 	Description:
 		Login
@@ -16,6 +16,7 @@
 		Version 0.0.3.1 - Set login timeout
 		Version 0.0.3.1.1 - Use ReasonIDs from database
 		Version 0.0.3.3 - Support SettingsDb, correct standards
+		Version 0.0.5.1 - Extend login duration to 12h
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -179,7 +180,7 @@
 			'status' => true,
 			'userID' => intval($accountID),
 			'time' => time(),
-			'timeout' => time() + 3600
+			'timeout' => time() + 43200
 		];
 		#Set success
 		$success = true;

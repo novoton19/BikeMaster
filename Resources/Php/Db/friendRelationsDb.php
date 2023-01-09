@@ -110,8 +110,8 @@
 				]
 			);
 		}
-		#Refuses the request by deleting the record
-		public function refuseRequest($recordID, $userID)
+		#Declines the request by deleting the record
+		public function declineRequest($recordID, $userID)
 		{
 			#Return result
 			return $this->db->getData(

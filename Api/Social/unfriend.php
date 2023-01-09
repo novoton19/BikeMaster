@@ -4,13 +4,13 @@
 	Contact: contact.bike@novotnyondrej.com
 
 	Created on
-		Date: 01/08/23 11:32pm
-		Version: 0.0.5
+		Date: 01/09/23 08:11pm
+		Version: 0.0.5.1
 	Updated on
-		Version: 0.0.5
+		Version: 0.0.5.1
 
 	Description:
-		Send friend request
+		Delete friend relation
 
 	Changes:
 
@@ -48,21 +48,25 @@
 	#Operation reason
 	$operationReason = null;
 
-	#ReceiverID
-	$receiverID = null;
+	#Other user ID
+	$otherUserID = null;
 	#Account ID
 	$id = null;
 	$account = [];
 	
 	#Other variables
 	$querySuccess = null;
+	$queryRelation = null;
+	$queryRelationExists = null;
+	$recordID = null;
+	$endRelationValidation = null;
 	
 	#Received inputs
 	$inputs = [
-		'receiverID' => null
+		'id' => null
 	];
 	$inputReasons = [
-		'receiverID' => null
+		'id' => null
 	];
 
 	#Checking if succeeded to get reasonIDs
@@ -71,20 +75,20 @@
 		#Checking if Post exists
 		if ($_POST)
 		{
-			#Getting ReceiverID
-			$receiverID = GeneralFunctions::getValue($_POST, 'receiverID');
+			#Getting UserID
+			$otherUserID = GeneralFunctions::getValue($_POST, 'id');
 			#Adding ID to inputs
-			$inputs['receiverID'] = $receiverID;
+			$inputs['id'] = $otherUserID;
 
 			#Validating ID
-			$receiverIDValidation = $validation->validateUserID($receiverID);
+			$otherUserIDValidation = $validation->validateUserID($otherUserID);
 			#Adding input reason
-			$inputReasons['receiverID'] = $receiverIDValidation;
+			$inputReasons['id'] = $otherUserIDValidation;
 			#Checking if valid
-			if ($receiverIDValidation['valid'])
+			if ($otherUserIDValidation['valid'])
 			{
 				#Convert to integer
-				$receiverID = intval($receiverID);
+				$otherUserID = intval($otherUserID);
 
 				#Checking if logged in
 				if ($loginStatusResult['loggedIn'])
@@ -93,46 +97,66 @@
 					$account = $loginStatusResult['account'];
 					$id = $account['id'];
 
-					#Checking if can create relation
-					$createRelationValidation = $validation->canSendRequest($id, $receiverID);
-					#Adding operation reason
-					$operationReason = $createRelationValidation;
-					#Checking if valid
-					if ($createRelationValidation['allowed'])
+					#Getting relation
+					list($querySuccess, $queryRelation, $queryRelationExists) = $friendRelationsDb->getRelationByUsers($id, $otherUserID);
+					#Checking if relation exists
+					if ($queryRelationExists)
 					{
-						#Sending a friend request
-						list($querySuccess, , ) = $friendRelationsDb->sendRequest($id, $receiverID);
-						#Checking if succeeded
-						if ($querySuccess)
+						#Getting recordID
+						$recordID = $queryRelation['ID'];
+						#Validating operation
+						$endRelationValidation = $validation->canEndRelation($recordID, $id);
+						#Adding operation reason
+						$operationReason = $endRelationValidation;
+
+						#Checking if valid
+						if ($endRelationValidation['allowed'])
 						{
-							#Success
-							$success = true;
-							$reasonID = $reasonIDs->Accepted;
+							#Ending relation
+							list($querySuccess, , ) = $friendRelationsDb->endRelation($recordID, $id);
+							#Checking if success
+							if ($querySuccess)
+							{
+								#Deleted
+								$success = true;
+								$reasonID = $reasonIDs->Accepted;
+							}
+							else#if (!$querySuccess)
+							{
+								$reasonID = $reasonIDs->DatabaseError;
+								$reason = 'Server experienced an error while processing the request (1)';
+							}
 						}
-						else#if (!$querySuccess)
+						elseif ($endRelationValidation['success'])
 						{
+							#Operation not allowed
+							$reasonID = $reasonIDs->NotAllowed;
+							$reason = 'Operation not allowed';
+						}
+						else#if (!$endRelationValidation['success'])
+						{
+							#Query did not succeed
 							$reasonID = $reasonIDs->DatabaseError;
-							$reason = 'Server experienced an error while processing the request (1)';
+							$reason = 'Server experienced an error while processing the request (2)';
 						}
 					}
-					elseif (!$createRelationValidation['success'])
+					elseif ($querySuccess /* and !$queryRelationExists */)
 					{
-						#Not succeeded
-						$reasonID = $reasonIDs->DatabaseError;
-						$reason = 'Server experienced an error while processing the request (2)';
+						$reasonID = $reasonIDs->NotFound;
+						$reason = 'Relation doesn\'t exist';
 					}
-					else#if (!$createRelationValidation['allowed'])
+					else#if (!$querySuccess)
 					{
-						#Not allowed
-						$reasonID = $reasonIDs->NotAllowed;
-						$reason = 'Cannot send a friend request';
+						#Query did not succeed
+						$reasonID = $reasonIDs->DatabaseError;
+						$reason = 'Server experienced an error while processing the request (3)';
 					}
 				}
 				elseif (!$loginStatusResult['success'])
 				{
 					#Not succeeded to get information
 					$reasonID = $reasonIDs->DatabaseError;
-					$reason = 'Server experienced an error while processing the request (3)';
+					$reason = 'Server experienced an error while processing the request (4)';
 				}
 				else#if (!$loginStatusResult['loggedIn'])
 				{
@@ -143,7 +167,7 @@
 			elseif (!$receiverIDValidation['success'])
 			{
 				$reasonID = $reasonIDs->DatabaseError;
-				$reason = 'Server experienced an error while processing the request (4)';
+				$reason = 'Server experienced an error while processing the request (5)';
 			}
 			else#if (!$receiverIDValidation['valid'])
 			{
@@ -161,7 +185,7 @@
 	{
 		#Cannot get reason IDs
 		$reasonID = -1;
-		$reason = 'Server experienced an error while processing the request (5)';
+		$reason = 'Server experienced an error while processing the request (6)';
 	}
 	#Checking if reasonID exists
 	if (is_null($reasonID))
@@ -180,12 +204,21 @@
 	#Unset unnecessary variables
 	unset(
 		$reasonIDs,
-		$usersDb,
+		$friendRelationsDb,
+		$validation,
 		$success,
 		$reasonID,
 		$reason,
-		$username,
+		$operationReason,
+		$otherUserID,
+		$id,
 		$account,
-		$querySuccess
+		$querySuccess,
+		$queryRelation,
+		$queryRelationExists,
+		$recordID,
+		$endRelationValidation,
+		$inputs,
+		$inputReasons
 	);
 ?>

@@ -200,6 +200,61 @@
 				'reason' => $reason
 			];
 		}
+		#Validates response type
+		public function validateResponseType($responseType)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Status
+			$success = false;
+			#Whether operation says to accept
+			$accept = false;
+			#Whether valid
+			$valid = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				$success = true;
+				#Checking responseType
+				if ($responseType === 'accept' or $responseType === 'decline')
+				{
+					$valid = true;
+					$accept = $responseType === 'accept';
+					$reasonID = $reasonIDs->Accepted;
+				}
+				elseif (is_null($responseType))
+				{
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Not specified';
+				}
+				else#if ($responseType !== 'accept' and $responseType !== 'decline')
+				{
+					$reasonID = $reasonIDs->InvalidInputs;
+					$reason = 'Not valid';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (1)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
+				'success' => $success,
+				'valid' => $valid,
+				'accept' => $accept,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
 		#Determines whether relation can be created between two users
 		public function canSendRequest($senderID, $receiverID)
 		{
@@ -270,8 +325,8 @@
 				'reason' => $reason
 			];
 		}
-		#Whether request can be accepted
-		public function canAcceptOrRefuseRequest($recordID, $receiverID)
+		#Whether request can be accepted or declined
+		public function canRespondToRequest($recordID, $receiverID)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
@@ -296,7 +351,7 @@
 					if ($recordReceiverID === $receiverID)
 					{
 						#Getting status
-						$accepted = GeneralFunctions::toBoolean($relation['Accepted']);
+						$accepted = boolval($relation['Accepted']);
 						#Checking if accepted
 						if (!$accepted)
 						{
@@ -373,28 +428,15 @@
 				if ($querySuccess and $relationExists)
 				{
 					#Getting senderID
-					$recordSenderID = intval($relation['SenderID']);
+					$recordSenderID = intval($relation['SenderUserID']);
 					#Getting receiverID
 					$recordReceiverID = intval($relation['ReceiverUserID']);
 					#Checking ID
 					if ($recordSenderID === $userID or $recordReceiverID === $userID)
 					{
-						#Getting status
-						$accepted = intval($relation['Accepted']);
-						#Checking if accepted
-						if (!$accepted)
-						{
-							#Can send request
-							$success = true;
-							$allowed = true;
-							$reasonID = $reasonIDs->Accepted;
-						}
-						else#if ($accepted)
-						{
-							$success = true;
-							$reasonID = $reasonIDs->AlreadyExists;
-							$reason = 'Request has already been accepted';
-						}
+						$success = true;
+						$allowed = true;
+						$reasonID = $reasonIDs->Accepted;
 					}
 					else#if ($recordSenderID !== $userID and $recordReceiverID !== $userID)
 					{
