@@ -7,13 +7,13 @@
 		Date: 01/08/23 10:32pm
 		Version: 0.0.5
 	Updated on
-		Version: 0.0.5
+		Version: 0.0.5.2
 
 	Description:
 		Functions managing friend relations
 
 	Changes:
-
+		Version 0.0.5.2 - Get IDs of friends
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -84,6 +84,17 @@
 				$queryResult,
 				$amount
 			];
+		}
+		#Returns friend accounts
+		public function getFriends($userID, $page = 0, $limit = 3)
+		{
+			#Return result
+			return $this->db->getData(
+				sprintf('SELECT If(SenderUserID = :UserID, ReceiverUserID, SenderUserID) As ID From FriendRelations Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) And Accepted Order By AcceptTime Limit %d Offset %d', $limit, $page * $limit),
+				[
+					':UserID' => $userID
+				]
+			);
 		}
 		#Creates a new friend relation request
 		public function sendRequest($senderID, $receiverID)

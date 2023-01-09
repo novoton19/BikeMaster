@@ -7,7 +7,7 @@
 		Date: 01/01/23 02:48pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.4.4
+		Version: 0.0.5.2
 
 	Description:
 		Class containing functions which execute sql queries on database
@@ -15,6 +15,7 @@
 	Changes:
 		Version 0.0.3.1 - Add getUserByIDSecure
 		Version 0.0.4.4 - Added function for searching for users and for getting amount of results
+		Version 0.0.5.2 - Added friends count
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -57,7 +58,7 @@
 		{
 			#Return result
 			return $this->db->getData(
-				'SELECT ID, Username, Email, RegistrationTime From Users Where ID = :ID Limit 1',
+				'SELECT ID, Username, Email, RegistrationTime, (Select Count(FriendRelations.ID) From FriendRelations Where (Users.ID = SenderUserID Or Users.ID = ReceiverUserID) And Accepted) As FriendsCount From Users Where ID = :ID Limit 1',
 				[
 					':ID' => $id
 				],

@@ -6,7 +6,7 @@ Created on
 	Date: 01/05/23 06:33pm
 	Version: 0.0.3.3
 Updated on
-	Version: 0.0.5.1
+	Version: 0.0.5.2
 
 Description:
 	Display user information
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.0.5 - Send friend request button
 	Version 0.0.5.1 - Cancel/Accept/Decline/Unfriend friend buttons
+	Version 0.0.5.2 - Show friends count and list
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -62,6 +63,23 @@ Changes:
 		<div id="RegistrationDate">
 
 		</div>
+	</div>
+	<div>
+		<div>
+			Friends count
+		</div>
+		<div id="FriendsCount">
+
+		</div>
+	</div>
+	<div>
+		<div>
+			Friends list
+		</div>
+		<div id="FriendsList">
+	
+		</div>
+		<button id="MoreFriendsButton" js-action="../../Api/Social/getFriends.php">Load more</button>
 	</div>
 	<div id="Buttons">
 		<button id="AddFriendButton" js-action="../../Api/Social/sendFriendRequest.php">Send friend request</button>

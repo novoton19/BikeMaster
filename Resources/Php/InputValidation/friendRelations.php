@@ -7,13 +7,13 @@
 		Date: 01/08/23 10:50pm
 		Version: 0.0.5
 	Updated on
-		Version: 0.0.5
+		Version: 0.0.5.1
 
 	Description:
 		Validation of inputs for any friend relation requests
 
 	Changes:
-
+		Version 0.0.5.1 - validateResponseType, Bug fixes
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))

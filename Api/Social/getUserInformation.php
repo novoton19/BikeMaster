@@ -7,13 +7,13 @@
 		Date: 01/05/23 06:42pm
 		Version: 0.0.3.3
 	Updated on
-		Version: 0.0.3.3
+		Version: 0.0.5.2
 
 	Description:
 		Get specified account information
 
 	Changes:
-
+		Version 0.0.5.2 - Added friends count
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -103,9 +103,10 @@
 		'success' => $success,
 		'account' => [
 			'id' => $id,
-			'username' => GeneralFunctions::getValue($account, 'Username'),
-			#'email' => GeneralFunctions::getValue($account, 'Email'),
-			'registrationTime' => intval(GeneralFunctions::getValue($account, 'RegistrationTime'))
+			'username' => $account['Username'],
+			#'email' => $account['Email'],
+			'registrationTime' => intval($account['RegistrationTime']),
+			'friendsCount' => intval($account['FriendsCount'])
 		],
 		'inputs' => $inputs,
 		'reasonID' => $reasonID,

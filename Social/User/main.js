@@ -6,7 +6,7 @@ Created on
 	Date: 01/05/23 06:35pm
 	Version: 0.0.3.3
 Updated on
-	Version: 0.0.5.1
+	Version: 0.0.5.2
 
 Description:
 	Finds an account and displays information
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.0.5 - Send friend request
 	Version 0.0.5.1 - Cancel/Accept/Decline/Unfriend friend actions
+	Version 0.0.5.2 - Show friends count and list
 */
 //Path to api
 const userInformationUrl = '../../Api/Social/getUserInformation.php';
@@ -26,24 +27,68 @@ const getParams = new URLSearchParams(window.location.search);
 $(document).ready(() =>
 {
 	//Getting elements
-	let userIDElem = $('#UserID');
-	let usernameElem = $('#Username');
-	let registrationDateElem = $('#RegistrationDate');
+	const userIDElem = $('#UserID');
+	const usernameElem = $('#Username');
+	const registrationDateElem = $('#RegistrationDate');
+	const friendsCountElem = $('#FriendsCount');
+	//Getting friends list
+	const friendsList = $('#FriendsList');
+	const moreFriendsButton = $('#MoreFriendsButton');
 	//Getting friend relation buttons
-	let addFriendButton = $('#AddFriendButton');
-	let cancelRequestButton = $('#CancelRequestButton');
-	let acceptRequestButton = $('#AcceptRequestButton');
-	let declineRequestButton = $('#DeclineRequestButton');
-	let unfriendButton = $('#UnfriendButton');
+	const addFriendButton = $('#AddFriendButton');
+	const cancelRequestButton = $('#CancelRequestButton');
+	const acceptRequestButton = $('#AcceptRequestButton');
+	const declineRequestButton = $('#DeclineRequestButton');
+	const unfriendButton = $('#UnfriendButton');
 
 	//Getting requested id
-	let requestedUserID = parseInt(getParams.get('id'));
+	const requestedUserID = parseInt(getParams.get('id'));
 	let relation = {
 		exists : false,
 		accepted : false,
 		senderID : null,
 		receiverID : null
 	};
+
+	//Current friends page
+	let friendsPage = 0;
+	//Checking if has next friends page
+	let hasNextFriendsPage = true;
+	//Loads next friends page
+	function loadNextFriendsPage()
+	{
+		if (hasNextFriendsPage)
+		{
+			//Sending request
+			$.get(moreFriendsButton.attr('js-action'), {id : requestedUserID, page : friendsPage}, function(response)
+			{
+				//Checking if success
+				if (response.success)
+				{
+					//Getting friends
+					let friends = response.friends;
+					//Getting total pages
+					let totalPages = response.totalPages;
+
+					//Next page
+					friendsPage++;
+					//Checking if there is any other page
+					if (friendsPage + 1 > totalPages)
+					{
+						//No more pages
+						moreFriendsButton.hide();
+						hasNextPage = false;
+					}
+
+					//Adding friends
+					friends.forEach(friend =>
+					{
+						friendsList.append('<div>' + `<a href=\"?id=${friend.id}\">${friend.username}</a>` + '</div>');
+					});
+				}
+			});
+		}
+	}
 
 	//Refreshes the buttons
 	function refreshButtons()
@@ -119,6 +164,9 @@ $(document).ready(() =>
 			userIDElem.text(account.id);
 			usernameElem.text(account.username);
 			registrationDateElem.text(registrationDate.toLocaleString());
+			friendsCountElem.text(account.friendsCount);
+			//Load friends page
+			loadNextFriendsPage();
 		}
 		else
 		{
@@ -128,6 +176,14 @@ $(document).ready(() =>
 	});
 	//Requesting friend relation
 	loadRelation();
+	//Load more friends
+	moreFriendsButton.click(function(event)
+	{
+		//Preventing default
+		event.preventDefault();
+		//Loading next page
+		loadNextFriendsPage();
+	})
 	//Add friend
 	addFriendButton.click(function(event)
 	{
@@ -217,5 +273,5 @@ $(document).ready(() =>
 				loadRelation();
 			}
 		});
-	})
+	});
 });
