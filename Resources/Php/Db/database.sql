@@ -48,6 +48,51 @@ Create Table BikeMaster.FriendRelations(
     Foreign Key (ReceiverUserID)
     	References BikeMaster.Users(ID)
 );
+/*Table of notification types*/
+Create Table BikeMaster.NotificationTypes(
+  	ID int
+    	Unsigned
+    	Primary Key 
+    	Auto_Increment 
+    	Not Null,
+    NameID varchar(24)
+		Unique
+    	Not Null
+);
+/*Table of notifications*/
+Create Table BikeMaster.Notifications(
+	ID int
+    	Unsigned
+    	Primary Key 
+    	Auto_Increment 
+    	Not Null,
+	TypeID int
+		Unsigned
+		Not Null,
+	TargetUserID int
+		Unsigned
+		Not Null,
+	TriggerUserID int
+		Unsigned
+		Default Null,
+	Viewed tinyint(1)
+		Default 0
+		Not Null,
+	TriggerTime int
+		Unsigned
+		Default Unix_Timestamp()
+		Not Null,
+	ViewTime int
+		Unsigned
+		Default Null,
+
+	Foreign Key (TypeID)
+		References BikeMaster.NotificationTypes(ID),
+	Foreign Key (TargetUserID)
+		References BikeMaster.Users(ID),
+	Foreign Key (TriggerUserID)
+		References BikeMaster.Users(ID)
+);
 /*Table of journeys*/
 Create Table BikeMaster.Journeys(
 	ID int 
@@ -143,6 +188,11 @@ Create Table BikeMaster.Settings(
 );
 
 /*Inserts*/
+/*NotificationTypes*/
+Insert Into BikeMaster.NotificationTypes (NameID) Values
+	('SendRequest'),
+	('AcceptRequest'),
+	('Unfriend');
 /*ReasonIDs*/
 Insert Into BikeMaster.ReasonIDs (NameID) Values
 	('DatabaseError'),

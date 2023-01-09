@@ -7,13 +7,13 @@
 		Date: 01/09/23 08:11pm
 		Version: 0.0.5.1
 	Updated on
-		Version: 0.0.5.1
+		Version: 0.0.5.3
 
 	Description:
 		Accept friend relation
 
 	Changes:
-
+		Version 0.0.5.3 - Send notification
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -24,6 +24,10 @@
 	header('Content-Type: application/json; charset=utf-8');
 	#Require reason IDs
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
+	#Require notificationTypesDb
+	require_once(__DIR__.'/../../Resources/Php/Db/notificationTypesDb.php');
+	#Require notificationsDb
+	require_once(__DIR__.'/../../Resources/Php/Db/notificationsDb.php');
 	#Require FriendRelationsDb
 	require_once(__DIR__.'/../../Resources/Php/Db/friendRelationsDb.php');
 	#Require FriendRelationsValidation
@@ -35,6 +39,10 @@
 	
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
+	#Creating NotificationTypesDb
+	$notificationTypes = new NotificationTypesDb();
+	#Creating NotificationsDb
+	$notificationsDb = new NotificationsDb();
 	#Creating FriendRelationsDb
 	$friendRelationsDb = new FriendRelationsDb();
 	#Creating FriendRelationsValidation
@@ -73,7 +81,7 @@
 	];
 
 	#Checking if succeeded to get reasonIDs
-	if ($reasonIDs->success)
+	if ($reasonIDs->success and $notificationTypes->success)
 	{
 		#Checking if Post exists
 		if ($_POST)
@@ -139,6 +147,12 @@
 								#Responded
 								$success = true;
 								$reasonID = $reasonIDs->Accepted;
+								#Checking if request accepted
+								if ($responseTypeValidation['accept'])
+								{
+									#Send notification
+									$notificationsDb->create($notificationTypes->AcceptRequest, $otherUserID, $id);
+								}
 							}
 							else#if (!$querySuccess)
 							{
@@ -200,10 +214,16 @@
 			$reason = 'No user specified';
 		}
 	}
-	else#if (!$reasonIDs->success)
+	elseif (!$reasonIDs->success)
 	{
 		#Cannot get reason IDs
 		$reasonID = -1;
+		$reason = 'Server experienced an error while processing the request (5)';
+	}
+	else#if (!$notificationTypes->success)
+	{
+		#Cannot get notificationTypes
+		$reasonID = $reasonIDs->DatabaseError;
 		$reason = 'Server experienced an error while processing the request (6)';
 	}
 	#Checking if reasonID exists
@@ -223,6 +243,8 @@
 	#Unset unnecessary variables
 	unset(
 		$reasonIDs,
+		$notificationTypes,
+		$notificationsDb,
 		$friendRelationsDb,
 		$validation,
 		$success,

@@ -7,13 +7,13 @@
 		Date: 01/09/23 08:11pm
 		Version: 0.0.5.1
 	Updated on
-		Version: 0.0.5.1
+		Version: 0.0.5.3
 
 	Description:
 		Delete friend relation
 
 	Changes:
-
+		Version 0.0.5.3 - Send notification
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -24,6 +24,10 @@
 	header('Content-Type: application/json; charset=utf-8');
 	#Require reason IDs
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
+	#Require notificationTypesDb
+	require_once(__DIR__.'/../../Resources/Php/Db/notificationTypesDb.php');
+	#Require notificationsDb
+	require_once(__DIR__.'/../../Resources/Php/Db/notificationsDb.php');
 	#Require FriendRelationsDb
 	require_once(__DIR__.'/../../Resources/Php/Db/friendRelationsDb.php');
 	#Require FriendRelationsValidation
@@ -35,6 +39,10 @@
 	
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
+	#Creating NotificationTypesDb
+	$notificationTypes = new NotificationTypesDb();
+	#Creating NotificationsDb
+	$notificationsDb = new NotificationsDb();
 	#Creating FriendRelationsDb
 	$friendRelationsDb = new FriendRelationsDb();
 	#Creating FriendRelationsValidation
@@ -59,6 +67,8 @@
 	$queryRelation = null;
 	$queryRelationExists = null;
 	$recordID = null;
+	$accepted = null;
+	$senderID = null;
 	$endRelationValidation = null;
 	
 	#Received inputs
@@ -70,7 +80,7 @@
 	];
 
 	#Checking if succeeded to get reasonIDs
-	if ($reasonIDs->success)
+	if ($reasonIDs->success and $notificationTypes->success)
 	{
 		#Checking if Post exists
 		if ($_POST)
@@ -104,6 +114,11 @@
 					{
 						#Getting recordID
 						$recordID = $queryRelation['ID'];
+						#Getting relation status
+						$accepted = boolval($queryRelation['Accepted']);
+						#Getting senderID
+						$senderID = intval($queryRelation['SenderUserID']);
+
 						#Validating operation
 						$endRelationValidation = $validation->canEndRelation($recordID, $id);
 						#Adding operation reason
@@ -120,6 +135,21 @@
 								#Deleted
 								$success = true;
 								$reasonID = $reasonIDs->Accepted;
+								#Checking if relation was accepted
+								if ($accepted)
+								{
+									#Send notification about unfriend
+									$notificationsDb->create($notificationTypes->Unfriend, $otherUserID, $id);
+								}
+								else#if (!$accepted)
+								{
+									#Checking if current user sent the request
+									if ($senderID === $id)
+									{
+										#Delete notification if possible
+										$notificationsDb->delete($notificationTypes->SendRequest, $otherUserID, $id);
+									}
+								}
 							}
 							else#if (!$querySuccess)
 							{
@@ -181,11 +211,17 @@
 			$reason = 'No user specified';
 		}
 	}
-	else#if (!$reasonIDs->success)
+	elseif (!$reasonIDs->success)
 	{
 		#Cannot get reason IDs
 		$reasonID = -1;
 		$reason = 'Server experienced an error while processing the request (6)';
+	}
+	else#if (!$notificationTypes->success)
+	{
+		#Cannot get notificationTypes
+		$reasonID = $reasonIDs->DatabaseError;
+		$reason = 'Server experienced an error while processing the request (7)';
 	}
 	#Checking if reasonID exists
 	if (is_null($reasonID))
@@ -204,6 +240,8 @@
 	#Unset unnecessary variables
 	unset(
 		$reasonIDs,
+		$notificationTypes,
+		$notificationsDb,
 		$friendRelationsDb,
 		$validation,
 		$success,
@@ -217,6 +255,8 @@
 		$queryRelation,
 		$queryRelationExists,
 		$recordID,
+		$accepted,
+		$senderID,
 		$endRelationValidation,
 		$inputs,
 		$inputReasons
