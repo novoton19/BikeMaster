@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:09pm
 	Version: 0.0.2.3.5
 Updated on
-	Version: 0.0.4
+	Version: 0.0.5.4.1
 
 Description:
 	Responsible for Journey Mode location tracking and backing up
@@ -16,6 +16,7 @@ Changes:
 	Version 0.0.2.6 - Support OOP positionManager
 	Version 0.0.2.7 - Create custom positionManager on new Journey
 	Version 0.0.4 - Add Segment
+	Version 0.0.5.4.1 - Bux fix, added event call on track updated
 */
 //Journey Mode statuses
 const jmStatuses = {
@@ -114,6 +115,8 @@ class Journey extends EventTarget
 			let lastSegment = this.segments[this.segments.length - 1];
 			//Adding point
 			lastSegment.addPoint(new TrackPoint(positionManager.mostRecentPosition));
+			//Calling on track changed event
+			this.dispatchEvent(this.#trackChangedEvent);
 		})
 		//On position not updated
 		positionManager.addEventListener('onPositionNotUpdated', (event) =>

@@ -24,6 +24,7 @@ Changes:
 	Version 0.0.2.7 - Added MapManager support
 	Version 0.0.4 - Send api request to save journey
 	Version 0.0.4.2 - Display track on the map
+	Version 0.0.5.4.1 - Unload gpx on track delete
 */
 //Api url
 const journeyApiUrl = '../Api/Journey/save.php';
@@ -218,5 +219,9 @@ $(document).ready(function()
 		});
 	});
 	//On delete button pressed
-	$(deleteButton).click(() => journeyModeManager.createNewJourney());
+	$(deleteButton).click(() =>
+	{
+		journeyModeManager.createNewJourney();
+		mapManager.unloadGpx();
+	});
 });

@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.7
 Updated on
-	Version: 0.0.4.3
+	Version: 0.0.5.4.1
 
 Description:
 	Loads a map, displays current location on a map
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.0.4.2 - Show track on a map
 	Version 0.0.4.3 - Option not to watch position
+	Version 0.0.5.4.1 - Add unload gpx function
 */
 //Map manager
 class MapManager
@@ -97,6 +98,7 @@ class MapManager
 		{
 			//Removing layer
 			this.map.removeLayer(this.#gpxLayer);
+			this.#gpxLayer = undefined;
 		}
 		//Creating xml document
 		let xmlDocument = JAK.XML.createDocument(gpx);
@@ -113,6 +115,17 @@ class MapManager
 	fitGpxLayer()
 	{
 		this.#gpxLayer.fit();
+	}
+	//Unloads gpx
+	unloadGpx()
+	{
+		//Checking if gpx layer exists
+		if (this.#gpxLayer !== undefined)
+		{
+			//Removing layer
+			this.map.removeLayer(this.#gpxLayer);
+			this.#gpxLayer = undefined;
+		}
 	}
 	//Updates the position
 	#updatePosition(coords)
