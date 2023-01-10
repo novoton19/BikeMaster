@@ -231,12 +231,11 @@ Insert Into BikeMaster.ReasonIDs (NameID) Values
 /*Settings*/
 Insert Into BikeMaster.Settings (NameID, Value) Values
 	('ProjectName', 'BikeMaster'),
-	('MaximumAccuracy', '9999'),
+	('MaximumAccuracy', '150'),
 	/*Minimum altitude: https://www.universetoday.com/15027/lowest-point-on-earth/*/
 	('MinimumAltitude', '-420'),
 	/*Maximum altitude: https://www.britannica.com/place/Mount-Everest*/
 	('MaximumAltitude', '8849'),
-	('MinimumAltitudeAccuracy', '0'),
 	('MaximumAltitudeAccuracy', '500'),
 	/*Minimum time: First time application introduced (1672948580000), https://www.unixtimestamp.com/
 	Actually, it's not necessary to keep minimum time to application start in case of data from other source

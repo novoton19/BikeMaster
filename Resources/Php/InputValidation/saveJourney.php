@@ -255,7 +255,7 @@
 			$settingsDb = $this->settingsDb;
 
 			#Getting minimum altitude accuracy
-			$minimumAccuracy = intval($settingsDb->MinimumAltitudeAccuracy);
+			$minimumAccuracy = 0;
 			#Getting maximum altitude
 			$maximumAccuracy = intval($settingsDb->MaximumAltitudeAccuracy);
 
