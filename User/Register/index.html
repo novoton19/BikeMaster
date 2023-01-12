@@ -6,7 +6,7 @@ Created on
 	Date: 01/01/23 02:48pm
 	Version: 0.0.3
 Updated on
-	Version: 0.0.3.3
+	Version: 0.1
 
 Description:
 	Page for account registration
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.0.3.2.2 - Update path to icons, added back and login button
 	Version 0.0.3.3 - Update Api path
+	Version 0.1 - Added UIkit, bunch of javascript managers
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -28,46 +29,95 @@ Changes:
 	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../../app.webmanifest">
-	<link rel="stylesheet" href="main.css">
+	<!--UIKit-->
+	<link rel="stylesheet" href="../../Resources/Css/UIKit/uikit.min.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
 
-	<title>BikeMaster</title>
+	<title>Sign up - BikeMaster</title>
+	<!--UIKit icons-->
+	<script src="../../Resources/Javascript/UIKit/uikit.min.js"></script>
+	<script src="../../Resources/Javascript/UIKit/uikit-icons.min.js"></script>
 	<!--jQuery-->
 	<script src="../../jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="../../registerServiceWorker.js"></script>
+	<!--Loading NetworkManager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Loading TopbarManager-->
+	<script src="../../Resources/Javascript/Application/topbarManager.js"></script>
+	<!--Response manager-->
+	<script src="../../Resources/Javascript/Application/responseManager.js"></script>
+	<!--Content manager-->
+	<script src="../../Resources/Javascript/Application/contentManager.js"></script>	
 	<!--Loading Javascript for this page-->
 	<script src="main.js"></script>
 </head>
 <body>
-	<a href="../../">Back to homepage</a>
-	<a href="../Login/">Log in</a>
-	<form id="RegistrationForm" method="post" js-action="../../Api/User/register.php">
-		<div id="Reason">
-
+	<div id="bodyWrapper" class="uk-container uk-container-medium uk-margin-top">
+		<div id="header">
+			<h1 class="uk-heading-small uk-padding-small">
+				Sign up
+			</h1>
+			<div class="uk-alert-primary uk-padding-small" uk-alert>
+				<!--<a class="uk-alert-close" uk-close></a>-->
+				<span>
+					Already have an account yet?
+				</span>
+				<a href="../Login/" class="uk-button uk-button-primary uk-button-small uk-margin-small-left">
+					Sign in
+				</a>
+			</div>
 		</div>
-		<div>
-			<label for="Email"> E-mail: </label>
-			<input id="Email" type="email" name="email" placeholder="Your e-mail">
-			<label for="Email" id="EmailReason"></label>
+		<div id="content" class="uk-inline uk-width-1-1">
+			<div class="uk-flex uk-flex-center">
+				<form id="registrationForm" method="post" js-action="../../Api/User/register.php" class="uk-padding-small uk-form-stacked">
+					<div class="formReason uk-hidden" uk-alert>
+						
+					</div>
+					<div class="uk-margin-small">
+						<label for="email" class="uk-form-label">
+							E-mail:
+						</label>
+						<div class="uk-form-controls uk-inline">
+							<span class="uk-form-icon" uk-icon="mail"></span>
+							<input id="email" type="text" name="email" placeholder="E-mail" class="uk-input" autocomplete>
+						</div>
+					</div>
+					<div class="uk-margin-small">
+						<label for="username" class="uk-form-label">
+							Username:
+						</label>
+						<div class="uk-form-controls uk-inline">
+							<span class="uk-form-icon" uk-icon="hashtag"></span>
+							<input id="username" type="text" name="username" placeholder="Username" class="uk-input" autocomplete>
+						</div>
+					</div>
+					<div class="uk-margin-small">
+						<label for="password" class="uk-form-label">
+							Password:
+						</label>
+						<div class="uk-flex uk-flex-column">
+							<div class="uk-form-controls uk-inline">
+								<span class="uk-form-icon" uk-icon="icon: lock"></span>
+								<input id="password" type="password" name="password" placeholder="Password" class="uk-input">
+							</div>
+							<div class="uk-form-controls uk-inline uk-margin-small-top">
+								<span class="uk-form-icon" uk-icon="icon: lock"></span>
+								<input id="passwordConfirmation" type="password" name="passwordConfirmation" placeholder="Confirm password" class="uk-input">
+							</div>
+						</div>
+					</div>
+					<div>
+						<button id="submitButton" class="uk-button uk-button-default">
+							Sign up
+						</button>
+					</div>
+				</form>
+			</div>
 		</div>
-		<div>
-			<label for="Username"> Username: </label>
-			<input id="Username" type="text" name="username" placeholder="Your username">
-			<label for="Username" id="UsernameReason"></label>
+		<div id="footer" class="uk-margin">
+			
 		</div>
-		<div>
-			<label for="Password"> Password: </label>
-			<input id="Password" type="password" name="password" placeholder="Password">
-			<label for="Password" id="PasswordReason"></label>
-		</div>
-		<div>
-			<input id="PasswordConfirmation" type="password" name="passwordConfirmation" placeholder="Confirm password">
-			<label for="PasswordConfirmation" id="PasswordConfirmationReason"></label>
-		</div>
-		<div>
-			<input id="SubmitButton" type="submit" name="submitButton">
-			<label for="SubmitButton" id="SubmitButtonReason"></label>
-		</div>
-	</form>
+	</div>
 </body>
 </html>

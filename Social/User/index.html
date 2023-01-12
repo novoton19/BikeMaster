@@ -6,7 +6,7 @@ Created on
 	Date: 01/05/23 06:33pm
 	Version: 0.0.3.3
 Updated on
-	Version: 0.0.5.2
+	Version: 0.1
 
 Description:
 	Display user information
@@ -15,6 +15,7 @@ Changes:
 	Version 0.0.5 - Send friend request button
 	Version 0.0.5.1 - Cancel/Accept/Decline/Unfriend friend buttons
 	Version 0.0.5.2 - Show friends count and list
+	Version 0.1 - Added UIkit, bunch of javascript managers
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -29,17 +30,30 @@ Changes:
 	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../../app.webmanifest">
+	<!--UIKit-->
+	<link rel="stylesheet" href="../../Resources/Css/UIKit/uikit.min.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
 
-	<title>BikeMaster - View Account</title>
+	<title>View Account - BikeMaster</title>
+	<!--UIKit icons-->
+	<script src="../../Resources/Javascript/UIKit/uikit.min.js"></script>
+	<script src="../../Resources/Javascript/UIKit/uikit-icons.min.js"></script>
 	<!--jQuery-->
 	<script src="../../jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="../../registerServiceWorker.js"></script>
+	<!--Loading NetworkManager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Loading TopbarManager-->
+	<script src="../../Resources/Javascript/Application/topbarManager.js"></script>
+	<!--Response manager-->
+	<script src="../../Resources/Javascript/Application/responseManager.js"></script>
+	<!--Content manager-->
+	<script src="../../Resources/Javascript/Application/contentManager.js"></script>	
 	<!--Loading Javascript for this page-->
 	<script src="main.js"></script>
 </head>
 <body>
-	<a href="../../">Back to homepage</a>
 	<div>
 		<div>
 			User ID

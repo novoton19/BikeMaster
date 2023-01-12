@@ -3,16 +3,16 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 01/05/23 06:19pm
-	Version: 0.0.3.2.2
+	Date: 01/11/23 10:07am
+	Version: 0.1
 Updated on
-	Version: 0.0.1
+	Version: 0.1
 
 Description:
-	Page informing user about successful registration
+	Page for account logout
 
 Changes:
-	Version 0.1 - Added UIkit, bunch of javascript managers
+	
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -30,8 +30,8 @@ Changes:
 	<!--UIKit-->
 	<link rel="stylesheet" href="../../Resources/Css/UIKit/uikit.min.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
-
-	<title>Successful sign up - BikeMaster</title>
+	
+	<title>Sign out - BikeMaster</title>
 	<!--UIKit icons-->
 	<script src="../../Resources/Javascript/UIKit/uikit.min.js"></script>
 	<script src="../../Resources/Javascript/UIKit/uikit-icons.min.js"></script>
@@ -43,8 +43,8 @@ Changes:
 	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
 	<!--Loading TopbarManager-->
 	<script src="../../Resources/Javascript/Application/topbarManager.js"></script>
-	<!--Response manager-->
-	<script src="../../Resources/Javascript/Application/responseManager.js"></script>	
+	<!--Loading SearchManager-->
+	<script src="../../Resources/Javascript/Application/searchManager.js"></script>
 	<!--Loading Javascript for this page-->
 	<script src="main.js"></script>
 </head>
@@ -52,23 +52,24 @@ Changes:
 	<div id="bodyWrapper" class="uk-container uk-container-medium uk-margin-top">
 		<div id="header">
 			<h1 class="uk-heading-small uk-padding-small">
-				Sign up successful
+				Sign out
 			</h1>
 			<div class="uk-alert-primary uk-padding-small" uk-alert>
-				<!--<a class="uk-alert-close" uk-close></a>-->
 				<span>
-					You have been successfully registrered
+					You are about to sign out
 				</span>
-				<a href="../Login/" class="uk-button uk-button-primary uk-button-small uk-margin-small-left">
-					Sign in
-				</a>
 			</div>
 		</div>
-		<div id="content" class="uk-inline uk-width-1-1">
-			
+		<div id="content">
+			<div class="formReason uk-hidden" uk-alert>
+
+			</div>
+			<button id="signoutButton" class="uk-button uk-button-default" js-action="../../Api/User/logout.php">
+				Sign out
+			</button>
 		</div>
 		<div id="footer" class="uk-margin">
-			
+
 		</div>
 	</div>
 </body>

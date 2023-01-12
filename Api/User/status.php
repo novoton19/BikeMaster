@@ -7,7 +7,7 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.0.4.3
+		Version: 0.1
 
 	Description:
 		Verifies login and returns information about login
@@ -18,6 +18,7 @@
 		Version 0.0.3.3 - Correct standards
 		Version 0.0.4.0.1 - Send account information on session timeout
 		Version 0.0.4.3 - Returns success status
+		Version 0.1 - Tiny bug fix
 	*/
 	#Whether is being included
 	$isIncluded = count(debug_backtrace());
@@ -100,7 +101,7 @@
 		if ($status === true)
 		{
 			#Checking login time and timeout
-			if ($loginTime < $time and $time < $timeout)
+			if ($loginTime <= $time and $time < $timeout)
 			{
 				#Trying to get user by ID
 				list($querySuccess, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
@@ -125,7 +126,7 @@
 					$reason = 'Invalid login information (1)';
 				}
 			}
-			elseif ($loginTime >= $time)
+			elseif ($loginTime > $time)
 			{
 				#Invalid login
 				$reasonID = $reasonIDs->InvalidLogin;

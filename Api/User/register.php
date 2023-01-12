@@ -131,6 +131,7 @@
 			{
 				#Invalid inputs
 				$reasonID = $reasonIDs->InvalidInputs;
+				$reason = 'Invalid information given';
 			}
 		}
 		else

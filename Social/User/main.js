@@ -6,7 +6,7 @@ Created on
 	Date: 01/05/23 06:35pm
 	Version: 0.0.3.3
 Updated on
-	Version: 0.0.5.2
+	Version: 0.1
 
 Description:
 	Finds an account and displays information
@@ -15,6 +15,7 @@ Changes:
 	Version 0.0.5 - Send friend request
 	Version 0.0.5.1 - Cancel/Accept/Decline/Unfriend friend actions
 	Version 0.0.5.2 - Show friends count and list
+	Version 0.1 - Added topbar manager, network manager, offline treatment
 */
 //Path to api
 const userInformationUrl = '../../Api/Social/getUserInformation.php';
@@ -26,6 +27,11 @@ const getParams = new URLSearchParams(window.location.search);
 //Waiting for document to load
 $(document).ready(() =>
 {
+	//Creating managers
+	const topbarManager = new TopbarManager();
+	const networkManager = new PageNetworkManager();
+	const contentManager = new ContentManager();
+
 	//Getting elements
 	const userIDElem = $('#UserID');
 	const usernameElem = $('#Username');

@@ -1,0 +1,123 @@
+<nav id="topbar" class="uk-navbar-container uk-padding-small uk-padding-remove-vertical" uk-navbar uk-sticky>
+	<div class="uk-navbar-left">
+		<div>
+			<a href="" class="backButton uk-button uk-button-default uk-visible@s">Back</a>
+			<a href="" class="backButton uk-button-small uk-button-default uk-hidden@s" uk-icon="chevron-left"></a>
+		</div>
+		<ul class="uk-navbar-nav uk-visible@l">
+			<li>
+				<a href="/Pwa/BikeMaster/Social/">Social <span uk-navbar-parent-icon></span></a>
+			</li>
+			<div class="uk-navbar-dropdown">
+				<div class="uk-nav uk-navbar-dropdown-nav">
+					<li>
+						<a href="/Pwa/BikeMaster/Social/Search/">Search User</a>
+					</li>
+				</div>
+			</div>
+			<li>
+				<a href="/Pwa/BikeMaster/Journey/">Journey <span uk-navbar-parent-icon></span></a>
+			</li>
+			<div class="uk-navbar-dropdown">
+				<div class="uk-nav uk-navbar-dropdown-nav">
+					<li>
+						<a href="/Pwa/BikeMaster/Journey/">Start</a>
+					</li>
+				</div>
+			</div>
+			<li>
+				<a href="/Pwa/BikeMaster/User/">Account <span uk-navbar-parent-icon></span></a>
+			</li>
+			<div class="uk-navbar-dropdown">
+				<div class="uk-nav uk-navbar-dropdown-nav">
+					<li class="showOnLoggedIn">
+						<a href="/Pwa/BikeMaster/User/Account/">View account</a>
+						<a href="/Pwa/BikeMaster/User/Logout/">Sign out</a>
+					</li>
+					<li class="showOnNotLoggedIn">
+						<a href="/Pwa/BikeMaster/User/Login/">Sign in</a>
+						<a href="/Pwa/BikeMaster/User/Register/">Sign up</a>
+					</li>
+				</div>
+			</div>
+		</ul>
+		<div class="uk-hidden@l">
+			<a href="" class="uk-navbar-toggle uk-navbar-toggle-animate" uk-navbar-toggle-icon></a>
+			<div class="uk-navbar-dropdown">
+				<ul class="uk-nav uk-navbar-dropdown-nav">
+					<li class="uk-active"><a href="/Pwa/BikeMaster/Social/">Social</a></li>
+					<li><a href="/Pwa/BikeMaster/Social/Search/">Search User</a></li>
+					<li class="uk-nav-divider"></li>
+					<li class="uk-active"><a href="/Pwa/BikeMaster/Social/Journey/">Journey</a></li>
+					<li><a href="/Pwa/BikeMaster/Journey/">Start</a></li>
+					<li class="uk-nav-divider"></li>
+					<li class="uk-active"><a href="/Pwa/BikeMaster/User/">Account</a></li>
+					<li class="showOnLoggedIn"><a href="/Pwa/BikeMaster/User/Account/">View account</a></li>
+					<li class="showOnLoggedIn"><a href="/Pwa/BikeMaster/User/Logout/">Sign out</a></li>
+					<li class="showOnNotLoggedIn"><a href="/Pwa/BikeMaster/User/Login/">Sign in</a></li>
+					<li class="showOnNotLoggedIn"><a href="/Pwa/BikeMaster/User/Register/">Sign up</a></li>
+				</ul>
+			</div>	
+		</div>
+	</div>
+	<div class="uk-navbar-center uk-visible@s">
+		<form js-action="/Pwa/BikeMaster/Social/Search/" class="searchForm uk-search uk-search-default">
+			<a href="" class="searchButton uk-search-icon-flip" uk-search-icon></a>
+			<input type="search" name="keyword" placeholder="Search" class="uk-search-input">
+		</form>
+	</div>
+	<div class="uk-navbar-right">
+		<div class="uk-hidden@s">
+			<a href="" class="uk-navbar-toggle" uk-search-icon></a>
+			<div class="uk-navbar-dropdown" uk-drop="mode: click; cls-drop: uk-navbar-dropdown; boundary: !.uk-navbar; flip: false">
+		
+				<div class="uk-grid-small uk-flex-middle" uk-grid>
+					<div class="uk-width-expand">
+						<form js-action="Pwa/BikeMaster/Social/Search/" class="searchForm uk-search uk-search-navbar uk-width-1-1">
+							<input type="search" name="keyword" placeholder="Search" class="uk-search-input">
+						</form>
+					</div>
+					<div class="uk-width-auto">
+						<a class="searchButton uk-margin-right" uk-icon="check" href="#"></a>
+						<a class="uk-navbar-dropdown-close" href="#" uk-close></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="showOnLoggedIn">
+				<a class="uk-navbar-toggle uk-navbar-toggle-animate" href="#">
+					<span class="uk-margin-small-right" uk-icon="user"></span>
+					<span class="loginUsername"> Username </span>
+				</a>
+				<div class="uk-navbar-dropdown">
+					<ul class="uk-nav uk-navbar-dropdown-nav">
+						<li><a href="/Pwa/BikeMaster/User/Account/"><span class="uk-margin-small-right" uk-icon="user"></span> View account </a></li>
+						<li><a href="/Pwa/BikeMaster/User/Logout/"><span class="uk-margin-small-right" uk-icon="sign-out"></span> Sign out </a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="showOnNotLoggedIn">
+				<a class="uk-navbar-toggle uk-navbar-toggle-animate" href="#">
+					<span class="uk-margin-small-right" uk-icon="user"></span>
+					<span> Sign in </span>
+				</a>
+				<div class="uk-navbar-dropdown">
+					<ul class="uk-nav uk-navbar-dropdown-nav">
+						<li><a href="/Pwa/BikeMaster/User/Login/"><span class="uk-margin-small-right" uk-icon="sign-in"></span> Sign in</a></li>
+						<li><a href="/Pwa/BikeMaster/User/Register/"><span class="uk-margin-small-right" uk-icon="user"></span> Sign up</a></li>
+					</ul>
+				</div>	
+			</div>
+			<div class="loadingSpinner">
+				<span class="uk-margin-small-right" uk-icon="user"></span>
+				<div uk-spinner></div>
+			</div>
+			<div class="loadError uk-alert-danger uk-hidden" uk-alert>
+				<span class="uk-margin-small-right" uk-icon="user"></span>
+				<span> Error </span>
+				<a href="" class="uk-margin-small-left uk-button-danger uk-button uk-button-small" uk-icon="refresh"></a>
+			</div>
+		</div>
+	</div>
+</nav>

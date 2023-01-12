@@ -1,0 +1,29 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/10/23 05:44pm
+	Version: 0.1
+Updated on
+	Version: 0.1
+
+Description:
+	General Css for all pages
+*/
+@font-face {
+	font-family: Roboto;
+	src: url(../../../Assets/Fonts/Roboto/Roboto-Regular.ttf);
+}
+body
+{
+	padding: 0px;
+	margin: 0px;
+
+	/*font-family: Roboto;*/
+}
+body *
+{
+	box-sizing: border-box;
+	user-select: none;
+}

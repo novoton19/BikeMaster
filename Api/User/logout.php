@@ -7,13 +7,14 @@
 		Date: 01/04/23 10:20pm
 		Version: 0.0.3.2
 	Updated on
-		Version: 0.0.3.3
+		Version: 0.1
 
 	Description:
 		Logout
 
 	Changes:
 		Version 0.0.3.3 - Correct standards
+		Version 0.1 - Bux fix, update success status
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -61,6 +62,8 @@
 		{
 			#Logging out
 			unset($_SESSION[$projectName]['login']);
+			#Success
+			$loggedOut = true;
 			#Set reason ID
 			$reasonID = $reasonIDs->Accepted;
 		}

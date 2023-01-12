@@ -6,13 +6,13 @@ Created on
 	Date: 01/05/23 03:51pm
 	Version: 0.0.3.2.2
 Updated on
-	Version: 0.0.3.2.2
+	Version: 0.1
 
 Description:
 	Page for user account
 
 Changes:
-
+	Version 0.1 - Added topbar manager, network manager, offline treatment
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -27,39 +27,124 @@ Changes:
 	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../../app.webmanifest">
-	<!--<link rel="stylesheet" href="icons.css">-->
-	<!--<link rel="stylesheet" href="main.css">-->
+	<!--UIKit-->
+	<link rel="stylesheet" href="../../Resources/Css/UIKit/uikit.min.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
 
-	<title>BikeMaster - Account</title>
+	<title>Your Account - BikeMaster</title>
+	<!--UIKit icons-->
+	<script src="../../Resources/Javascript/UIKit/uikit.min.js"></script>
+	<script src="../../Resources/Javascript/UIKit/uikit-icons.min.js"></script>
 	<!--jQuery-->
 	<script src="../../jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="../../registerServiceWorker.js"></script>
+	<!--Loading NetworkManager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Loading TopbarManager-->
+	<script src="../../Resources/Javascript/Application/topbarManager.js"></script>
+	<!--Loading SearchManager-->
+	<script src="../../Resources/Javascript/Application/searchManager.js"></script>
+	<!--Response manager-->
+	<script src="../../Resources/Javascript/Application/responseManager.js"></script>
 	<!--Loading Javascript for this page-->
 	<script src="main.js"></script>
 </head>
 <body>
-	<noscript id="UpperWarning">
-		<i class="Icon WarningIcon NoLeftMargin"></i>
-		<div class="Message">
-			Javascript is not enabled for this site, some features may not be available
-		</div>
-		<div class="ShortMessage">
-			Javascript
-		</div>
-	</noscript>
-	<div id="Body">
-		<div id="Header">
-			<h1>
+	<div id="bodyWrapper" class="uk-container uk-container-medium uk-margin-top">
+		<div id="header">
+			<h1 class="uk-heading-small uk-padding-small">
 				Your account
 			</h1>
-		</div>
-		<div id="Content">
-			<div>
-
+			<div class="uk-padding-small uk-padding-remove-vertical">
+				Here you can see and modify your account information
+			</div>
+			<div class="uk-alert-primary uk-padding-small" uk-alert>
+				<a class="uk-alert-close" uk-close></a>
+				<span>
+					Want to see how others see you profile?
+				</span>
+				<a href="../../Social/User/" class="uk-button uk-button-primary uk-button-small uk-margin-small-left">
+					Show public profile
+				</a>
 			</div>
 		</div>
-		<div id="Footer">
+		<div id="content" class="uk-inline uk-width-1-1">
+			<div class="uk-alert uk-alert-primary uk-flex uk-flex-between">
+				<div class="uk-flex uk-flex-left uk-flex-middle">
+					<span uk-icon="info"></span>
+					<span class="uk-margin-small-left">Account information modified</span>
+				</div>
+				<div class="uk-flex uk-flex-right">
+					<button class="cancelButton uk-button uk-button-small uk-button-danger">
+						Revert changes
+					</button>
+					<button class="saveButton uk-button uk-button-small uk-button-primary uk-margin-small-left">
+						Save changes
+					</button>
+				</div>
+			</div>
+			<div class="uk-flex uk-flex-center">
+				<div class="information uk-flex uk-flex-center">
+					<div>
+						<div class="uk-flex uk-flex-center">
+							<h2 class="uk-heading-small uk-padding-small">
+								Username
+							</h2>
+							<span class="modifyUsername uk-margin-small-left uk-icon-button" uk-icon="pencil"></span>
+						</div>
+						<div class="uk-flex uk-flex-center">
+							<div>
+								<div class="uk-flex">
+									<h3>Bio</h3>
+									<span class="modifyUsername uk-margin-small-left uk-icon-button" uk-icon="pencil"></span>
+								</div>
+								<div>
+									Text
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="uk-alert uk-alert-warning uk-flex uk-flex-column">
+				<div class="uk-flex uk-flex-left uk-flex-middle">
+					<span uk-icon="info"></span>
+					<span class="uk-margin-small-left">Account information modified</span>
+				</div>
+				<div class="uk-flex uk-flex-right">
+					<button class="cancelButton uk-button uk-button-small uk-button-danger">
+						Revert changes
+					</button>
+					<button class="saveButton uk-button uk-button-small uk-button-primary uk-margin-small-left">
+						Save changes
+					</button>
+				</div>
+			</div>
+			<div class="loadingOverlay uk-overlay-default uk-position-cover uk-padding">
+				<div class="uk-alert-primary uk-padding-small uk-width-small uk-margin-auto">
+					<div class="uk-padding-small uk-padding-remove-top uk-text-center">
+						Loading
+					</div>
+					<div class="uk-flex uk-flex-center">
+						<div uk-spinner="ratio: 3"></div>
+					</div>
+				</div>
+			</div>
+			<div class="loadErrorOverlay uk-overlay-default uk-position-cover uk-padding uk-hidden">
+				<div class="uk-alert-danger uk-padding-small uk-width-medium uk-margin-auto">
+					<div class="errorText uk-padding-small uk-padding-remove-top uk-text-center">
+						Error
+					</div>
+					<div class="uk-flex uk-flex-center">
+						<button class="reloadButton uk-button uk-button-danger">
+							Try again
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="footer" class="uk-margin">
 
 		</div>
 	</div>

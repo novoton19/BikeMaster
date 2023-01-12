@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.0.3.2.2
+	Version: 0.1
 
 Description:
 	Service worker
@@ -19,6 +19,7 @@ Changes:
 	Version 0.0.2.5.1 - Remove non-existent file list of cached files
 	Version 0.0.3 - Added Account files
 	Version 0.0.3.2.2 - Temporarily disable cached files list because it's become hard to manage
+	Version 0.1 - Different requests may have different fetching strategies
 */
 //Cache name
 const cacheName = 'pwa-assets';
@@ -51,6 +52,15 @@ const files = [];
 	'Journey/mapManager.js',
 	'https://api.mapy.cz/loader.js'
 ];*/
+const networkOnlyRequests = [
+	'/Api/User/login.php',
+	'/Api/User/logout.php',
+	'/Api/User/register.php'
+];
+const networkFirstRequests = [
+	'https://api.mapy.cz',
+	'/Api/'
+];
 
 //Intall event
 self.addEventListener('install', function(event)
@@ -72,14 +82,43 @@ self.addEventListener('activate', function(event)
 //Fetch event
 self.addEventListener('fetch', function(event)
 {
-	console.log('Service Worker fetch event\nUrl: \'' + event.request.url + '\'');
 	//Request
 	let request = event.request;
 	let url = request.url;
 
-	//Checking if request is on api.mapy.cz
-	if (url.startsWith('https://api.mapy.cz/'))
+	//Strategies
+	let networkOnly = false;
+	let networkFirst = false;
+	//Determining strategy
+	networkOnlyRequests.forEach(networkOnlyRequest =>
 	{
+		networkOnly = networkOnly || url.includes(networkOnlyRequest);
+	});
+	networkFirstRequests.forEach(networkFirstRequest =>
+	{
+		networkFirst = networkFirst || url.includes(networkFirstRequest);
+	});
+	//Checking strategy
+	if (networkOnly)
+	{
+		console.log(`Network-only request\nUrl: \'${url}\'`);
+		//Network only
+		event.respondWith(
+			fetch(request).then(function(response)
+			{
+				//Return response
+				return response;
+			}).catch(function(error)
+			{
+				//Network failed
+				console.log(`Network-only fetch error\nUrl: ${url}\nError: \'${error}\'`);
+				return;
+			})
+		);
+	}
+	else if (networkFirst)
+	{
+		console.log(`Network-first request\nUrl: \'${url}\'`);
 		//Network first
 		event.respondWith(
 			fetch(request).then(function(response)
@@ -103,12 +142,18 @@ self.addEventListener('fetch', function(event)
 				{
 					//Return result from cache
 					return cache.match(request);
+				}).catch(function(error)
+				{
+					//Request failed
+					console.log(`Network-first fetch error\nUrl: ${url}\nError: \'${error}\'`);
+					return;
 				});
 			})
 		);
 	}
 	else
 	{
+		console.log(`Stale while revalidate request\nUrl: \'${url}\'`);
 		//Stale While Revalidate
 		event.respondWith(
 			caches.open(cacheName).then(function(cache)
@@ -128,8 +173,9 @@ self.addEventListener('fetch', function(event)
 						return response.clone();
 					}).catch(function(error)
 					{
-						//Error
-						console.log('Service Worker fetch error:\nUrl: \'' + url + '\'\nError: \'' + error + '\'');
+						//Request failed
+						console.log(`Stale while revalidate fetch error\nUrl: ${url}\nError: \'${error}\'`);
+						return;
 					});
 					return cacheResponse || fetchResponse;
 				});

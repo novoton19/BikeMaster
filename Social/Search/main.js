@@ -6,143 +6,198 @@ Created on
 	Date: 01/07/23 05:23pm
 	Version: 0.0.4.4
 Updated on
-	Version: 0.0.4.4
+	Version: 0.1
 
 Description:
 	Displays find results
 
 Changes:
-	 
+	 Version 0.1 - Added topbar manager, network manager, offline treatment
 */
 //Getting get parameters
 const getParams = new URLSearchParams(window.location.search);
+let keyword = getParams.get('keyword');
 
 //Waiting for document to load
 $(document).ready(() =>
 {
-	//Getting elements
-	const searchForm = $('#SearchForm');
-	//Search input
-	const searchInput = $(searchForm).find('#Search');
-	const searchResultsElem = $('#SearchResults');
-	//Button to load more results
-	const moreResultsButton = $('#MoreResults');
-	//Getting url to api
-	const apiUrl = searchForm.attr('js-action');
+	//Creating managers
+	const topbarManager = new TopbarManager();
+	const networkManager = new PageNetworkManager();
 
-	//Getting requested username
-	let getUsername = getParams.get('search');
-	let username = undefined;
+	//Getting search form
+	const searchForm = $('.searchForm');
+	const searchAction = searchForm.attr('js-action');
+	const searchInput = searchForm.find('input[type=\"search\"]');
+	const keywordText = $('.keyword');
+	const noResults = $('.noResults');
+	noResults.removeClass('uk-hidden');
+	noResults.hide();
+
+	//Getting search results
+	const searchContent = $('#searchContent');
+	const searchResults = searchContent.find('.searchResults');
+	const oldSearchResults = searchContent.find('.oldSearchResults');
+	const searchProfilePreset = searchResults.find('.profile');
+	searchProfilePreset.hide();
+	searchResults.remove(searchProfilePreset);
+
+	//Loading keyword
+	keywordText.text(keyword);
+	searchInput.val(keyword);
+
 	//Current page
-	let getPage = parseInt(getParams.get('page')) || 0;
-	let page = undefined;
-	//Whether has next page
-	let hasNextPage = false;
+	let page = 0;
+	let hasNextPage = true;
+	let nextPageLoading = false;
+	//List of all results
+	let allResults = [];
 
 	//Loads next page
-	function loadNextPage()
+	function loadNextPage(onSuccess, onError)
 	{
 		//Checking if has next page
 		if (hasNextPage)
 		{
-			//Sending request to api
-			$.get(apiUrl, {search : username, page : page}, function(response)
+			//Checking if not loading
+			if (!nextPageLoading)
 			{
-				//Getting status
-				let success = response.success;
-				//Checking if success
-				if (success)
-				{
-					//Getting search results
-					let results = response.searchResults;
-					//Getting total pages
-					let totalPages = response.totalPages;
+				//Set page to loading
+				nextPageLoading = true;
+				keywordText.text(keyword);
 
-					//Next page
-					page++;
-					//Checking if there is any other page
-					if (page + 1 > totalPages)
+				topbarManager.setSearchKeyword(keyword);
+				//Loading results
+				$.ajax({
+					url : searchAction,
+					type : 'get',
+					dataType : 'json',
+					data : {
+						search : keyword,
+						page : page
+					},
+					timeout : 5000,
+					success : (response) =>
 					{
-						//No more pages
-						moreResultsButton.hide();
-						hasNextPage = false;
+						if (response.success)
+						{
+							//Getting search results
+							let results = response.searchResults;
+							//Adding result
+							allResults = allResults.concat(results);
+							//Getting previous search results
+							let searchProfiles = searchResults.children().toArray();
+							//Unloading search results that don't match anymore
+							searchProfiles.forEach(searchProfile =>
+							{
+								//Checking if has search result
+								if (!allResults.some(result => result.id === parseInt($(searchProfile).attr('userID'))))
+								{
+									//Changing parent
+									searchResults.remove($(searchProfile));
+									oldSearchResults.append($(searchProfile));
+									$(searchProfile).hide(400, () => searchProfile.remove());
+								}
+							});
+							//Loading results
+							results.forEach(result =>
+							{
+								//Checking if not exists
+								if (!searchProfiles.some(searchProfile => result.id === parseInt($(searchProfile).attr('userID'))))
+								{
+									//Creating profile
+									let searchProfile = searchProfilePreset.clone();
+									//Adding username
+									searchProfile.attr('userID', result.id);
+									searchProfile.find('.username').text(result.username);
+									searchProfile.find('.viewProfileButton').attr('href', `../User/?id=${result.id}`);
+									searchResults.append(searchProfile);
+									searchProfile.show(400);
+								}
+							});
+							//Adding page
+							page++;
+							hasNextPage = page < response.totalPages;
+							nextPageLoading = false;
+							
+							onSuccess();
+						}
+						else //if (!response.success)
+						{
+							hasNextPage = page < response.totalPages;
+							nextPageLoading = false;
+							
+							onError(response.reason);
+						}
+					},
+					error : (data, textStatus) =>
+					{
+						onError(ResponseManager.getErrorText(data, textStatus));
 					}
-					
-					//Adding results
-					results.forEach(user =>
-					{
-						//Adding result
-						searchResultsElem.append('<div>' + `<a href=\"../User/?id=${user.id}\">${user.username}</a>` + '</div>');
-					});
-					//Creating new url
-					let url = new URL(window.location);
-					//Adding parameters
-					url.searchParams.set('search', username);
-					url.searchParams.set('page', page);
-					//Replacing parameters
-					window.history.pushState(null, '', url.toString());
-				}
-				else //if (!success)
-				{
-
-				}
-			});
+				});
+			}
 		}
 	}
-	//Loads search results
-	function loadSearchResults(searchedUsername, untilPage)
+	//Content reload
+	function searchContentReload()
 	{
-		//Checking if searched username matches
-		if (username === searchedUsername)
+		//Reset page
+		page = 0;
+		//Getting keyword
+		keyword = searchInput.val();
+		hasNextPage = true;
+		nextPageLoading = false;
+		allResults = [];
+		//Loading next page
+		loadNextPage(() =>
 		{
-			loadNextPage();
-		}
-		else
+			checkNextPageLoad();
+		}, (message) =>
 		{
-			//Set username
-			username = searchedUsername;
-			//Resetting page
-			page = 0;
-			hasNextPage = true;
 			
-			//Clearing search results
-			searchResultsElem.text('');
-			//Showing button for loading more
-			moreResultsButton.show();
-			
-			//Loading pages
-			for (let pageNum = 0; pageNum <= untilPage; pageNum++)
+		});
+	}
+	//Checks if should load another page
+	function checkNextPageLoad()
+	{
+		//Getting values
+		let scrollY = window.scrollY;
+		let sizeY = window.innerHeight;
+		let posY = searchResults.offset().top + searchResults.height();
+		//Checking if visible
+		if (posY - scrollY <= sizeY)
+		{
+			//Checking if has next page
+			if (hasNextPage)
 			{
-				//Loading page
-				loadNextPage();
-				//Checking if has any other pages
-				if (!hasNextPage)
+				//Checking if not loading next page
+				if (!nextPageLoading)
 				{
-					break;
+					//Load next page
+					loadNextPage(() =>
+					{
+						//Checking if has next page
+						if (hasNextPage)
+						{
+							checkNextPageLoad();
+						}
+					}, () =>
+					{
+
+					});
 				}
 			}
 		}
 	}
-	//On form submitted
-	searchForm.submit(function(event)
+	//On input changed
+	searchInput.on('input', () => searchContentReload());
+	$(searchForm).submit((event) =>
 	{
-		//Cancel send
 		event.preventDefault();
-		//Loading search results
-		loadSearchResults(searchInput.val());
-	});
-	moreResultsButton.click(function(event)
-	{
-		//Cancel send
-		event.preventDefault();
-		//Loading next pafge
-		loadNextPage();
-	});
-	//Checking if searched username exists
-	if (getUsername !== undefined && getUsername !== null)
-	{
-		//Adding username to search input
-		searchInput.val(getUsername);
-		loadSearchResults(getUsername, getPage);
-	}
+		searchContentReload();
+	})
+
+	window.onscroll = checkNextPageLoad;
+	window.onresize = checkNextPageLoad;
+	searchContentReload();
 });
