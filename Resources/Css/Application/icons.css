@@ -1,0 +1,127 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/25/23 12:14pm
+	Version: 0.1.2
+Updated on
+	Version: 0.1.2
+
+Description:
+	Icons
+*/
+/*https://linuxhint.com/rotate-animation-css/*/
+@keyframes rotation
+{
+	from
+	{
+	  transform: rotate(0deg);
+	}
+	to
+	{
+	  transform: rotate(359deg);
+	}
+}
+.icon
+{
+	width: 25px;
+	height: 25px;
+	background-size: 21px;
+
+	margin-right: 5px;
+
+	background-repeat: no-repeat;
+	background-position: center;
+	filter: invert(25%);
+}
+.icon.large
+{
+	width: 40px;
+	height: 40px;
+	background-size: 40px;
+}
+.icon.mini
+{
+	width: 15px;
+	height: 15px;
+	background-size: 15px;
+	margin-right: 3px;
+}
+.icon.noMargin
+{
+	margin: 0px;
+}
+.icon.inverted
+{
+	filter: invert(100%);
+}
+.icon.start
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/start.png);
+}
+.icon.finish
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/finish.png);	
+}
+.icon.accept
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/accept.png);
+}
+.icon.decline
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/decline.png);	
+}
+.icon.info
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/info.png);	
+}
+.icon.home
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/home.png);	
+}
+.icon.journey
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/journey.png);	
+}
+.icon.challenge
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/challenge.png);	
+}
+.icon.account
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/account.png);	
+}
+.icon.search
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/search.png);	
+}
+.icon.achievement
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/achievement.png);	
+}
+.icon.new
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/new.png);	
+}
+.icon.offline
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/offline.png);	
+}
+.icon.warning
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/warning.png);	
+}
+.icon.refresh
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/refresh.png);	
+}
+.icon.loading
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/loading.png);
+	animation: rotation 1s infinite linear;
+}
+.icon.loading.noAnimation
+{
+	animation: unset;
+}

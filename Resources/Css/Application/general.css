@@ -6,24 +6,85 @@ Created on
 	Date: 01/10/23 05:44pm
 	Version: 0.1
 Updated on
-	Version: 0.1
+	Version: 0.1.2
 
 Description:
 	General Css for all pages
 */
-@font-face {
-	font-family: Roboto;
-	src: url(../../../Assets/Fonts/Roboto/Roboto-Regular.ttf);
+@font-face
+{
+	font-family: 'Roboto';
+	src: url(/Pwa/BikeMaster/Assets/Fonts/Roboto/Roboto-Regular.ttf);
+}
+html
+{
+	font-family: 'Roboto';
+	user-select: none;
 }
 body
 {
-	padding: 0px;
+	width: 100vw;
+	min-width: 130px;
+	
 	margin: 0px;
+	padding: 0px;
 
-	/*font-family: Roboto;*/
+	background-color: #f7f7f7;
+	color: #333;
 }
-body *
+*
 {
 	box-sizing: border-box;
-	user-select: none;
+	float: left;
+}
+a
+{
+	text-decoration: none;
+	
+	color: #333;
+}
+p
+{
+	margin: 0px;
+}
+h1
+{
+	width: 100%;
+	height: auto;
+
+	margin: 0px;
+	padding: 10px;
+	font-size: 25px;
+
+	font-weight: 400;
+
+	color: #333;
+}
+h2
+{
+	width: 100%;
+	height: auto;
+	margin: 0px;
+	font-size: 23px;
+
+	font-weight: 400;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+
+	color: #444;
+}
+h3
+{
+	width: 100%;
+	height: auto;
+	margin: 0px;
+	font-size: 20px;
+
+	font-weight: 400;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+
+	color: #505050;
 }

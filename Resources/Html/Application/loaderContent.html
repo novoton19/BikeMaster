@@ -1,0 +1,81 @@
+<!--Inserted and managed by Application/contentLoadManager.js-->
+<div class="reminders">
+	<div class="reminder orange offline">
+		<div class="information buttonless">
+			<div class="row">
+				<i class="icon offline"></i>
+				<h3 class="normal">You are currently offline</h3>
+				<h3 class="minimalist">Offline</h3>
+			</div>
+			<div class="row">
+				<p class="details optional">
+					Information may not be actual
+				</p>
+			</div>
+		</div>
+	</div>
+	<div class="reminder orange backup">
+		<div class="information">
+			<div class="row">
+				<i class="icon warning"></i>
+				<h3 class="normal minimalist">Backup loaded</h3>
+			</div>
+			<div class="row">
+				<p class="details">
+					Information may not be actual
+				</p>
+			</div>
+		</div>
+		<button class="button refreshButton mini blue">
+			<i class="icon refresh inverted noMargin"></i>
+		</button>
+	</div>
+	<div class="reminder refresh">
+		<button class="button refreshButton mini blue">
+			<i class="icon refresh inverted noMargin"></i>
+		</button>
+	</div>
+</div>
+<div class="overlays">
+	<div class="overlay offline">
+		<i class="icon large offline"></i>
+		<h3 class="normal">
+			You are currently offline
+		</h3>
+		<h3 class="minimalist">
+			Offline
+		</h3>
+		<div class="buttons">
+			<button class="button backupButton gray">
+				Load backup
+			</button>
+			<button class="button retryButton blue">
+				Retry
+			</button>
+		</div>
+	</div>
+	<div class="overlay fetchFail">
+		<i class="icon large warning"></i>
+		<h3 class="normal minimalist">
+			Invalid request
+		</h3>
+		<div class="buttons">
+			<button class="button backupButton gray">
+				Load backup
+			</button>
+			<a class="button signInButton green" href="/Pwa/BikeMaster/User/SignIn">
+				Sign in
+			</a>
+			<button class="button retryButton blue">
+				Retry
+			</button>
+		</div>
+	</div>
+	<div class="overlay loading">
+		<i class="icon large loading"></i>
+		<h3 class="normal minimalist">
+			Loading
+		</h3>
+	</div>
+</div>
+<!--End of insertion-->

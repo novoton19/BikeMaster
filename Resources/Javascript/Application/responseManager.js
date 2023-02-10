@@ -6,13 +6,13 @@ Created on
 	Date: 01/11/23 08:12pm
 	Version: 0.1
 Updated on
-	Version: 0.1
+	Version: 0.2
 
 Description:
 	Https response manager
 
 Changes:
-
+	Changed return texts
 */
 //Response manager
 class ResponseManager
@@ -22,11 +22,11 @@ class ResponseManager
 		//Checking status
 		if (textStatus === 'timeout')
 		{
-			return 'Timed out';
+			return 'Request took too long';
 		}
 		else if (textStatus === 'abort')
 		{
-			return 'Aborted';
+			return 'Request has been aborted';
 		}
 		else if (textStatus === 'parsererror')
 		{
@@ -37,14 +37,14 @@ class ResponseManager
 			//Checking if offline
 			if (!navigator.onLine)
 			{
-				return 'Offline';
+				return 'You are offline';
 			}					
 			else
 			{
 				//Checking status
 				if (response.status === 404)
 				{
-					return 'Action page doesn\'t exist';
+					return 'Application has misunderstood the request';
 				}
 				else
 				{

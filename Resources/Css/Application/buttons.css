@@ -1,0 +1,142 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/27/23 08:56am
+	Version: 0.1.2
+Updated on
+	Version: 0.1.2
+
+Description:
+	Buttons
+*/
+.button,
+.button.default
+{
+	max-width: 150px;
+
+	padding: 12px 15px;
+	border: 1px solid #ccc;
+	border-radius: 12px;
+	line-height: 25px;
+	font-size: 16px;
+	text-align: center;
+
+	color: #555;
+	background-color: #e7e7e7;
+
+	transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+.button.unlimitedWidth
+{
+	max-width: none;
+}
+.button.noRadiusLeft
+{
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+.button.noRadiusRight
+{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+.button.noRadius
+{
+	border-radius: 0px;
+}
+.button.noBorderLeft
+{
+	border-left: 0px;
+}
+.button.noBorderRight
+{
+	border-right: 0px;
+}
+.button.noBorderTop
+{
+	border-top: 0px;
+}
+.button.noBorderBottom
+{
+	border-bottom: 0px;
+}
+.button.noBorder
+{
+	border: 0px;
+}
+.button.noVerticalBorder
+{
+	border-top: 0px;
+	border-bottom: 0px;
+}
+.button:not(.noMargin):not(:first-child)
+{
+	margin-left: 10px;
+}
+.button.mini
+{
+	padding: 6px 11px;
+}
+.button.mini:not(:first-child)
+{
+	margin-left: 5px;
+}
+.button.containingIcon
+{
+	padding: 10px;
+}
+.button.mini.containingIcon
+{
+	padding: 5px;
+}
+.button.gray
+{
+	border-color: #666;
+	background-color: #555;
+	color: #e7e7e7;
+}
+.button.blue
+{
+	border-color: #225aa1;
+	background-color: #2664b1;
+	color: #e7e7e7;
+}
+.button.green
+{
+	border-color: #307030;
+	background-color: #387c38;
+	color: #f5f5f5;
+}
+.button.red
+{
+	border-color: #971f24;
+	background-color: #b1262c;
+	color: #e7e7e7;
+}
+.button:hover,
+.button.default:hover
+{
+
+}
+.button.gray:hover
+{
+	color: #e1e1e1;
+	background-color: #4a4a4a;
+}
+.button.blue:hover
+{
+	color: #e1e1e1;
+	background-color: #225aa1;
+}
+.button.green:hover
+{
+	color: #f0f0f0;
+	background-color: #307030;
+}
+.button.red:hover
+{
+	color: #e1e1e1;
+	background-color: #971f24;
+}

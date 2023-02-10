@@ -1,0 +1,156 @@
+[loader]
+{
+	width: 100%;
+	height: 100%;
+}
+[loader] .reminders
+{
+	width: 100%;
+
+	margin-bottom: 10px;
+
+	display: none;
+}
+[loader] .reminders .reminder
+{
+	width: 100%;
+	padding: 5px 10px;
+	}
+[loader] .reminders .reminder.orange
+{
+	margin-top: 10px;
+	border-radius: 10px;
+
+	background-color: #ffe4b2;
+}
+[loader] .reminders .reminder.refresh
+{
+	justify-content: right;
+
+	border-bottom: 1px solid #ddd;
+}
+[loader] .reminders .reminder .information
+{
+	max-width: calc(100% - 55px);
+}
+[loader] .reminders .reminder .information.buttonless
+{
+	width: 100%;
+	max-width: 100%;
+}
+[loader] .reminders .reminder .information .row
+{
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+}
+[loader] .reminders .reminder .information .row h3
+{
+	overflow-x: auto;
+	white-space: nowrap;
+	text-overflow: unset;
+}
+[loader] .reminders .reminder .information .row .minimalist:not(.normal)
+{
+	display: none;
+}
+[loader] .reminders .reminder .information .row .details
+{
+	width: 100%;
+
+	overflow-x: auto;
+	white-space: nowrap;
+
+	color: #666;
+}
+[loader] .reminders .reminder .information .row .details.optional
+{
+	display: none;
+}
+[loader] .reminders .reminder .button
+{
+	float: right;
+}
+[loader] .overlays
+{
+	width: 100%;
+	height: 100%;
+
+	display: none;
+}
+[loader] .overlay
+{
+	width: 100%;
+	height: 100%;
+
+	padding: 10px 0px;
+
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
+}
+[loader] .overlay h3
+{
+	padding-bottom: 5px;
+	margin: 5px 0px;
+
+	overflow-x: auto;
+	white-space: nowrap;
+	text-overflow: unset;
+}
+[loader] .overlay .minimalist:not(.normal)
+{
+	display: none;
+}
+[loader] .buttons
+{
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	white-space: nowrap;
+}
+[loader] .buttons .button
+{
+	width: 100%;
+
+	overflow-x: auto;
+}
+[loader] .buttons .button:not(:first-child)
+{
+	margin-top: 5px;
+	margin-left: 0px;
+}
+@media screen and (max-width: 350px)
+{
+	[loader] .reminders .reminder .information .row .minimalist:not(.normal)
+	{
+		display: unset;
+	}
+	[loader] .reminders .reminder .information .row .normal:not(.minimalist)
+	{
+		display: none;
+	}
+	[loader] .overlay .minimalist:not(.normal)
+	{
+		display: unset;
+	}
+	[loader] .overlay .normal:not(.minimalist)
+	{
+		display: none;
+	}
+}
+@media screen and (max-width: 250px)
+{
+	[loader] .reminders .reminder .information .icon
+	{
+		display: none;
+	}
+	[loader] .reminders .reminder .information:not(.buttonless)
+	{
+		max-width: 100%;
+	}
+}

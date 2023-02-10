@@ -314,6 +314,27 @@ $(document).ready(() =>
 			}
 		}
 	}
+	$('.createButton').click(() =>
+	{
+		$.ajax({
+			url : '../../Api/Social/Challenge/create.php',
+			type : 'post',
+			dataType : 'json',
+			data : {
+				teamA : teamBlue,
+				teamB : teamRed
+			},
+			timeout : 5000,
+			success : (response) =>
+			{
+				console.log(response);
+			},
+			error : (data, textStatus) =>
+			{
+
+			}
+		});
+	})
 	//On form submitted
 	searchForm.submit(function(event)
 	{

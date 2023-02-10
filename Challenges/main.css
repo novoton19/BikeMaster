@@ -1,0 +1,427 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/24/23 11:37am
+	Version: 0.1.2
+Updated on
+	Version: 0.1.2
+
+Description:
+	Css for competition page
+*/
+#header
+{
+	width: 100%;
+
+	background-color: #f7f7f7; 
+}
+#sections
+{
+	width: 100%;
+}
+#topbar
+{
+	width: 100%;
+	
+	border-bottom: 1px solid #ddd;
+	background-color: #e7e7e7;
+}
+#topbar
+{
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+#topbar .navigation
+{
+	width: 100%;
+	
+	display: flex;
+	overflow-x: auto;
+}
+#topbar .navigation .button
+{
+	font-family: 'Roboto';
+	flex: 1;
+}
+#content
+{
+	width: 100%;
+	height: calc(100vh - 99px);
+
+	padding: 20px;
+	padding-top: 0px;
+
+	overflow-y: auto;
+}
+#sections .section
+{
+	width: 100%;
+}
+#competitions .page
+{
+	width: 100%;
+}
+#competitions .page .navigation
+{
+	width: 100%;
+	padding-top: 10px;
+	padding-bottom: 15px;
+	border-bottom: 1px solid #ddd;
+	
+	position: sticky;
+	top: 0px;
+	z-index: 2;
+	
+	background-color: #f7f7f7;
+}
+#competitions .page .navigation h2
+{
+	width: 100%;
+
+	font-size: 25px;
+
+	text-align: center;
+}
+#competitions .page .navigation .buttons 
+{
+	width: 100%;
+
+	margin-top: 5px;
+
+	display: flex;
+	justify-content: center;
+}
+#competitions .page .navigation .buttons .button
+{
+	flex: 1;
+
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+#competitions .page .list
+{
+	width: 100%;
+}
+#competitions .page .list .competition
+{
+	width: 100%;
+
+	padding: 10px;
+}
+#competitions .page .list .competition:not(:first-child)
+{
+	border-top: 1px solid #ddd;
+}
+#competitions .page .list .competition.invitation
+{
+	margin: 10px 0px;
+	padding: 10px;
+	border-radius: 10px;
+
+	background-color: #c7e5c7;
+}
+#competitions .page .list .competition .tags 
+{
+	width: 100%;
+
+	margin-bottom: 5px;
+
+	display: flex;
+	justify-content: center;
+	overflow-x: auto;
+}
+#competitions .page .list .competition .tags .tag:not(:first-child)
+{
+	margin-left: 5px;
+}
+#competitions .page .list .competition .name
+{
+	width: 100%;
+
+	margin-bottom: 5px;
+	font-size: 20px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+	white-space: nowrap;
+	text-align: center;
+
+	color: #333;
+}
+#competitions .page .list .competition .buttons
+{
+	width: 100%;
+
+	margin-bottom: 5px;
+
+	display: flex;
+	overflow-x: auto;
+}
+#competitions .page .list .competition .buttons .button
+{
+	display: flex;
+}
+
+
+#competitions .page .list .competition .special .quickActions
+{
+	min-width: 80px;
+	height: min-content;
+	float: right;
+}
+#competitions .page .list .competition .special .quickActions .button
+{
+	line-height: 25px;
+}
+#competitions .page .list .competition .general
+{
+	width: 100%;
+	
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+}
+#competitions .page .list .competition .general .name
+{
+	margin-right: 10px;
+    
+    text-overflow: ellipsis;
+    overflow: hidden;
+	white-space: nowrap;
+	font-size: 20px;
+
+	color: #333;
+}
+#competitions .page .list .competition .description
+{
+	width: 100%;
+
+	padding: 0px 10px;
+	margin-top: 15px;
+
+	text-overflow: ellipsis;
+	overflow: hidden;
+	font-style: italic;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	display: -webkit-box;
+
+	color: #5e5d5d;
+}
+#competitions .page .list .competition .miniDetails
+{
+	font-size: 15px;
+
+	display: flex;
+	justify-content: right;
+
+	color: #5e5d5d;
+
+	float: right;
+}
+#competitions .page .list .competition .progress
+{
+	width: 100%;
+	margin-top: 15px;
+}
+#competitions .page .list .competition .team
+{
+	width: 100%;
+
+	padding: 0px 5px;
+}
+#competitions .page .list .competition .team:not(:first-child)
+{
+	margin-top: 5px;
+}
+#competitions .page .list .competition .team .name
+{
+	margin: 2px 0px;
+	margin-left: 10px;
+	font-size: 15px;
+	font-style: italic;
+
+	color: #5e5d5d;
+}
+#competitions .page .list .competition .team .barWrapper
+{
+	width: 100%;
+
+	padding: 7px 15px;
+	border-radius: 15px;
+	font-size: 12px;	
+
+	position: relative;
+
+	background-color: #e7e7e7;
+}
+#competitions .page .list .competition .team .barWrapper .bar
+{
+	height: 100%;
+	min-width: 40px;
+
+	padding: 7px 15px;
+	border-radius: 15px;
+	font-size: 12px;
+
+	top: 0px;
+	left: 0px;
+	position: absolute;
+
+	text-align: right;
+	overflow: hidden;
+
+	background-color: #2651b1;
+	color: #f7f7f7;
+}
+#competitions .page .list .competition .team .barWrapper .bar.red
+{
+	background-color: #b1262c;
+}
+
+
+@media screen and (max-width: 350px)
+{
+	#competitions .page .navigation
+	{
+		position: inherit;
+	}
+	#competitions .page .navigation h2
+	{
+		display: none;
+	}
+	#competitions .page .navigation .buttons
+	{
+		margin-top: 5px;
+		
+		flex-direction: column;
+		align-items: center;
+	}
+	#competitions .page .navigation .button
+	{
+		max-width: 200px;
+		width: 100%;
+
+		margin-left: 0px;
+	}
+	#competitions .page .navigation .buttons .button:not(:first-child)
+	{
+		margin-top: 5px;
+	}
+	/*#competitions .page .navigation
+	{
+		justify-content: unset;
+		align-items: unset;
+		flex-direction: column;
+	}*/
+	#competitions .page .list .competition .special .tags
+	{
+		width: 100%;
+
+		display: flex;
+		justify-content: center;
+	}
+	#competitions .page .list .competition .special .quickActions
+	{
+		width: 100%;
+
+		display: flex;
+		justify-content: center;
+	}
+	#competitions .page .list .competition .general
+	{
+		display: inherit;
+	}
+	#competitions .page .list .competition .general .name
+	{
+		width: 100%;
+
+		margin-right: 0px;
+
+		text-align: center;
+	}
+	#competitions .page .list .competition .general .buttons
+	{
+		margin-top: 5px;
+		width: 100%;
+
+		display: flex;
+		justify-content: center;
+	}
+	#competitions .page .list .competition .general .buttons .button
+	{
+		width: 100%;
+	}
+	#competitions .page .list .competition .description
+	{
+		text-align: center;
+	}
+}
+@media screen and (max-width: 250px)
+{
+	#content
+	{
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	#competitions .page .list .competition .special .quickActions 
+	{
+		flex-direction: column;
+		align-items: center;
+	}
+	#competitions .page .list .competition .special .quickActions .button
+	{
+		width: 100%;
+
+		margin-left: 0px;
+	}
+	#competitions .page .list .competition .special .quickActions .button:not(:first-child)
+	{
+		margin-top: 5px;
+	}
+	#competitions .page .list .competition .miniDetails
+	{
+		width: 100%;
+
+		justify-content: center;
+
+		margin-bottom: 10px;
+	}
+	#competitions .page .list .competition .team .name
+	{
+		width: 100%;
+
+		margin: 0px;
+
+		text-align: center;
+	}
+}
+@media screen and (max-width: 150px)
+{
+	#competitions .page .list .competition .special .tags .tag
+	{
+		width: 100%;
+	
+		margin-left: 0px;
+	
+		text-align: center;
+	}
+}
+@media screen and (max-height: 400px)
+{
+	#competitions .page .navigation
+	{
+		position: inherit;
+	}
+}
+@media screen and (max-height: 425px)
+{
+	#competitions .page .navigation h2
+	{
+		display: none;
+	}
+}

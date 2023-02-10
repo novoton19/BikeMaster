@@ -1,0 +1,40 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/10/23 12:59pm
+	Version: 0.1.2
+Updated on
+	Version: 0.1.2
+
+Description:
+	Css for bottombar
+*/
+#bottombar
+{
+	width: 100%;
+	border: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	
+	position: fixed;
+	bottom: 0;
+	z-index: 2;
+
+	background-color: #e7e7e7;
+}
+#bottombar .navigation
+{
+	width: 100%;
+	
+	display: flex;
+	overflow-x: auto;
+}
+#bottombar .navigation .button
+{
+	flex: 1;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
