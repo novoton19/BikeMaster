@@ -6,22 +6,23 @@ Created on
 	Date: 02/09/23 02:26pm
 	Version: 0.2
 Updated on
-	Version: 0.3
+	Version: 0.3.1
 
 Description:
 	Bottombar manager
 
 Changes:
 	Version 0.3 - Show bottombar only if signed in
+	Version 0.3.1 - Use var instead of const
 */
 //Path to signin status api request
-const statusUrl = '/Pwa/BikeMaster/Api/User/status.php';
+var statusUrl = '/Pwa/BikeMaster/Api/User/status.php';
 //Path to bottombar files
-const bottombarHtmlUrl = '/Pwa/BikeMaster/Resources/Html/Application/bottombar.html';
-const bottombarCssUrl = '/Pwa/BikeMaster/Resources/Css/Application/bottombar.css';
+var bottombarHtmlUrl = '/Pwa/BikeMaster/Resources/Html/Application/bottombar.html';
+var bottombarCssUrl = '/Pwa/BikeMaster/Resources/Css/Application/bottombar.css';
 
 //Getting current url
-const url = location.protocol + '//' + location.host + location.pathname;
+var url = location.protocol + '//' + location.host + location.pathname;
 //Waiting for document to load
 $(document).ready(() =>
 {

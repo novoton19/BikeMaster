@@ -124,7 +124,7 @@ function sendRequest(url, data = {}, method = 'get', timeout = 5000)
 						if (response.status === 404)
 						{
 							reasonID = requestHandlerReasonIDs.NotFound;
-							reason = 'Request was unable to reach its destination';
+							reason = 'Unable to load resource';
 						}
 						else//if (response.status !== 404)
 						{

@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.1
+	Version: 0.3.1
 
 Description:
 	Service worker
@@ -20,6 +20,7 @@ Changes:
 	Version 0.0.3 - Added Account files
 	Version 0.0.3.2.2 - Temporarily disable cached files list because it's become hard to manage
 	Version 0.1 - Different requests may have different fetching strategies
+	Version 0.3.1 - Fixed service worker not returning response when neither of the options is available NETWORK-FIRST FIX ONLY
 */
 //Cache name
 const cacheName = 'pwa-assets';
@@ -61,6 +62,13 @@ const networkFirstRequests = [
 	'https://api.mapy.cz',
 	'/Api/'
 ];
+const defaultResponse = new Response(
+	'Error fetching the resource',
+	{
+		status: 404,
+		statusText: 'Not found'
+	}
+);
 
 //Intall event
 self.addEventListener('install', function(event)
@@ -121,32 +129,37 @@ self.addEventListener('fetch', function(event)
 		console.log(`Network-first request\nUrl: \'${url}\'`);
 		//Network first
 		event.respondWith(
-			fetch(request).then(function(response)
+			fetch(request).then((response) =>
 			{
 				//Checking if request method is other than post
 				if (request.method !== 'POST')
 				{
 					//Trying to cache response
-					caches.open(cacheName).then(function(cache)
+					caches.open(cacheName).then((cache) =>
 					{
 						//Update
 						return cache.put(request, response.clone());
 					});
 				}
 				return response.clone();
-			}).catch(function(error)
+			}).catch((error) =>
 			{
-				console.log(error);
 				//Network failed, trying cache
-				return caches.open(cacheName).then(function(cache)
+				return caches.open(cacheName).then((cache) =>
 				{
 					//Return result from cache
-					return cache.match(request);
-				}).catch(function(error)
+					return cache.match(request).then((response) =>
+					{
+						return response || defaultResponse.clone();
+					}).catch((error) =>
+					{
+						return defaultResponse.clone();
+					})
+				}).catch((error) =>
 				{
 					//Request failed
 					console.log(`Network-first fetch error\nUrl: ${url}\nError: \'${error}\'`);
-					return;
+					return defaultResponse.clone();
 				});
 			})
 		);
