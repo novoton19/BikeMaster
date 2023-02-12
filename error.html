@@ -1,0 +1,92 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/10/23 08:56pm
+	Version: 0.3
+Updated on
+	Version: 0.3
+
+Description:
+	Page displaying an error
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="app.webmanifest">
+	<link rel="stylesheet" href="error.css">
+	<link rel="stylesheet" href="Resources/Css/Application/topbar.css">
+	<link rel="stylesheet" href="Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="Resources/Css/Application/icons.css">
+
+	<title>Error - BikeMaster</title>
+	<!--jQuery-->
+	<script src="jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="registerServiceWorker.js"></script>
+	<!--Require login-->
+	<script src="Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Javascript for this page-->
+	<script src="error.js"></script>
+	<!--Bottombar Manager-->
+	<script src="Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Switch manager-->
+	<script src="Resources/Javascript/Application/switchManager.js"></script>
+	<!--Network manager-->
+	<script src="Resources/Javascript/Application/networkManager.js"></script>
+	<!--Response manager-->
+	<script src="Resources/Javascript/Application/responseManager.js"></script>
+	<!--Content load manager-->
+	<script src="Resources/Javascript/Application/contentLoadManager.js"></script>
+</head>
+<body>
+	<div id="topbar">
+		<h1>
+			That's an error.
+		</h1>
+	</div>
+	<div id="content">
+		<div class="row gifWrapper">
+			<img alt="Bike accident" class="randomAccident">
+		</div>
+		<p class="row message">
+			Message
+		</p>
+		<div class="row details">
+			<p class="title">
+				Detailed report
+			</p>
+			<h2 class="sourceScript">
+				Source script
+			</h2>
+			<p class="detailedMessage">
+				Detailed message
+			</p>
+		</div>
+		<div class="row buttons">
+			<a href="Home/" class="button blue">
+				<i class="icon home inverted"></i>
+				<span>Go to home page</span>
+			</a>
+			<a href="" class="button previousPageButton gray">
+				<i class="icon back inverted"></i>
+				<span>To previous page</span>
+			</a>
+		</div>
+	</div>
+</body>
+</html>

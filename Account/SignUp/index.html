@@ -1,0 +1,122 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/10/23 11:02pm
+	Version: 0.3
+Updated on
+	Version: 0.3
+
+Description:
+	Account sign in
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../../app.webmanifest">
+	<link rel="stylesheet" href="../../Resources/Css/Application/topbar.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/forms.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/icons.css">
+
+	<title>Sign Up - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../../registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+	<!--Network manager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Content load manager-->
+	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
+</head>
+<body>
+	<div id="topbar">
+		<h1>
+			Account Sign Up
+		</h1>
+	</div>
+	<div id="content">
+		<div onRequest="onFormRefresh" onSuccess="onFormRefreshCompleted" onFail="onFormRefreshFailed" loader>
+
+		</div>
+		<div class="formWrapper">
+			<div class="redirect blue">
+				<span>
+					Already have an account?
+				</span>
+				<a href="../SignIn" class="button mini blue">
+					Sign In
+				</a>
+			</div>
+			<form id="signUpForm" jsAction="../../Api/User/register.php" method="post">
+				<div class="formReason">
+						
+				</div>
+				<div class="formRow">
+					<div class="labelWrapper">
+						<i class="icon account"></i>
+						<label for="username">
+							Username:
+						</label>
+					</div>
+					<input id="username" type="text" name="username" placeholder="Username" autocomplete>
+					<label for="username" class="inputReason">
+						
+					</label>
+				</div>
+				<div class="formRow">
+					<div class="labelWrapper">
+						<i class="icon email"></i>
+						<label for="email">
+							E-mail:
+						</label>
+					</div>
+					<input id="email" type="text" name="email" placeholder="E-mail" autocomplete>
+					<label for="email" class="inputReason">
+
+					</label>
+				</div>
+				<div class="formRow">
+					<div class="labelWrapper">
+						<i class="icon password"></i>
+						<label for="password">
+							Password:
+						</label>
+					</div>
+					<input id="password" type="password" name="password" placeholder="Password">
+					<label for="password" class="inputReason">
+						
+					</label>
+					<input id="passwordConfirmation" type="password" name="passwordConfirmation" placeholder="Confirm Password">
+					<label for="passwordConfirmation" class="inputReason">
+						
+					</label>
+				</div>
+				<button id="submitButton" class="button gray">
+					Sign Up
+				</button>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

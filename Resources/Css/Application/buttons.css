@@ -22,6 +22,11 @@ Description:
 	line-height: 25px;
 	font-size: 16px;
 	text-align: center;
+	white-space: nowrap;
+	overflow-x: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
 	color: #555;
 	background-color: #e7e7e7;
@@ -115,6 +120,8 @@ Description:
 	background-color: #b1262c;
 	color: #e7e7e7;
 }
+
+
 .button:hover,
 .button.default:hover
 {
@@ -139,4 +146,11 @@ Description:
 {
 	color: #e1e1e1;
 	background-color: #971f24;
+}
+
+
+.button.gray:disabled
+{
+	background-color: #333;
+	color: #ddd;
 }

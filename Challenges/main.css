@@ -21,39 +21,9 @@ Description:
 {
 	width: 100%;
 }
-#topbar
-{
-	width: 100%;
-	
-	border-bottom: 1px solid #ddd;
-	background-color: #e7e7e7;
-}
-#topbar
-{
-	position: -webkit-sticky;
-	position: sticky;
-	top: 0;
-	z-index: 2;
-}
-#topbar .navigation
-{
-	width: 100%;
-	
-	display: flex;
-	overflow-x: auto;
-}
-#topbar .navigation .button
-{
-	font-family: 'Roboto';
-	flex: 1;
-}
 #content
 {
-	width: 100%;
 	height: calc(100vh - 99px);
-
-	padding: 20px;
-	padding-top: 0px;
 
 	overflow-y: auto;
 }

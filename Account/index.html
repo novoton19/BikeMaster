@@ -1,0 +1,81 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/10/23 08:32pm
+	Version: 0.3
+Updated on
+	Version: 0.3
+
+Description:
+	Account information
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../app.webmanifest">
+	<link rel="stylesheet" href="../Resources/Css/Application/topbar.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
+
+	<title>Account - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../registerServiceWorker.js"></script>
+	<!--Require login-->
+	<script src="../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Javascript for this page-->
+	<!--<script src="main.js"></script>-->
+	<!--Bottombar Manager-->
+	<script src="../Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Switch manager-->
+	<script src="../Resources/Javascript/Application/switchManager.js"></script>
+	<!--Network manager-->
+	<script src="../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Response manager-->
+	<script src="../Resources/Javascript/Application/responseManager.js"></script>
+	<!--Content load manager-->
+	<script src="../Resources/Javascript/Application/contentLoadManager.js"></script>
+</head>
+<body>
+	<div id="topbar">
+		<div class="navigation" switcherID="section" switcher>
+			<button class="button noRadiusLeft noBorder unlimitedWidth" switchID="account">
+				Account
+			</button>
+			<button class="button noMargin noBorder unlimitedWidth" switchID="settings">
+				Settings
+			</button>
+			<button class="button noMargin noRadiusRight noBorder unlimitedWidth" switchID="history">
+				Your journeys
+			</button>
+		</div>
+	</div>
+	<div id="content">
+		<div id="account" switchDefault>
+			
+		</div>
+		<div id="settings">
+
+		</div>
+		<div id="history">
+
+		</div>
+	</div>
+</body>
+</html>

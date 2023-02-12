@@ -7,13 +7,13 @@
 		Date: 01/04/23 10:13pm
 		Version: 0.0.3.2
 	Updated on
-		Version: 0.0.3.2
+		Version: 0.3
 
 	Description:
 		Returns all of the reason IDs
 
 	Changes:
-
+		Version 0.3 - Now returns information in correct format
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -30,8 +30,8 @@
 
 	#Echo result
 	echo json_encode([
-		'Success' => $reasonIDs->success,
-		'ReasonIDs' => $reasonIDs->all
+		'success' => $reasonIDs->success,
+		'reasonIDs' => $reasonIDs->all
 	]);
 	#Unset unnecessary variables
 	unset(

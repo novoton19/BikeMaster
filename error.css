@@ -1,0 +1,82 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/10/23 09:27pm
+	Version: 0.3
+Updated on
+	Version: 0.3
+
+Description:
+	Css for error page
+*/
+h1
+{
+	width: 100%;
+}
+#content
+{
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+#content .gifWrapper
+{
+	max-width: 400px;
+	max-height: 400px;
+	min-height: 100px;
+	width: 100%;
+
+	margin-top: 20px;
+
+	display: flex;
+	justify-content: center;
+}
+#content .gifWrapper .randomAccident
+{
+	max-width: 100%;
+	border-radius: 20px;
+}
+#content .message
+{
+	width: auto;
+	max-height: 50px;
+
+	margin-top: 15px;
+	padding: 10px 15px;
+	font-size: 18px;
+	border-radius: 10px;
+	border: 1px solid #bcd9ff;
+
+	overflow-x: auto;
+
+	background-color: #c2dcfd;
+}
+#content .details
+{
+	margin-top: 15px;
+	padding: 10px;
+
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
+}
+#content .buttons
+{
+	margin-top: 15px;
+
+	display: flex;
+	flex-direction: column;
+}
+#content .buttons .button
+{
+	max-width: 200px;
+	width: 100%;
+}
+#content .buttons .button:not(:first-child)
+{
+	margin-left: 0px;
+	margin-top: 5px;
+}

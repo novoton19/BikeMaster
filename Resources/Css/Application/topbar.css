@@ -1,0 +1,39 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/10/23 08:40pm
+	Version: 0.3
+Updated on
+	Version: 0.3
+
+Description:
+	Css for topbar
+*/
+#topbar
+{
+	width: 100%;
+	
+	border-bottom: 1px solid #ddd;
+	background-color: #e7e7e7;
+}
+#topbar
+{
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	z-index: 2;
+}
+#topbar .navigation
+{
+	width: 100%;
+	
+	display: flex;
+	overflow-x: auto;
+}
+#topbar .navigation .button
+{
+	flex: 1;
+	white-space: nowrap;
+}

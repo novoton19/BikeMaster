@@ -1,0 +1,139 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 01/10/23 05:44pm
+	Version: 0.3
+Updated on
+	Version: 0.3
+
+Description:
+	Css for forms
+*/
+.formWrapper .redirect,
+.formWrapper .redirect.default
+{
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	background-color: #e7e7e7;	
+}
+.formWrapper .redirect.blue
+{
+	border: 1px solid #bcd9ff;
+	background-color: #c2dcfd;
+}
+.formWrapper .redirect span
+{
+	overflow-x: auto;
+}
+.formWrapper form .formReason
+{
+	width: 100%;
+
+	padding: 10px;
+	border: 1px solid #f7a7a7;
+	border-radius: 10px;
+
+	display: none;
+
+	background-color: #ffa8a8;
+}
+.formWrapper form
+{
+	width: 100%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+.formWrapper form .formRow
+{
+	width: 100%;
+	max-width: 250px;
+}
+.formWrapper form .formRow:not(:first-child)
+{
+	margin-top: 10px;
+}
+.formWrapper form .formRow .labelWrapper
+{
+	width: 100%;
+
+	font-size: 14px;
+
+	display: flex;
+	align-items: center;
+
+	color: #444;
+}
+.formWrapper form .formRow .labelWrapper .icon
+{
+	margin-right: 3px;
+}
+.formWrapper form .formRow input
+{
+	width: 100%;
+	max-width: 250px;
+
+	padding: 12px 15px;
+	font-size: 15px;
+	border-radius: 10px;
+	border: 1px solid #ddd;
+	
+	overflow-x: auto;
+	
+	color: #333;
+	background-color: #e7e7e7;
+}
+.formWrapper form .formRow input:not(:last-child)
+{
+	margin-bottom: 5px;
+}
+.formWrapper form .formRow input::placeholder
+{
+	color: #666;
+}
+.formWrapper form .formRow input.invalid
+{
+	background-color: #ffe0e0;
+	border: 1px solid #f7a7a7;
+}
+.formWrapper form .formRow .inputReason
+{
+	width: 100%;
+
+	font-size: 14px;
+	
+	color: #cb2a2a;
+}
+.formWrapper form button
+{
+	width: 100%;
+
+	margin-top: 10px;
+}
+@media screen and (max-width: 350px)
+{
+	.formWrapper .redirect
+	{
+		flex-direction: column;
+	}
+	.formWrapper .redirect span
+	{
+		text-align: center;
+	}
+	.formWrapper .redirect .button
+	{
+		width: 100%;
+		margin-top: 5px;
+		margin-left: 0px;
+	}
+}

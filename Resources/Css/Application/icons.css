@@ -25,6 +25,8 @@ Description:
 }
 .icon
 {
+	min-width: 25px;
+	min-height: 25px;
 	width: 25px;
 	height: 25px;
 	background-size: 21px;
@@ -124,4 +126,16 @@ Description:
 .icon.loading.noAnimation
 {
 	animation: unset;
+}
+.icon.back
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/back.png);
+}
+.icon.password
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/password.png);
+}
+.icon.email
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/email.png);
 }
