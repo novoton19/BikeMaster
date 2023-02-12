@@ -15,6 +15,12 @@ Create Table BikeMaster.Users(
     	Not Null,
     Password varchar(255)
     	Not Null,
+	ProfilePictureUrl varchar(255),
+	Description varchar (511),
+	 /*-90-90 deg. Precision 4 decimal places (11.1m)*/
+    Latitude double(6, 4),
+    /*-180-180 deg. Precision 4 decimal places (11.1m)*/
+    Longitude double(7, 4),
     RegistrationTime int
 		Unsigned
 		Default Unix_Timestamp()

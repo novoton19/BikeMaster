@@ -1,0 +1,58 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/12/23 02:52pm
+	Version: 0.3.2
+Updated on
+	Version: 0.3.2
+
+Description:
+	Css for welcome page
+*/
+#content .imageWrapper
+{
+	width: 100%;
+
+	margin-bottom: 10px;
+
+	display: flex;
+	justify-content: center;
+}
+#content .imageWrapper img
+{
+	width: 100%;
+	max-width: 256px;
+	max-height: 256px;
+
+	border-radius: 20px;
+}
+#content .setupText
+{
+	width: 100%;
+
+	margin-bottom: 10px;
+	font-size: 20px;
+
+	text-align: center;
+	overflow-x: auto;
+}
+#content .buttons
+{
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+#content .buttons .button
+{
+	width: 100%;
+
+	margin-left: 0px;
+}
+#content .buttons .button:not(:first-child)
+{
+	margin-top: 5px;
+}

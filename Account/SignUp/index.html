@@ -6,13 +6,13 @@ Created on
 	Date: 02/10/23 11:02pm
 	Version: 0.3
 Updated on
-	Version: 0.3
+	Version: 0.3.2
 
 Description:
 	Account sign in
 
 Changes:
-
+	Version 0.3.2 - Removed topbar.css
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -27,7 +27,6 @@ Changes:
 	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../../app.webmanifest">
-	<link rel="stylesheet" href="../../Resources/Css/Application/topbar.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/forms.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
@@ -59,7 +58,7 @@ Changes:
 		<div onRequest="onFormRefresh" onSuccess="onFormRefreshCompleted" onFail="onFormRefreshFailed" loader>
 
 		</div>
-		<div class="formWrapper">
+		<div class="formWrapper section">
 			<div class="redirect blue">
 				<span>
 					Already have an account?

@@ -21,8 +21,11 @@
 	{
 		return;
 	}
+	session_start();
 	#Return json
 	header('Content-Type: application/json; charset=utf-8');
+	#Require settings
+	require_once(__DIR__.'/../../Resources/Php/Db/settingsDb.php');
 	#Require reason IDs
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
 	#Require database
@@ -32,10 +35,15 @@
 	
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
+	#Creating SettingsDb
+	$settingsDb = new SettingsDb();
 	#Creating UsersDb
 	$usersDb = new UsersDb();
 	#Creating RegistrationValidation
 	$validation = new RegistrationValidation();
+
+	#Session project name
+	$projectName = null;
 
 	#Whether succeeded
 	$success = false;
@@ -44,6 +52,7 @@
 	$reason = null;
 
 	#Account information
+	$account = null;
 	$username = null;
 	$email = null;
 	$password = null;
@@ -73,8 +82,11 @@
 	];
 
 	#Checking if reasonIDs loaded
-	if ($reasonIDs->success)
+	if ($reasonIDs->success and $settingsDb->success)
 	{
+		#Getting projectName
+		$projectName = $settingsDb->ProjectName;
+
 		#Checking if post exists
 		if ($_POST)
 		{
@@ -119,6 +131,28 @@
 					#Set success
 					$success = true;
 					$reasonID = $reasonIDs->Accepted;
+					#Getting user by username
+					list($querySuccess, $account, $accountExists) = $usersDb->getUserByUsername($username);
+					#Checking if query success
+					if ($querySuccess)
+					{
+						#Signing in
+						#Checking if session exists
+						if (!isset($_SESSION[$projectName]))
+						{
+							#Create project
+							$_SESSION[$projectName] = [];
+						}
+						#Adding login information
+						$_SESSION[$projectName]['login'] = [
+							'status' => true,
+							'userID' => intval(GeneralFunctions::getValue($account, 'ID')),
+							'time' => time(),
+							'timeout' => time() + 43200
+						];
+						#Set success
+						$success = true;
+					}
 				}
 				else
 				{
@@ -170,6 +204,7 @@
 		$success,
 		$reasonID,
 		$reason,
+		$account,
 		$username,
 		$email,
 		$password,
@@ -184,4 +219,5 @@
 		$inputs,
 		$inputReasons
 	);
+	session_write_close();
 ?>

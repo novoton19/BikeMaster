@@ -1,0 +1,185 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/12/23 03:11pm
+	Version: 0.3.2
+Updated on
+	Version: 0.3.2
+
+Description:
+	Setup page for new users
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../../app.webmanifest">
+	<link rel="stylesheet" href="main.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/forms.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/icons.css">
+
+	<title>Setup - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../../registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+	<!--Network manager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Sign in requirer-->
+	<script src="../../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Bottombar manager-->
+	<script src="../../Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Content load manager-->
+	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
+
+	<!--Mapy.cz Api-->
+	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript">Loader.load();</script>
+</head>
+<body>
+	<div id="topbar">
+		<h1>
+			Account setup
+		</h1>
+	</div>
+	<div id="content">
+		<div loader onRequest="onRefresh" onSuccess="onLoad" onFail="onFail">
+
+		</div>
+		<div class="section">
+			<div class="progress">
+				<div class="bar blue">
+					0%
+				</div>
+			</div>
+			<div class="pages">
+				<div id="profilePicturePage" class="page">
+					<h2>
+						Add a profile picture
+					</h2>
+					<div class="description">
+						If you set a profile picture, it'll be easier for other people to recognize you
+					</div>
+					<div class="pageContent formWrapper">
+						<form jsAction="../../Api/User/updateInformation.php" method="post">
+							<div class="formRow">
+								<div class="labelWrapper">
+									<label for="profilePicture">
+										Profile picture:
+									</label>
+								</div>
+								<input id="profilePicture" type="file" name="profilePicture">
+								<label for="profilePicture" class="inputReason"></label>
+							</div>
+							<div class="formRow">
+								<img class="imagePreview" alt="image preview">
+							</div>
+							<button class="submitButton button green">
+								Set picture
+							</button>
+						</form>
+					</div>
+					<div class="navigationButtons">
+						<button class="skipButton button gray" nextPage="descriptionPage">
+							Skip
+						</button>
+					</div>
+				</div>
+				<div id="descriptionPage" class="page">
+					<h2>
+						Tell us something about yourself
+					</h2>
+					<div class="description">
+						Tell people on this platform something about yourself
+					</div>
+					<div class="pageContent formWrapper">
+						<form jsAction="../../Api/User/updateInformation.php" method="post">
+							<div class="formRow">
+								<div class="labelWrapper">
+									<label for="description">
+										Description:
+									</label>
+								</div>
+								<textarea id="description" name="profilePicture" placeholder="Description"></textarea>
+								<label for="description" class="inputReason"></label>
+							</div>
+							<button class="submitButton button green">
+								Set description
+							</button>
+						</form>
+					</div>
+					<div class="navigationButtons">
+						<button class="skipButton button gray" nextPage="locationPage">
+							Skip
+						</button>
+					</div>
+				</div>
+				<div id="locationPage" class="page">
+					<h2>
+						Tell us your location
+					</h2>
+					<div class="description">
+						We'd like to know your location in order to protect you. If you decide to share your journey with other people, we'll automatically hide any segment in 500m radius from your home. Your home location is stored with 100 meter accuracy.
+					</div>
+					<div class="pageContent">
+						<div id="map">
+
+						</div>
+						<script>
+							var acenter = SMap.Coords.fromWGS84(14.41790, 50.12655);
+							var am = new SMap(JAK.gel("map"), acenter, 13);
+							am.addDefaultLayer(SMap.DEF_BASE).enable();
+							am.addDefaultControls();
+						</script>
+						<button class="showLocation button green">
+							Find my location
+						</button>
+						<button class="submitButton button green">
+							Confirm location
+						</button>
+					</div>
+					<div class="navigationButtons">
+						<button class="skipButton button gray" nextPage="complete">
+							Skip
+						</button>
+					</div>
+				</div>
+				<div id="complete" class="page">
+					<h2>
+						Setup complete!
+					</h2>
+					<div class="description">
+						You've finished your account setup!
+					</div>
+					<div class="buttons">
+						<a href="../../Home/" class="button green">
+							Home
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

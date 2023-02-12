@@ -27,7 +27,6 @@ Changes:
 	<link rel="apple-touch-icon" href="../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../app.webmanifest">
-	<link rel="stylesheet" href="../Resources/Css/Application/topbar.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
@@ -37,43 +36,58 @@ Changes:
 	<script src="../jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="../registerServiceWorker.js"></script>
-	<!--Require login-->
-	<script src="../Resources/Javascript/Application/requireSignIn.js"></script>
 	<!--Javascript for this page-->
 	<!--<script src="main.js"></script>-->
+	<!--Network manager-->
+	<script src="../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Require login-->
+	<script src="../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Content load manager-->
+	<script src="../Resources/Javascript/Application/contentLoadManager.js"></script>
 	<!--Bottombar Manager-->
 	<script src="../Resources/Javascript/Application/bottombarManager.js"></script>
 	<!--Switch manager-->
 	<script src="../Resources/Javascript/Application/switchManager.js"></script>
-	<!--Network manager-->
-	<script src="../Resources/Javascript/Application/networkManager.js"></script>
-	<!--Response manager-->
-	<script src="../Resources/Javascript/Application/responseManager.js"></script>
-	<!--Content load manager-->
-	<script src="../Resources/Javascript/Application/contentLoadManager.js"></script>
 </head>
 <body>
 	<div id="topbar">
 		<div class="navigation" switcherID="section" switcher>
-			<button class="button noRadiusLeft noBorder unlimitedWidth" switchID="account">
+			<button class="button noMargin noBorderLeft noVerticalBorder unlimitedWidth" switchID="account">
 				Account
 			</button>
-			<button class="button noMargin noBorder unlimitedWidth" switchID="settings">
-				Settings
+			<button class="button noMargin noBorderLeft noVerticalBorder unlimitedWidth" switchID="friends">
+				Friends
 			</button>
-			<button class="button noMargin noRadiusRight noBorder unlimitedWidth" switchID="history">
-				Your journeys
+			<button class="button noMargin noBorderLeft noVerticalBorder unlimitedWidth" switchID="settings">
+				Settings
 			</button>
 		</div>
 	</div>
 	<div id="content">
-		<div id="account" switchDefault>
+		<div id="account" class="section" switchDefault>
 			
 		</div>
-		<div id="settings">
+		<div id="friends" class="section noPadding">
+			<div switcherID="type" switcher>
+				<button class="button noMargin noBorderLeft noVerticalBorder unlimitedWidth" switchID="list">
+					All friends
+				</button>
+				<button class="button noMargin noBorderLeft noVerticalBorder unlimitedWidth" switchID="requests">
+					Friend Requests
+				</button>
+			</div>
+			<div id="list" class="section" switchDefault>
 
+			</div>
+			<div id="requests" class="section">
+
+			</div>
 		</div>
-		<div id="history">
+		<div id="settings" class="section">
 
 		</div>
 	</div>

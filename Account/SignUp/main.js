@@ -124,8 +124,8 @@ $(document).ready(() =>
 			//Request succeeded
 			//Remove previous information from session storage
 			sessionStorage.removeItem('signUpForm');
-			//Forward to homepage
-			window.location.replace('/Pwa/BikeMaster/Home/');
+			//Forward to welcome page
+			window.location.replace('/Pwa/BikeMaster/Account/Welcome/');
 		}).catch((information) =>
 		{
 			//Request did not succeed, show form reason

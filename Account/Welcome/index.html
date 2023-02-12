@@ -3,16 +3,16 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 02/10/23 11:02pm
-	Version: 0.3
+	Date: 02/12/23 02:29pm
+	Version: 0.3.2
 Updated on
 	Version: 0.3.2
 
 Description:
-	Account sign in
+	Welcome page for registered users
 
 Changes:
-	Version 0.3.2 - Removed topbar.css
+
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -27,12 +27,13 @@ Changes:
 	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../../app.webmanifest">
+	<link rel="stylesheet" href="main.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/forms.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/icons.css">
 
-	<title>Sign In - BikeMaster</title>
+	<title>Welcome to BikeMaster</title>
 	<!--jQuery-->
 	<script src="../../jquery.min.js"></script>
 	<!--Registering service worker-->
@@ -45,54 +46,36 @@ Changes:
 	<script src="../../Resources/Javascript/Application/requestHandler.js"></script>
 	<!--Forwarder-->
 	<script src="../../Resources/Javascript/Application/forwarder.js"></script>
-	<!--Content load manager-->
-	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
+	<!--Sign in requirer-->
+	<script src="../../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Bottombar manager-->
+	<script src="../../Resources/Javascript/Application/bottombarManager.js"></script>
 </head>
 <body>
 	<div id="topbar">
 		<h1>
-			Account Sign In
+			Welcome to BikeMaster!
 		</h1>
 	</div>
 	<div id="content">
-		<div onRequest="onFormRefresh" onSuccess="onFormRefreshCompleted" onFail="onFormRefreshFailed" loader>
-
-		</div>
-		<div class="formWrapper section">
-			<div class="redirect blue">
-				<span>
-					Not a member yet?
-				</span>
-				<a href="../SignUp" class="button mini blue">
-					Sign Up
+		<div class="section">
+			<p class="redirect blue">
+				You have successfully signed up!
+			</p>
+			<div class="imageWrapper">
+				<img src="/Pwa/BikeMaster/Assets/Illustrations/Unblast.com/manRidingABike.jpg" alt="Man riding a bike">
+			</div>
+			<p class="setupText">
+				Let's finish setting up your account
+			</p>
+			<div class="buttons">
+				<a href="../Setup" class="button blue">
+					Set up account
+				</a>
+				<a href="../../Home" class="button gray">
+					Skip setup
 				</a>
 			</div>
-			<form id="signInForm" jsAction="../../Api/User/login.php" method="post">
-				<div class="formReason">
-						
-				</div>
-				<div class="formRow">
-					<div class="labelWrapper">
-						<i class="icon account"></i>
-						<label for="usernameOrEmail">
-							Username or E-mail:
-						</label>
-					</div>
-					<input id="usernameOrEmail" type="text" name="usernameOrEmail" placeholder="Username or E-mail" autocomplete>
-				</div>
-				<div class="formRow">
-					<div class="labelWrapper">
-						<i class="icon password"></i>
-						<label for="password">
-							Password:
-						</label>
-					</div>
-					<input id="password" type="password" name="password" placeholder="Password">
-				</div>
-				<button id="submitButton" class="button gray">
-					Sign in
-				</button>
-			</form>
 		</div>
 	</div>
 </body>

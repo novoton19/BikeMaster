@@ -1,0 +1,40 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/12/23 02:07pm
+	Version: 0.3.2
+Updated on
+	Version: 0.3.2
+
+Description:
+	Css for switchers
+*/
+[switcher]
+{
+	width: 100%;
+	
+	border-radius: 10px;
+	border-bottom: 1px solid #ddd;
+
+	display: flex;
+	overflow-x: auto;
+
+	background-color: #e7e7e7;
+}
+[switcher].noBackground
+{
+	border-bottom: 0px;
+	background-color: transparent;
+}
+#topbar [switcher]
+{
+	border-radius: 0px;
+}
+[switcher] .button
+{
+	flex: 1;
+	white-space: nowrap;
+	overflow-x: unset;
+}

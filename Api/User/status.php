@@ -177,7 +177,11 @@
 			'id' => intval(GeneralFunctions::getValue($account, 'ID')),
 			'username' => GeneralFunctions::getvalue($account, 'Username'),
 			'email' => GeneralFunctions::getValue($account, 'Email'),
-			'registrationTime' => intval(GeneralFunctions::getValue($account, 'RegistrationTime'))
+			'profilePictureUrl' => GeneralFunctions::getValue($account, 'ProfilePictureUrl'),
+			'description' => GeneralFunctions::getValue($account, 'Description'),
+			'latitude' => GeneralFunctions::getValue($account, 'Latitude'),
+			'longitude' => GeneralFunctions::getValue($account, 'Longitude'),
+			'registrationTime' => intval(GeneralFunctions::getValue($account, 'RegistrationTime')),
 		]
 	];
 	#Checking if included

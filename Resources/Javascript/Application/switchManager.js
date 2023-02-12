@@ -4,22 +4,27 @@ Contact: contact.bike@novotnyondrej.com
 
 Created on
 	Date: 01/26/23 9:18am
-	Version: 0.1.2
+	Version: 0.2
 Updated on
-	Version: 0.1.2
+	Version: 0.3.2
 
 Description:
 	Switch manager
 
 Changes:
-	 
+	Version 0.3.2 - Include switchers.css
 */
+//Switcher css
+var switcherCssUrl = '/Pwa/BikeMaster/Resources/Css/Application/switchers.css';
 //Getting get params
-let getParams = new URLSearchParams(window.location.search);
+var getParams = new URLSearchParams(window.location.search);
 
 //Waiting for document to load
 $(document).ready(() =>
 {
+	//Adding css
+	$('head').append($('<link>').attr('rel', 'stylesheet').attr('href', switcherCssUrl));
+
 	//Getting page switchers
 	const switchers = $('[switcher]');
 	//Getting distinct switcher IDs

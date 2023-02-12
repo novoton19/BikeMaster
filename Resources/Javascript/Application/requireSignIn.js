@@ -6,13 +6,14 @@ Created on
 	Date: 02/10/23 08:30pm
 	Version: 0.3
 Updated on
-	Version: 0.3.1
+	Version: 0.3.2
 
 Description:
 	Checks if user is logged in, if not, send him to login page
 
 Changes:
 	Version 0.3.1 - Functional script + colaborate with newest scripts
+	Version 0.3.2 - Fixed - Did not verify login
 */
 //Path to files
 var errorUrl = '/Pwa/BikeMaster/error.html';
@@ -31,9 +32,22 @@ if (crtPageUrl !== errorPageUrl)
 	//Requesting status
 	sendMultipleRequests([{
 		url : statusUrl
-	}]).then((response) =>
+	}]).then((responses) =>
 	{
-		//Everything in order
+		//Getting status
+		let status = responses[0];
+		//Whether timed out
+		let timedOut = status.timeout && status.timeout <= new Date().getTime() / 1000
+		//Checking if logged in
+		if (status.loggedIn && !timedOut)
+		{
+			//Everything in order
+		}
+		else//if (!status.loggedIn || timedOut)
+		{
+			//Forward to signin page
+			window.location.replace(signInUrl);
+		}
 	}).catch((information) =>
 	{
 		//Request did not succeed

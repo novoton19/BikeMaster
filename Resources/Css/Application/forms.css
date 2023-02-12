@@ -11,26 +11,6 @@ Updated on
 Description:
 	Css for forms
 */
-.formWrapper .redirect,
-.formWrapper .redirect.default
-{
-	width: 100%;
-	margin-bottom: 10px;
-	padding: 10px;
-	border-radius: 10px;
-	border: 1px solid #ddd;
-
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-
-	background-color: #e7e7e7;	
-}
-.formWrapper .redirect.blue
-{
-	border: 1px solid #bcd9ff;
-	background-color: #c2dcfd;
-}
 .formWrapper .redirect span
 {
 	overflow-x: auto;
@@ -72,13 +52,14 @@ Description:
 	display: flex;
 	align-items: center;
 
-	color: #444;
+	color: #555;
 }
 .formWrapper form .formRow .labelWrapper .icon
 {
 	margin-right: 3px;
 }
-.formWrapper form .formRow input
+.formWrapper form .formRow input,
+.formWrapper form .formRow textarea
 {
 	width: 100%;
 	max-width: 250px;
@@ -93,15 +74,18 @@ Description:
 	color: #333;
 	background-color: #e7e7e7;
 }
-.formWrapper form .formRow input:not(:last-child)
+.formWrapper form .formRow input:not(:last-child),
+.formWrapper form .formRow textarea:not(:last-child)
 {
 	margin-bottom: 5px;
 }
-.formWrapper form .formRow input::placeholder
+.formWrapper form .formRow input::placeholder,
+.formWrapper form .formRow textarea::placeholder
 {
 	color: #666;
 }
-.formWrapper form .formRow input.invalid
+.formWrapper form .formRow input.invalid,
+.formWrapper form .formRow textarea.invalid
 {
 	background-color: #ffe0e0;
 	border: 1px solid #f7a7a7;
