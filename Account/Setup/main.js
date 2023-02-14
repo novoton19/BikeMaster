@@ -78,6 +78,25 @@ $(document).ready(() =>
 		currentPage = nextPage;
 		onPageChanged();
 	}
+	function onPageFinished()
+	{
+		//Proceed to the next page
+		$(`#${currentPage}`).hide(200);
+		
+		//Get index of page
+		let index = missingPages.indexOf(currentPage);
+		//Checking if last
+		if (index + 1 === currentPage.length)
+		{
+			$('#complete');
+		}
+		else
+		{
+			currentPage = missingPages[index + 1];
+			$(`#${currentPage}`).show(200);
+		}
+		onPageChanged();
+	}
 	//Called when user requests refresh
 	function onRefresh()
 	{
@@ -113,7 +132,7 @@ $(document).ready(() =>
 		{
 			missingPages.push('descriptionPage');
 		}
-		if (!account.location)
+		if (!account.latitude || !account.longitude)
 		{
 			missingPages.push('locationPage');
 		}
@@ -141,6 +160,7 @@ $(document).ready(() =>
 	window.onRefresh = onRefresh;
 	window.onLoad = onLoad;
 	window.onFail = (information) => information.reason;
+	window.onPageFinished = onPageFinished;
 
 	$('.skipButton').each((index, skipButton) =>
 	{

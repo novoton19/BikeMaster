@@ -72,8 +72,7 @@ h2
 
 	font-weight: 400;
 	text-align: center;
-	text-overflow: ellipsis;
-	overflow: hidden;
+	overflow-x: auto;
 	white-space: nowrap;
 
 	color: #444;
@@ -86,10 +85,9 @@ h3
 	font-size: 20px;
 
 	font-weight: 400;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
 	text-align: center;
+	overflow-x: auto;
+	white-space: nowrap;
 
 	color: #505050;
 }

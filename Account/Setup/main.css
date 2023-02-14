@@ -84,10 +84,51 @@ Description:
 	display: flex;
 	justify-content: end;
 }
+#profilePicturePage .imageWrapper
+{
+	width: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+#profilePicturePage .imageWrapper .imageHolder
+{
+	width: 128px;
+	height: 128px;
+
+	border: 1px solid #ddd;
+	border-radius: 64px;
+
+	overflow: hidden;
+	box-sizing: unset;
+}
 #map
 {
 	width: 100%;
 	height: 300px;
+}
+#map *:not(.pointer)
+{
+	float: none;
+}
+#map .pointer
+{
+	position: absolute;
+	top: calc(50% - 10px);
+	left: calc(50% - 10px);
+
+	width: 20px;
+	height: 20px;
+
+	border-radius: 10px;
+	border: 3px solid #cb2a2a;
+
+	z-index: 2;
+}
+#locationPage .inputReason
+{
+	margin: 5px 0px;
 }
 #locationPage .button
 {

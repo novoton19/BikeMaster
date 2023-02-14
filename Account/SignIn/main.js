@@ -108,8 +108,8 @@ $(document).ready(() =>
 			//Request succeeded
 			//Remove previous information from session storage
 			sessionStorage.removeItem('signInForm');
-			//Forward to homepage
-			window.location.replace('/Pwa/BikeMaster/Home/');
+			//Forward to setup page
+			window.location.replace('/Pwa/BikeMaster/Account/Welcome/');
 		}).catch((information) =>
 		{
 			//Request did not succeed, show form reason
@@ -203,8 +203,8 @@ $(document).ready(() =>
 		//Checking if logged in
 		if (status.loggedIn && !timedOut)
 		{
-			//Back to homepage
-			window.location.replace('/Pwa/BikeMaster/Home/');
+			//Forward to setup page
+			window.location.replace('/Pwa/BikeMaster/Account/Welcome/');
 		}
 		else//if (!status.loggedIn || timedOut)
 		{
@@ -215,7 +215,6 @@ $(document).ready(() =>
 			let reasonID = status.reasonID;
 			//Form reason
 			let text;
-			
 			//Determining form reason
 			if (reasonID === reasonIDs.TimedOut || timedOut)
 			{
@@ -233,6 +232,7 @@ $(document).ready(() =>
 					username : username
 				}
 			};
+			loadResponse(response);
 		}
 	}
 

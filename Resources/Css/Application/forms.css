@@ -90,7 +90,18 @@ Description:
 	background-color: #ffe0e0;
 	border: 1px solid #f7a7a7;
 }
-.formWrapper form .formRow .inputReason
+.formWrapper form .formRow .information
+{
+	width: 100%;
+
+	font-size: 12px;
+	
+	text-align: right;
+
+	color: #666;
+}
+.formWrapper form .formRow .inputReason,
+.inputReason.formException
 {
 	width: 100%;
 

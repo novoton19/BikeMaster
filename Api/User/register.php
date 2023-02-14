@@ -7,7 +7,7 @@
 		Date: 01/02/23
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3.3
+		Version: 0.3.3
 
 	Description:
 		Registration
@@ -15,6 +15,8 @@
 	Changes:
 		Version 0.0.3.1.1 - Use ReasonIDs from database
 		Version 0.0.3.3 - Correct standards
+		Version 0.3.2 - Automatic login on registration
+		Version 0.3.3 - Quick fix - GeneralFunctions were not included
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -32,6 +34,8 @@
 	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
 	#Require input validation
 	require_once(__DIR__.'/../../Resources/Php/InputValidation/registration.php');
+	#Require general functions
+	require_once(__DIR__.'/../../Resources/Php/general.php');
 	
 	#Creating ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();

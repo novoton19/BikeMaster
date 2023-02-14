@@ -40,6 +40,9 @@ Changes:
 	<script src="../../registerServiceWorker.js"></script>
 	<!--Javascript for this page-->
 	<script src="main.js"></script>
+	<script src="profilePicture.js"></script>
+	<script src="description.js"></script>
+	<script src="location.js"></script>
 	<!--Network manager-->
 	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
 	<!--Request handler-->
@@ -52,6 +55,10 @@ Changes:
 	<script src="../../Resources/Javascript/Application/bottombarManager.js"></script>
 	<!--Content load manager-->
 	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
+	<!--Position manager-->
+	<script src="../../Resources/Javascript/Application/positionManager.js"></script>
+	<!--Map manager-->
+	<script src="../../Resources/Javascript/Application/mapManager.js"></script>
 
 	<!--Mapy.cz Api-->
 	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
@@ -89,11 +96,18 @@ Changes:
 										Profile picture:
 									</label>
 								</div>
-								<input id="profilePicture" type="file" name="profilePicture">
+								<input id="profilePicture" type="file" name="profilePicture" accept=".jpg, .jpeg, .png, .gif">
 								<label for="profilePicture" class="inputReason"></label>
 							</div>
 							<div class="formRow">
-								<img class="imagePreview" alt="image preview">
+								<div class="imageWrapper">
+									<h3>
+										Profile picture will look like this
+									</h3>
+									<div class="imageHolder">
+										<img class="imagePreview" alt="image preview">
+									</div>
+								</div>
 							</div>
 							<button class="submitButton button green">
 								Set picture
@@ -121,7 +135,8 @@ Changes:
 										Description:
 									</label>
 								</div>
-								<textarea id="description" name="profilePicture" placeholder="Description"></textarea>
+								<textarea id="description" name="description" placeholder="Description"></textarea>
+								<label for="description" class="characterCounter information">0/511</label>
 								<label for="description" class="inputReason"></label>
 							</div>
 							<button class="submitButton button green">
@@ -144,15 +159,14 @@ Changes:
 					</div>
 					<div class="pageContent">
 						<div id="map">
+							<div class="pointer">
 
+							</div>
 						</div>
-						<script>
-							var acenter = SMap.Coords.fromWGS84(14.41790, 50.12655);
-							var am = new SMap(JAK.gel("map"), acenter, 13);
-							am.addDefaultLayer(SMap.DEF_BASE).enable();
-							am.addDefaultControls();
-						</script>
-						<button class="showLocation button green">
+						<div class="inputReason formException">
+							
+						</div>
+						<button class="findLocationButton button green">
 							Find my location
 						</button>
 						<button class="submitButton button green">

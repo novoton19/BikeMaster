@@ -27,7 +27,7 @@ let requestHandlerReasonIDs = {
 	OtherStatus : 8
 }
 //Sends a request and returns result
-function sendRequest(url, data = {}, method = 'get', timeout = 5000)
+function sendRequest(url, data = {}, method = 'get', processData = undefined, contentType = undefined, timeout = 5000)
 {
 	//Return promise
 	return new Promise((resolve, reject) =>
@@ -36,6 +36,8 @@ function sendRequest(url, data = {}, method = 'get', timeout = 5000)
 			url : url,
 			data : data,
 			method : method,
+			processData : processData,
+			contentType : contentType,
 			timeout : 5000,
 			success : (response) =>
 			{

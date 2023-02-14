@@ -53,6 +53,30 @@
 			#Return result
 			return $success;
 		}
+		#Update user information
+		public function updateInformation($id, $columns)
+		{
+			#Data to feed
+			$data = [
+				':ID' => $id
+			];
+			#Column changes
+			$changes = [];
+			#Loading columns
+			foreach ($columns as $column => $value)
+			{
+				$data[':'.$column] = $value;
+				array_push($changes, $column.' = :'.$column);
+			}
+			#Query to feed
+			$query = implode(',', $changes);
+
+			list($success, , ) = $this->db->getData(
+				'UPDATE Users Set '.$query.' Where ID = :ID',
+				$data
+			);
+			return $success;
+		}
 		#Get user by ID
 		public function getUserByIDSecure($id)
 		{

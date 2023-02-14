@@ -7,13 +7,14 @@
 		Date: 01/02/23 10:24pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.3.1.1
+		Version: 0.3.3
 
 	Description:
 		Validation of registration form inputs
 
 	Changes:
 		Version 0.0.3.1.1 - Use ReasonIDs from database
+		Version 0.3.3 - Added ProfilePicture, Description verification
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -22,6 +23,10 @@
 	}
 	#Require reason IDs
 	require_once(__DIR__.'/../Db/reasonIDsDb.php');
+	#Require settings
+	require_once(__DIR__.'/../Db/settingsDb.php');
+	#Require general functions
+	require_once(__DIR__.'/../general.php');
 
 	#Validation class
 	class RegistrationValidation
@@ -30,6 +35,8 @@
 		private $usersDb;
 		#ReasonIDs
 		private $reasonIDs;
+		#SettingsDb
+		private $settings;
 		#Username pattern
 		public static $usernamePattern = '/^[a-zA-Z0-9_]{3,24}$/';
 		#Constructor
@@ -39,6 +46,8 @@
 			$this->usersDb = new UsersDb();
 			#Create ReasonIDsDb
 			$this->reasonIDs = new ReasonIDsDb();
+			#Create SettingsDb
+			$this->settings = new SettingsDb();
 		}
 
 		public function validateUsername($username)
@@ -256,6 +265,196 @@
 			}
 			return [
 				'valid' => $isValid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		public function validateProfilePicture($image)
+		{
+			#Reasons
+			$reasonIDs = $this->reasonIDs;
+			#Settings
+			$settings = $this->settings;
+			
+			#Minimum dimensions
+			$minWidth = intval($settings->MinimumProfilePictureWidth);
+			$minHeight = intval($settings->MinimumProfilePictureHeight);
+			#Maximum dimensions
+			$maxWidth = intval($settings->MaximumProfilePictureWidth);
+			$maxHeight = intval($settings->MaximumProfilePictureHeight);
+			#Valid extensions
+			$validExtensions = explode(',', $settings->ValidProfilePictureExtensions);
+			
+			#Whether is valid
+			$isValid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if exists
+			if (is_null($image))
+			{
+				$reasonID = $reasonIDs->IsNull;
+				$reason = 'Image not set';
+			}
+			else#if (!is_null($image))
+			{
+	
+				#Getting fileName
+				$fileName = GeneralFunctions::getValue($image, 'name', null);
+				$fileLocation = GeneralFunctions::getValue($image, 'tmp_name', null);
+				#Checking fileName
+				if (is_null($fileName) or is_null($fileLocation) or empty($fileName) or empty($fileLocation))
+				{
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Image not found';
+				}
+				else#if (!(is_null($fileName) or is_null($fileLocation) or empty($fileName) or empty($fileLocation)))
+				{
+					$fileName = basename($fileName);
+					#Getting extension
+					$ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+					#Getting size
+					list($width, $height) = getimagesize($fileLocation);
+		
+					#Checking image
+					if (!in_array($ext, $validExtensions))
+					{
+						$reasonID = $reasonIDs->InvalidExtension;
+						$reason = 'Invalid extension ('.join(',', $validExtensions).' only)';
+					}
+					elseif ($width < $minWidth or $height < $minHeight)
+					{
+						$reasonID = $reasonIDs->TooSmall;
+						$reason = 'Minimum image size is '.$minWidth.'x'.$minHeight.'px';
+					}
+					elseif ($width > $maxWidth or $height > $maxHeight)
+					{
+						$reasonID = $reasonIDs->TooBig;
+						$reason = 'Maximum image size is '.$maxWidth.'x'.$maxHeight.'px';
+					}
+					else
+					{
+						#Valid
+						$isValid = true;
+					}
+				}
+			}
+			return [
+				'valid' => $isValid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		public function validateDescription($description)
+		{
+			#Reasons
+			$reasonIDs = $this->reasonIDs;
+			#Whether is valid
+			$isValid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+			#Checking if exists
+			if (is_null($description))
+			{
+				$reasonID = $reasonIDs->IsNull;
+				$reason = 'Description not set';
+			}
+			elseif (gettype($description) !== 'string')
+			{
+				$reasonID = $reasonIDs->InvalidType;
+				$reason = 'Description is not a string';
+			}
+			else
+			{
+				#Getting length
+				$length = strlen($description);
+				#Checking length
+				if ($length > 511)
+				{
+					$reasonID = $reasonIDs->TooLong;
+					$reason = 'Description must not be longer than 511 characters';
+				}
+				else
+				{
+					$isValid = true;
+				}
+			}
+			return [
+				'valid' => $isValid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates latitude
+		public function validateLatitude($latitude)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Whether valid
+			$valid = false;
+			#Filtered result
+			$latitudeValue = null;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			$latitude = doubleval($latitude);
+
+			#Checking range
+			if ($latitude >= -90 and $latitude <= 90)
+			{
+				#Valid
+				$reasonID = $reasonIDs->Accepted;
+				$valid = true;
+				$latitudeValue = round($latitude, 7);
+			}
+			else#if ($latitude < -90 or $latitude > 90)
+			{
+				#Invalid
+				$reasonID = $reasonIDs->OutOfRange;
+				$reason = 'Not latitude';
+			}
+			#Return result
+			return [
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates longitude
+		public function validateLongitude($longitude)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Whether valid
+			$valid = false;
+			#Filtered result
+			$longitudeValue = null;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			$longitude = doubleval($longitude);
+
+			#Checking range
+			if ($longitude >= -180 and $longitude <= 180)
+			{
+				#Valid
+				$reasonID = $reasonIDs->Accepted;
+				$valid = true;
+				$longitudeValue = round($longitude, 7);
+			}
+			else#if ($longitude < -90 or $longitude > 90)
+			{
+				#Invalid
+				$reasonID = $reasonIDs->OutOfRange;
+				$reason = 'Not longitude';
+			}
+			#Return result
+			return [
+				'valid' => $valid,
 				'reasonID' => $reasonID,
 				'reason' => $reason
 			];

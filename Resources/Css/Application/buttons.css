@@ -154,3 +154,8 @@ Description:
 	background-color: #333;
 	color: #ddd;
 }
+.button.green:disabled
+{
+	color: #ddd;
+	background-color: #265a26;
+}
