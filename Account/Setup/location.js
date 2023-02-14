@@ -6,13 +6,13 @@ Created on
 	Date: 02/14/23 03:35pm
 	Version: 0.3.3
 Updated on
-	Version: 0.3.3
+	Version: 0.3.4
 
 Description:
 	Javascript specifically designed for location upload
 
 Changes:
-	 
+	Version 0.3.4 - Default map controls removed from mapManager, needed to be added manually 
 */
 //Action url
 var action = '../../Api/User/updateInformation.php';
@@ -25,6 +25,7 @@ $(document).ready(() =>
 	const networkManager = new NetworkManager();
 	//Creating map manager
 	var mapManager = new MapManager('map', false);
+	mapManager.map.addDefaultControls();
 	//Creating position manager
 	var positionManager = new PositionManager();
 

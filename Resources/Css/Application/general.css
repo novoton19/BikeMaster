@@ -6,7 +6,7 @@ Created on
 	Date: 01/10/23 05:44pm
 	Version: 0.1
 Updated on
-	Version: 0.2
+	Version: 0.3.4
 
 Description:
 	General Css for all pages
@@ -145,4 +145,22 @@ h3
 {
 	border: 1px solid #bcd9ff;
 	background-color: #c2dcfd;
+}
+#content .redirect .button
+{
+	min-width: min-content;
+}
+@media screen and (max-width: 300px) {
+	#content .redirect
+	{
+		flex-direction: column;
+	}
+	#content .redirect .button
+	{
+		width: 100%;
+
+		margin-left: 0px;
+		margin-top: 5px;
+		min-width: unset;
+	}
 }

@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.7
 Updated on
-	Version: 0.0.5.4.1
+	Version: 0.3.4
 
 Description:
 	Loads a map, displays current location on a map
@@ -15,6 +15,8 @@ Changes:
 	Version 0.0.4.2 - Show track on a map
 	Version 0.0.4.3 - Option not to watch position
 	Version 0.0.5.4.1 - Add unload gpx function
+	Version 0.3.3 - Enable default controls
+	Version 0.3.4 - Disable default controls on default
 */
 //Map manager
 class MapManager
@@ -40,7 +42,6 @@ class MapManager
 		);
 		//Adding default layer
 		map.addDefaultLayer(SMap.DEF_TURIST).enable();
-		map.addDefaultControls();
 
 		//Adding map
 		this.map = map;

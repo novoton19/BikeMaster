@@ -7,13 +7,13 @@
 		Date: 02/12/23
 		Version: 0.3.3
 	Updated on
-		Version: 0.3.3
+		Version: 0.3.4
 
 	Description:
 		Update account information
 
 	Changes:
-		
+		Version 0.3.4 - Profile picture Url (Users table) - save only image name, not whole url
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -227,7 +227,7 @@
 					$ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 					#Getting file location
 					$imageDir = $imagesFolder.'/'.$pictureName.'.'.'png';
-					$imageUrl = $imagesUrl.'/'.$pictureName.'.'.'png';
+					$imageUrl = $pictureName.'.'.'png';
 					#Getting size
 					list($width, $height) = getimagesize($fileLocation);
 					#Checking extension
@@ -301,14 +301,14 @@
 							else
 							{
 								#Adding profile picture url to columns
-								$columns['ProfilePictureUrl'] = $imagesUrl.'/'.$username.'.'.$originalImageExtension;
+								$columns['ProfilePictureUrl'] = $username.'.'.$originalImageExtension;
 							}
 						}
 						else
 						{
 							#Adding profile picture url to columns
 							#Just to make sure, what if previous request did not update database?
-							$columns['ProfilePictureUrl'] = $imagesUrl.'/'.$username.'.'.$originalImageExtension;
+							$columns['ProfilePictureUrl'] = $username.'.'.$originalImageExtension;
 						}
 					}
 				}

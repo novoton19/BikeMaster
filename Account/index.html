@@ -6,7 +6,7 @@ Created on
 	Date: 02/10/23 08:32pm
 	Version: 0.3
 Updated on
-	Version: 0.3
+	Version: 0.3.4
 
 Description:
 	Account information
@@ -30,6 +30,7 @@ Changes:
 	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
+	<link rel="stylesheet" href="main.css">
 
 	<title>Account - BikeMaster</title>
 	<!--jQuery-->
@@ -38,6 +39,7 @@ Changes:
 	<script src="../registerServiceWorker.js"></script>
 	<!--Javascript for this page-->
 	<!--<script src="main.js"></script>-->
+	<script src="account.js"></script>
 	<!--Network manager-->
 	<script src="../Resources/Javascript/Application/networkManager.js"></script>
 	<!--Request handler-->
@@ -52,6 +54,14 @@ Changes:
 	<script src="../Resources/Javascript/Application/bottombarManager.js"></script>
 	<!--Switch manager-->
 	<script src="../Resources/Javascript/Application/switchManager.js"></script>
+	<!--Position manager-->
+	<script src="../Resources/Javascript/Application/positionManager.js"></script>
+	<!--Map manager-->
+	<script src="../Resources/Javascript/Application/mapManager.js"></script>
+
+	<!--Mapy.cz Api-->
+	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript">Loader.load();</script>
 </head>
 <body>
 	<div id="topbar">
@@ -69,7 +79,61 @@ Changes:
 	</div>
 	<div id="content">
 		<div id="account" class="section" switchDefault>
+			<div loader onRequest="onAccountRequested" onSuccess="onAccountLoaded" onFail="onAccountLoadFailed"></div>
+			<div class="content">
+				<div class="redirect blue">
+					<span>
+						You are now viewing your profile privately.
+					</span>
+					<a href="" class="button blue">
+						Public profile
+					</a>
+				</div>
+				<div class="setupDialog redirect blue">
+					<span>
+						Your account is still not fully set up!
+					</span>
+					<a href="Setup/" class="button blue">
+						Finish setup
+					</a>
+				</div>
+				<div class="group">
+					<div class="imageWrapper">
+						<img src="../Assets/ProfilePictures/Default/default.png" class="profilePicture" alt="profile picture">
+					</div>
+					<h2 class="username">
+						Username
+					</h2>
+					<p class="email">
+						E-mail
+					</p>
+					<p class="registrationTime">
+						Registration time
+					</p>
+				</div>
+				<div class="group descriptionWrapper">
+					<p class="description limited">
+						Description
+					</p>
+					<div class="buttons">
+						<button class="readMoreDescription button mini">Read more</button>
+						<button class="readLessDescription button mini invisible">Read less</button>
+					</div>
+				</div>
+				<div class="group locationWrapper">
+					<p>
+						Your home location
+					</p>
+					<div id="map">
 			
+					</div>
+				</div>
+				<div class="navigationalButton buttons">
+					<button class="button gray">
+						Sign out
+					</button>
+				</div>
+			</div>
 		</div>
 		<div id="friends" class="section noPadding">
 			<div switcherID="type" switcher>
