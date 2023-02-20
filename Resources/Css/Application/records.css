@@ -1,0 +1,107 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/20/23 09:31pm
+	Version: 0.3.5
+Updated on
+	Version: 0.3.5
+
+Description:
+	Css for any types of  records
+*/
+#content .recordsWrapper
+{
+	width: 100%;
+}
+#content .recordsWrapper .records
+{
+	width: 100%;
+}
+#content .recordsWrapper .records .record
+{
+	width: 100%;
+
+	padding: 15px 10px;
+	border-bottom: 1px solid #ddd;
+}
+#content .recordsWrapper .records .record.friend,
+#content .recordsWrapper .records .record.friendRequest
+{
+	display: flex;
+	justify-content: space-between;
+}
+#content .recordsWrapper .records .record.friend .iconWrapper,
+#content .recordsWrapper .records .record.friendRequest .iconWrapper
+{
+	max-width: 48px;
+	min-width: 48px;
+
+	display: flex;
+	align-items: center;
+}
+#content .recordsWrapper .records .record.friend .iconWrapper .profilePicture,
+#content .recordsWrapper .records .record.friendRequest .iconWrapper .profilePicture
+{
+	max-width: 100%;
+
+	border-radius: 24px;
+	border: 1px solid #ddd;
+}
+#content .recordsWrapper .records .record.friend .information,
+#content .recordsWrapper .records .record.friendRequest .information
+{
+	width: 100%;
+
+	margin: 0px 15px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+#content .recordsWrapper .records .record.friend .information .username,
+#content .recordsWrapper .records .record.friendRequest .information .username
+{
+	font-size: 20px;
+	margin-bottom: 3px;
+ 
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+	word-break: break-all;
+}
+#content .recordsWrapper .records .record.friend .information .description,
+#content .recordsWrapper .records .record.friendRequest .information .description
+{
+	width: auto;
+
+	font-size: 13px;
+
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+	word-break: break-all;
+	
+	color: #666;
+	font-style: italic;
+}
+#content .recordsWrapper .records .record.friend .buttons,
+#content .recordsWrapper .records .record.friendRequest .buttons
+{
+	display: flex;
+	align-items: center;
+}
+#content .recordsWrapper .noResults
+{
+	width: 100%;
+	
+	margin-top: 50px;
+	margin-bottom: 25px;
+	font-size: 20px;
+
+	text-align: center;
+	color: #666;
+}

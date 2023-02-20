@@ -6,13 +6,13 @@ Created on
 	Date: 02/11/23 05:21pm
 	Version: 0.3
 Updated on
-	Version: 0.3
+	Version: 0.3.5
 
 Description:
 	Handles requests
 
 Changes:
-
+	Version 0.3.5 - Support 0 requests
 */
 //Reason IDs
 let requestHandlerReasonIDs = {
@@ -148,6 +148,12 @@ function sendRequest(url, data = {}, method = 'get', processData = undefined, co
 //Sends multiple requests
 function sendMultipleRequests(requests = [])
 {
+	//Checking if there are any requests
+	if (!requests.length)
+	{
+		//Resolved
+		return new Promise((resolve, reject) => resolve([]));
+	}
 	return new Promise((resolve, reject) =>
 	{
 		Promise.all(requests.map((request) =>

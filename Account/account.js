@@ -115,7 +115,6 @@ $(document).ready(() =>
 		locationMarker.setCoords(SMap.Coords.fromWGS84(longitude, latitude));
 		//Show content
 		content.show();
-		console.log(account);
 	}
 	
 	window.onAccountRequested = onAccountRequested;

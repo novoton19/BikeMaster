@@ -28,6 +28,7 @@ Changes:
 	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../app.webmanifest">
 	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/records.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
 	<link rel="stylesheet" href="main.css">
@@ -40,6 +41,8 @@ Changes:
 	<!--Javascript for this page-->
 	<!--<script src="main.js"></script>-->
 	<script src="account.js"></script>
+	<script src="currentFriends.js"></script>
+	<script src="friendRequests.js"></script>
 	<!--Network manager-->
 	<script src="../Resources/Javascript/Application/networkManager.js"></script>
 	<!--Request handler-->
@@ -145,10 +148,28 @@ Changes:
 				</button>
 			</div>
 			<div id="list" class="section" switchDefault>
-
+				<div loader onRequest="onFriendListPageRequested" onSuccess="onFriendListPageObtained" onFail="onFriendListPageFailed"></div>
+				<div class="recordsWrapper">
+					<div class="records">
+						
+					</div>
+					<div loader continuous relativeID="list" onRequest="onFriendListRequested" onSuccess="onFriendListObtained" onFail="onFriendListFailed"></div>
+					<div class="noResults">
+						No more results
+					</div>
+				</div>
 			</div>
 			<div id="requests" class="section">
-
+				<div loader onRequest="onFriendRequestsPageRequested" onSuccess="onFriendRequestsPageObtained" onFail="onFriendRequestsPageFailed"></div>
+				<div class="recordsWrapper">
+					<div class="records">
+						
+					</div>
+					<div loader continuous relativeID="requests" onRequest="onFriendRequestsRequested" onSuccess="onFriendRequestsObtained" onFail="onFriendRequestsFailed"></div>
+					<div class="noResults">
+						No more results
+					</div>
+				</div>
 			</div>
 		</div>
 		<div id="settings" class="section">

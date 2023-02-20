@@ -72,7 +72,7 @@
 			#Getting id term
 			$id = GeneralFunctions::getValue($_GET, 'id');
 			#Getting page
-			$page = intval(GeneralFunctions::getvalue($_GET, 'page'));
+			$page = intval(GeneralFunctions::getValue($_GET, 'page'));
 			#Checking value
 			if ($page < 0)
 			{

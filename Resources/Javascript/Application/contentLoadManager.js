@@ -6,13 +6,14 @@ Created on
 	Date: 02/09/23 11:04pm
 	Version: 0.2
 Updated on
-	Version: 0.3
+	Version: 0.3.5
 
 Description:
 	Content loading manager
 
 Changes:
 	Version 0.3 - Added backup treatment option, collaboration with forwarder and requestHandler
+	Version 0.3.5 - Added continuous loading support, removed transitions
 */
 //Path to required files
 const loaderCssPath = '/Pwa/BikeMaster/Resources/Css/Application/loader.css';
@@ -47,6 +48,10 @@ $(document).ready(() =>
 			let onFail = $(loader).attr('onFail');
 			//Checking if should have extra treatment for backups
 			let backupTreatment = $(loader).attr('backupTreatment') !== undefined;
+			//Checking if loader is continuous
+			let continuous = $(loader).attr('continuous') !== undefined;
+			let relativeID = $(loader).attr('relativeID');
+			let relative = $(`#${relativeID}`);
 
 			//Checking if functions exist
 			if (!(onRequest && onSuccess && onFail) || !(window[onRequest] && window[onSuccess] && window[onFail]))
@@ -55,7 +60,15 @@ $(document).ready(() =>
 				console.log('Loader is missing one of the following functions: onRequest, onSuccess, onFail', loader);
 				return;
 			}
+			//Checking if relative exists
+			if (continuous && !relative.length)
+			{
+				//Relative doesn't exist
+				console.log('Continuous loader is missing relative', loader);
+				return;
+			}
 			//Adding html
+			let parent = $(loader).parent();
 			$(loader).append(html);
 			//Getting reminders
 			let reminders = $(loader).find('.reminders');
@@ -69,19 +82,20 @@ $(document).ready(() =>
 			let oFetchFail = overlays.find('.overlay.fetchFail');
 			let oFetchFailText = oFetchFail.find('h3');
 			let oLoading = overlays.find('.overlay.loading');
-
+			
 			//Buttons
 			let backupButtons = $(loader).find('.backupButton');
 			let retryButtons = $(loader).find('.retryButton');
 			let refreshButtons = $(loader).find('.refreshButton');
 			let signInButtons = $(loader).find('.signInButton');
-
+			
 			//Whether backup exists
 			let backupExists = false;
 			let backup = undefined;
 			//Whether SignIn is required in order to access the content
 			let mustSignIn = false;
 			//Whether result has been loaded
+			let loadingContent = false;
 			let resultLoaded = false;
 			let resultIsBackup = false;
 			//Update button visibility
@@ -89,51 +103,57 @@ $(document).ready(() =>
 			{
 				if (backupExists && backupTreatment)
 				{
-					backupButtons.show(200);
+					backupButtons.show();
 				}
 				else//if (!backupExists || !backupTreatment)
 				{
-					backupButtons.hide(200);
+					backupButtons.hide();
 				}
 				if (mustSignIn)
 				{
-					signInButtons.show(200);
+					signInButtons.show();
 				}
 				else//if (!mustSignIn)
 				{
-					signInButtons.hide(200);
+					signInButtons.hide();
 				}
 			}
 			//Shows reminder
 			function showReminder(reminder)
 			{
 				//Hide overlays
-				overlays.hide(200);
-				rOffline.hide(200);
-				rBackup.hide(200);
-				rRefresh.hide(200);
-				reminders.show(200);
-				reminder.show(200);
+				overlays.hide();
+				rOffline.hide();
+				rBackup.hide();
+				rRefresh.hide();
+				reminders.show();
+				reminder.show();
 			}
 			//Shows overlay
 			function showOverlay(overlay)
 			{
-				reminders.hide(200);
-				oOffline.hide(200);
-				oFetchFail.hide(200);
-				oLoading.hide(200);
-				overlays.show(200);
-				overlay.show(200);
+				reminders.hide();
+				oOffline.hide();
+				oFetchFail.hide();
+				oLoading.hide();
+				overlays.show();
+				overlay.show();
 			}
 			//Hides everything
 			function hideEverything()
 			{
-				reminders.hide(200);
-				overlays.hide(200);
+				reminders.hide();
+				overlays.hide();
 			}
 			//Loads content
 			function loadContent()
 			{
+				//Checking if not loading content
+				if (loadingContent)
+				{
+					return;
+				}
+				loadingContent = true;
 				//Show loading overlay
 				showOverlay(oLoading);
 				//Result not loaded
@@ -143,33 +163,53 @@ $(document).ready(() =>
 				//Getting requests
 				let requests = window[onRequest]();
 				//Checking if urls exist
-				if (!requests)
+				if (!requests || !requests.length)
 				{
 					//Successfully loaded since there is nothing to load
 					window[onSuccess]();
-					//Showing refresh reminder
-					showReminder(rRefresh);
+					//Checking if continuous
+					if (!continuous)
+					{
+						//Show refresh reminder
+						showReminder(rRefresh);
+					}
+					else
+					{
+						//Refresh reminder not required, the content will be updated on scroll
+						hideEverything();
+					}
+					loadingContent = false;
 					return;
 				}
 				sendMultipleRequests(requests).then((responses) =>
 				{
+					loadingContent = false;
 					//Checking if online or doesn't have backup treatment
 					if (networkManager.online || !backupTreatment)
 					{
 						resultLoaded = true;
-						//Send responses
-						window[onSuccess](responses);
 						//Checking if online
 						if (networkManager.online)
 						{
-							//Show refresh reminder
-							showReminder(rRefresh);
+							//Checking if continuous
+							if (!continuous)
+							{
+								//Show refresh reminder
+								showReminder(rRefresh);
+							}
+							else
+							{
+								//Refresh reminder not required, the content will be updated on scroll
+								hideEverything();
+							}
 						}
 						else//if (!networkManager.online)
 						{
 							//Show offline reminder
 							showReminder(rOffline);
 						}
+						//Send responses
+						window[onSuccess](responses);
 						return;
 					}
 					else//if (!networkManager.online || backupTreatment)
@@ -187,12 +227,14 @@ $(document).ready(() =>
 					//Backup doesn't exist or is invalid
 					backupExists = false;
 					backup = undefined;
+					loadingContent = false;
 
 					//Checking if online
 					if (!networkManager.online)
 					{
 						//Show offline overlay
 						showOverlay(oOffline);
+						loadingContent = false;
 						return;
 					}
 					else//if (networkManager.online)
@@ -226,14 +268,58 @@ $(document).ready(() =>
 					}
 				});
 			}
+			//On scroll
+			function onScroll()
+			{
+				//console.log('scroll');
+				//Checking if not loading next page already
+				if (loadingContent)
+				{
+					return;
+				}
+				//Getting scroll position
+				//let scrollTop = $(relative).scrollTop();
+				//let innerHeight = $(relative).innerHeight();
+				//let scrollHeight = $(relative).prop('scrollHeight');
+				//let loaderHeight = $(loader).height();
+				//console.log('scrollTop', scrollTop, 'innerHeight', innerHeight, 'scrollHeight', scrollHeight, 'loaderHeight', loaderHeight);
+				//Checking if it's time to load next page
+				//if (scrollHeight - scrollTop - loaderHeight <= innerHeight)
+				//{
+					//Load next page
+					loadContent();
+				//}
+			}
 
 
 			//Update buttons on default
 			updateButtons();
-			loadContent();
+			//Checking if continuous
+			if (continuous)
+			{
+				//Scroll events
+				//$(window).scroll(onScroll);
+				$(relative).on('DOMSubtreeModified', onScroll);
+				//$(window).resize(onScroll);
+				//onScroll();
+			}
+			else
+			{
+				loadContent();
+			}
 			//Click event listeners
 			retryButtons.click(loadContent);
-			refreshButtons.click(loadContent);
+			//Checking if continuous
+			if (!continuous)
+			{
+				//Adding refresh button click events
+				refreshButtons.click(loadContent);
+			}
+			else
+			{
+				//Hide refresh buttons
+				refreshButtons.hide();
+			}
 			backupButtons.click(() =>
 			{
 				//Change state
@@ -261,7 +347,17 @@ $(document).ready(() =>
 					}
 					else//if (!resultIsBackup)
 					{
-						showReminder(rRefresh);
+						//Checking if continuous
+						if (!continuous)
+						{
+							//Add option to refresh
+							showReminder(rRefresh);
+						}
+						else
+						{
+							//Next request on scroll
+							hideEverything();
+						}
 					}
 				}
 				else//if (!networkManager.online)
@@ -269,11 +365,11 @@ $(document).ready(() =>
 					//Checking if backup loaded
 					if (resultIsBackup && backupTreatment)
 					{
-						rOfflineDetails.show(200);
+						rOfflineDetails.show();
 					}
 					else //if (!resultIsBackup)
 					{
-						rOfflineDetails.hide(200);
+						rOfflineDetails.hide();
 					}
 					//Show offline reminder
 					showReminder(rOffline);

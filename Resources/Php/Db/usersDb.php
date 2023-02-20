@@ -82,7 +82,7 @@
 		{
 			#Return result
 			return $this->db->getData(
-				'SELECT ID, Username, Email, RegistrationTime, ProfilePictureUrl, Description, Latitude, Longitude, (Select Count(FriendRelations.ID) From FriendRelations Where (Users.ID = SenderUserID Or Users.ID = ReceiverUserID) And Accepted) As FriendsCount From Users Where ID = :ID Limit 1',
+				'SELECT ID, Username, Email, RegistrationTime, ProfilePictureUrl, Description, (Select Count(FriendRelations.ID) From FriendRelations Where (Users.ID = SenderUserID Or Users.ID = ReceiverUserID) And Accepted) As FriendsCount From Users Where ID = :ID Limit 1',
 				[
 					':ID' => $id
 				],

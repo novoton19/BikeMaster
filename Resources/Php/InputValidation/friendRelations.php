@@ -7,13 +7,14 @@
 		Date: 01/08/23 10:50pm
 		Version: 0.0.5
 	Updated on
-		Version: 0.0.5.1
+		Version: 0.3.5
 
 	Description:
 		Validation of inputs for any friend relation requests
 
 	Changes:
 		Version 0.0.5.1 - validateResponseType, Bug fixes
+		Version 0.3.5 - Validate page and viewing type
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -118,6 +119,113 @@
 			}
 			return [
 				'success' => $success,
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates page
+		public function validatePage($page)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Whether valid
+			$valid = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Checking if is number
+				if (is_numeric($page))
+				{
+					#Converting to number
+					$page = intval($page);
+					#Checking if >= 0
+					if ($page >= 0)
+					{
+						$valid = true;
+						$reasonID = $reasonIDs->Accepted;
+					}
+					else#if ($page < 0)
+					{
+						$reasonID = $reasonIDs->TooSmall;
+						$reason = 'Cannot load page lower than 0';
+					}
+				}
+				elseif (is_null($userID))
+				{
+					#Not set
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Not specified';
+				}
+				else#if (!is_numeric($userID))
+				{
+					#Not number
+					$reasonID = $reasonIDs->InvalidInputs;
+					$reason = 'Not a number';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates viewing type
+		public function validateViewingType($type)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Whether valid
+			$valid = false;
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				#Checking type
+				if ($type === 'current' or $type === 'requests')
+				{
+					$valid = true;
+					$reasonID = $reasonIDs->Accepted;
+				}
+				elseif (is_null($type))
+				{
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Not specified';
+				}
+				else#if ($type !== 'current' and $type !== 'requests')
+				{
+					$reasonID = $reasonIDs->InvalidInputs;
+					$reason = 'Not valid';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = $reasonIDs->DatabaseError;
+				$reason = 'Server experienced an error while processing the request (1)';
+			}
+			#Checking if reasonID is set
+			if (is_null($reasonID))
+			{
+				#Default
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
 				'valid' => $valid,
 				'reasonID' => $reasonID,
 				'reason' => $reason
