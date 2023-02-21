@@ -7,7 +7,7 @@
 		Date: 01/08/23 10:32pm
 		Version: 0.0.5
 	Updated on
-		Version: 0.3.5
+		Version: 0.3.5.1
 
 	Description:
 		Functions managing friend relations
@@ -15,6 +15,7 @@
 	Changes:
 		Version 0.0.5.2 - Get IDs of friends
 		Version 0.3.5 - Get friend requests, get friend requests count
+		Version 0.3.5.1 - Bug fix, sender has been receiving sent requests as received friend requests, load friends from newest
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -38,7 +39,7 @@
 			$this->db = new Db();
 		}
 		#Returns friend relation
-		public function getRelationByUsers($userIDA, $userIDB)
+		public function getRelationByUserIDs($userIDA, $userIDB)
 		{
 			#Return result
 			return $this->db->getData(
@@ -93,7 +94,7 @@
 			$amount = null;
 			#Getting friends amount
 			list($querySuccess, $queryResult, ) =  $this->db->getData(
-				'SELECT Count(ID) As Result From FriendRelations Where SenderUserID = :UserID Or ReceiverUserID = :UserID And Not Accepted',
+				'SELECT Count(ID) As Result From FriendRelations Where ReceiverUserID = :UserID And Not Accepted',
 				[
 					':UserID' => $userID
 				],
@@ -115,7 +116,7 @@
 		{
 			#Return result
 			return $this->db->getData(
-				sprintf('SELECT If(SenderUserID = :UserID, ReceiverUserID, SenderUserID) As ID From FriendRelations Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) And Accepted Order By AcceptTime Limit %d Offset %d', $limit, $page * $limit),
+				sprintf('SELECT If(SenderUserID = :UserID, ReceiverUserID, SenderUserID) As ID From FriendRelations Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) And Accepted Order By AcceptTime Desc Limit %d Offset %d', $limit, $page * $limit),
 				[
 					':UserID' => $userID
 				]
@@ -126,7 +127,7 @@
 		{
 			#Return result
 			return $this->db->getData(
-				sprintf('SELECT If(SenderUserID = :UserID, ReceiverUserID, SenderUserID) As ID From FriendRelations Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) And Not Accepted Order By RequestTime Limit %d Offset %d', $limit, $page * $limit),
+				sprintf('SELECT If(SenderUserID = :UserID, ReceiverUserID, SenderUserID) As ID From FriendRelations Where (ReceiverUserID = :UserID) And Not Accepted Order By RequestTime Desc Limit %d Offset %d', $limit, $page * $limit),
 				[
 					':UserID' => $userID
 				]

@@ -6,13 +6,13 @@ Created on
 	Date: 02/10/23 08:32pm
 	Version: 0.3
 Updated on
-	Version: 0.3.4
+	Version: 0.3.5.1
 
 Description:
 	Account information
 
 Changes:
-
+	Version 0.3.5.1 - Show title on friends section
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -150,6 +150,11 @@ Changes:
 			<div id="list" class="section" switchDefault>
 				<div loader onRequest="onFriendListPageRequested" onSuccess="onFriendListPageObtained" onFail="onFriendListPageFailed"></div>
 				<div class="recordsWrapper">
+					<h2>
+						<span>Your friends (</span>
+						<span class="friendsCount">?</span>
+						<span>)</span>
+					</h2>
 					<div class="records">
 						
 					</div>
@@ -162,6 +167,11 @@ Changes:
 			<div id="requests" class="section">
 				<div loader onRequest="onFriendRequestsPageRequested" onSuccess="onFriendRequestsPageObtained" onFail="onFriendRequestsPageFailed"></div>
 				<div class="recordsWrapper">
+					<h2>
+						<span>Friend requests (</span>
+						<span class="requestsCount">?</span>
+						<span>)</span>
+					</h2>
 					<div class="records">
 						
 					</div>

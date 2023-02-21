@@ -315,8 +315,6 @@
 			$reasonIDs = $this->reasonIDs;
 			#Status
 			$success = false;
-			#Whether operation says to accept
-			$accept = false;
 			#Whether valid
 			$valid = false;
 			$reasonID = null;
@@ -330,7 +328,6 @@
 				if ($responseType === 'accept' or $responseType === 'decline')
 				{
 					$valid = true;
-					$accept = $responseType === 'accept';
 					$reasonID = $reasonIDs->Accepted;
 				}
 				elseif (is_null($responseType))
@@ -358,7 +355,6 @@
 			return [
 				'success' => $success,
 				'valid' => $valid,
-				'accept' => $accept,
 				'reasonID' => $reasonID,
 				'reason' => $reason
 			];

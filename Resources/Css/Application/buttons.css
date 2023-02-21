@@ -6,7 +6,7 @@ Created on
 	Date: 01/27/23 08:56am
 	Version: 0.1.2
 Updated on
-	Version: 0.1.2
+	Version: 0.3.5.1
 
 Description:
 	Buttons
@@ -151,11 +151,16 @@ Description:
 
 .button.gray:disabled
 {
-	background-color: #333;
 	color: #ddd;
+	background-color: #333;
 }
 .button.green:disabled
 {
 	color: #ddd;
 	background-color: #265a26;
+}
+.button.red:disabled
+{
+	color: #ddd;
+	background-color: #811b1e;
 }

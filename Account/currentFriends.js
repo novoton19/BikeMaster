@@ -6,13 +6,13 @@ Created on
 	Date: 02/20/23 02:39pm
 	Version: 0.3.5
 Updated on
-	Version: 0.3.5
+	Version: 0.3.5.1
 
 Description:
 	Loads friend list
 
 Changes:
-	 
+	Version 0.3.5.1 - Add friends count
 */
 //Status request url
 var friendHtmlUrl = '../Resources/Html/Application/friend.html';
@@ -27,6 +27,7 @@ $(document).ready(() =>
 	var friends = $('#friends');
 	var list = friends.find('#list');
 	var recordsWrapper = list.find('.recordsWrapper');
+	var friendsCountElem = recordsWrapper.find('.friendsCount');
 	var records = recordsWrapper.find('.records');
 	var noResults = recordsWrapper.find('.noResults');
 	//Current friends page
@@ -51,6 +52,7 @@ $(document).ready(() =>
 		lastPage = false;
 		//Clear anything from records (' ' is there because of contentLoadManager)
 		records.text(' ');
+		friendsCountElem.text('?');
 		//Show records wrapper
 		noResults.hide();
 		recordsWrapper.show();
@@ -77,6 +79,7 @@ $(document).ready(() =>
 		}
 		//Getting result
 		let friendsResult = responses[0]
+		let friendsCount = friendsResult.resultsCount;
 		let friends = friendsResult.result;
 		let page = friendsResult.inputs.page;
 		//Checking page
@@ -97,6 +100,8 @@ $(document).ready(() =>
 			lastPage = true;
 			noResults.show();
 		}
+		//Adding friends count
+		friendsCountElem.text(friendsCount);
 		//Appending friends
 		records.append(friends.map((friend) =>
 		{

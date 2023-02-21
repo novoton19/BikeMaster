@@ -15,6 +15,18 @@ Description:
 {
 	width: 100%;
 }
+#content .recordsWrapper h2
+{
+	width: 100%;
+
+	margin-bottom: 10px;
+	padding: 10px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #ddd;
+
+	display: flex;
+	justify-content: center;
+}
 #content .recordsWrapper .records
 {
 	width: 100%;

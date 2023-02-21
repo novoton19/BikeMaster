@@ -17,6 +17,7 @@ Changes:
 //Status request url
 var friendRequestHtmlUrl = '../Resources/Html/Application/friendRequest.html';
 var friendsUrl = '../Api/Social/Account/getFriends.php';
+var respondUrl = '../Api/Social/Account/respondToFriendRequest.php';
 //Getting current script name
 var friendsName = document.currentScript.src.split('/').pop();
 
@@ -27,6 +28,7 @@ $(document).ready(() =>
 	var friends = $('#friends');
 	var requests = friends.find('#requests');
 	var recordsWrapper = requests.find('.recordsWrapper');
+	var requestsCountElem = recordsWrapper.find('.requestsCount');
 	var records = recordsWrapper.find('.records');
 	var noResults = recordsWrapper.find('.noResults');
 	//Current friends page
@@ -34,6 +36,13 @@ $(document).ready(() =>
 	var lastPage = false;
 	var friendRequestHtml = undefined;
 
+	//Changes the disabled state of accept and decline buttons
+	function changeButtonDisablity(disabled = true)
+	{
+		//Change state
+		records.find('.acceptButton').prop('disabled', disabled);
+		records.find('.declineButton').prop('disabled', disabled);
+	}
 	function onPageRequest()
 	{
 		//Clear current records
@@ -51,6 +60,7 @@ $(document).ready(() =>
 		lastPage = false;
 		//Clear anything from records (' ' is there because of contentLoadManager)
 		records.text(' ');
+		requestsCountElem.text('?');
 		//Show records wrapper
 		noResults.hide();
 		recordsWrapper.show();
@@ -77,7 +87,8 @@ $(document).ready(() =>
 		}
 		//Getting result
 		let friendsResult = responses[0]
-		let friends = friendsResult.result;
+		let requestsCount = friendsResult.resultsCount;
+		let requests = friendsResult.result;
 		let page = friendsResult.inputs.page;
 		//Checking page
 		if (page !== currentPage)
@@ -97,8 +108,10 @@ $(document).ready(() =>
 			lastPage = true;
 			noResults.show();
 		}
+		//Adding friend requests count
+		requestsCountElem.text(requestsCount);
 		//Appending friends
-		records.append(friends.map((friend) =>
+		records.append(requests.map((friend) =>
 		{
 			//Creating new record
 			let record = $(friendRequestHtml);
@@ -107,9 +120,13 @@ $(document).ready(() =>
 			let username = record.find('.username');
 			let description = record.find('.description');
 			let detailsButton = record.find('.detailsButton');
+			let acceptButton = record.find('.acceptButton');
+			let declineButton = record.find('.declineButton');
 
-			//Getting profile picture url
+			//Getting user information
+			let id = friend.id;
 			let profilePictureUrl = friend.profilePictureUrl;
+			//Getting profile picture url
 			if (profilePictureUrl)
 			{
 				profilePictureUrl = `../Assets/ProfilePictures/Users/${profilePictureUrl}`;
@@ -122,7 +139,31 @@ $(document).ready(() =>
 			profilePicture.attr('src', profilePictureUrl);
 			username.text(friend.username);
 			description.text(friend.description);
-			detailsButton.attr('href', friend.id);
+			detailsButton.attr('href', id);
+
+			function respondToRequest(type)
+			{
+				changeButtonDisablity();
+				//Send request
+				sendRequest(
+					respondUrl,
+					{
+						id : id,
+						responseType : type
+					}
+				).then((response) =>
+				{
+					changeButtonDisablity(false);
+					acceptButton.remove();
+					declineButton.remove();
+				}).catch((information) =>
+				{
+					changeButtonDisablity(false);
+				});
+			}
+			//Adding response button events
+			acceptButton.click(() => respondToRequest('accept'));
+			declineButton.click(() => respondToRequest('decline'));
 			return $(record);
 		}));
 	}
