@@ -6,22 +6,26 @@ Created on
 	Date: 02/14/23 04:56pm
 	Version: 0.3.4
 Updated on
-	Version: 0.3.4
+	Version: 0.3.5.2
 
 Description:
 	Loads account information
 
 Changes:
-	 
+	Version 0.3.5.2 - Sign out
 */
 //Status request url
-var statusUrl = '../../Api/User/status.php';
+var statusUrl = '../Api/User/status.php';
+var signOutApiUrl = '../Api/User/logout.php';
+var signInUrl = 'SignIn/';
 //Getting current script name
 var mainName = document.currentScript.src.split('/').pop();
 
 //Waiting for page to load
 $(document).ready(() =>
 {
+	//Creating network manager
+	var networkManager = new NetworkManager();
 	//Creating map manager
 	var mapManager = new MapManager('map', false);
 	mapManager.map.setZoom(14);
@@ -45,6 +49,7 @@ $(document).ready(() =>
 	var readMoreButton = descriptionWrapper.find('.readMoreDescription');
 	var readLessButton = descriptionWrapper.find('.readLessDescription');
 	var locationWrapper = page.find('.locationWrapper');
+	var signOutButton = page.find('.signOutButton');
 
 	readLessButton.hide();
 
@@ -132,5 +137,24 @@ $(document).ready(() =>
 		descriptionElem.addClass('limited');
 		readMoreButton.show();
 		readLessButton.hide();
+	});
+	signOutButton.click(() =>
+	{
+		//Disable sign out button
+		signOutButton.prop('disabled', true);
+		//Send request to sign out
+		sendRequest(
+			signOutApiUrl
+		).then((response) =>
+		{
+			window.location.href = signInUrl;
+		}).catch(() =>
+		{
+			signOutButton.prop('disabled', !networkManager.online);
+		});
+	});
+	networkManager.addEventListener('onStatusChanged', () =>
+	{
+		signOutButton.prop('disabled', !networkManager.online);
 	});
 });

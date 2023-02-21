@@ -6,24 +6,29 @@ Created on
 	Date: 02/20/23 11:39pm
 	Version: 0.3.5
 Updated on
-	Version: 0.3.5
+	Version: 0.3.5.2
 
 Description:
 	Loads friend requests list
 
 Changes:
-	 
+	Version 0.3.5.1 - Accept/Decline friend request
+	Version 0.3.5.2 - Disable buttons on no network
 */
 //Status request url
 var friendRequestHtmlUrl = '../Resources/Html/Application/friendRequest.html';
 var friendsUrl = '../Api/Social/Account/getFriends.php';
 var respondUrl = '../Api/Social/Account/respondToFriendRequest.php';
+var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
+var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
 //Getting current script name
 var friendsName = document.currentScript.src.split('/').pop();
 
 //Waiting for page to load
 $(document).ready(() =>
 {
+	//Creating network manager
+	var networkManager = new NetworkManager();
 	//Getting friends section
 	var friends = $('#friends');
 	var requests = friends.find('#requests');
@@ -129,11 +134,11 @@ $(document).ready(() =>
 			//Getting profile picture url
 			if (profilePictureUrl)
 			{
-				profilePictureUrl = `../Assets/ProfilePictures/Users/${profilePictureUrl}`;
+				profilePictureUrl = userProfilePicturesUrl + profilePictureUrl;
 			}
 			else
 			{
-				profilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
+				profilePictureUrl = defaultProfilePictureUrl;
 			}
 
 			profilePicture.attr('src', profilePictureUrl);
@@ -143,7 +148,7 @@ $(document).ready(() =>
 
 			function respondToRequest(type)
 			{
-				changeButtonDisablity();
+				changeButtonDisablity(true);
 				//Send request
 				sendRequest(
 					respondUrl,
@@ -153,12 +158,12 @@ $(document).ready(() =>
 					}
 				).then((response) =>
 				{
-					changeButtonDisablity(false);
+					changeButtonDisablity(!networkManager.online);
 					acceptButton.remove();
 					declineButton.remove();
 				}).catch((information) =>
 				{
-					changeButtonDisablity(false);
+					changeButtonDisablity(!networkManager.online);
 				});
 			}
 			//Adding response button events
@@ -167,6 +172,10 @@ $(document).ready(() =>
 			return $(record);
 		}));
 	}
+	networkManager.addEventListener('onStatusChanged', () =>
+	{
+		changeButtonDisablity(!networkManager.online);
+	});
 
 	window.onFriendRequestsPageRequested = onPageRequest;
 	window.onFriendRequestsPageObtained = onPageSuccess;

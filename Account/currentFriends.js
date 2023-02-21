@@ -17,6 +17,8 @@ Changes:
 //Status request url
 var friendHtmlUrl = '../Resources/Html/Application/friend.html';
 var friendsUrl = '../Api/Social/Account/getFriends.php';
+var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
+var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
 //Getting current script name
 var friendsName = document.currentScript.src.split('/').pop();
 
@@ -117,11 +119,11 @@ $(document).ready(() =>
 			let profilePictureUrl = friend.profilePictureUrl;
 			if (profilePictureUrl)
 			{
-				profilePictureUrl = `../Assets/ProfilePictures/Users/${profilePictureUrl}`;
+				profilePictureUrl = userProfilePicturesUrl + profilePictureUrl;
 			}
 			else
 			{
-				profilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
+				profilePictureUrl = defaultProfilePictureUrl;
 			}
 
 			profilePicture.attr('src', profilePictureUrl);

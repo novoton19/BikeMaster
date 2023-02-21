@@ -6,13 +6,14 @@ Created on
 	Date: 02/10/23 08:32pm
 	Version: 0.3
 Updated on
-	Version: 0.3.5.1
+	Version: 0.3.5.2
 
 Description:
 	Account information
 
 Changes:
 	Version 0.3.5.1 - Show title on friends section
+	Version 0.3.5.2 - Friends page backup treatment
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -132,7 +133,7 @@ Changes:
 					</div>
 				</div>
 				<div class="navigationalButton buttons">
-					<button class="button gray">
+					<button class="signOutButton button gray">
 						Sign out
 					</button>
 				</div>
@@ -148,7 +149,7 @@ Changes:
 				</button>
 			</div>
 			<div id="list" class="section" switchDefault>
-				<div loader onRequest="onFriendListPageRequested" onSuccess="onFriendListPageObtained" onFail="onFriendListPageFailed"></div>
+				<div loader backupTreatment onRequest="onFriendListPageRequested" onSuccess="onFriendListPageObtained" onFail="onFriendListPageFailed"></div>
 				<div class="recordsWrapper">
 					<h2>
 						<span>Your friends (</span>
@@ -158,14 +159,14 @@ Changes:
 					<div class="records">
 						
 					</div>
-					<div loader continuous relativeID="list" onRequest="onFriendListRequested" onSuccess="onFriendListObtained" onFail="onFriendListFailed"></div>
+					<div loader continuous backupTreatment relativeID="list" onRequest="onFriendListRequested" onSuccess="onFriendListObtained" onFail="onFriendListFailed"></div>
 					<div class="noResults">
 						No more results
 					</div>
 				</div>
 			</div>
 			<div id="requests" class="section">
-				<div loader onRequest="onFriendRequestsPageRequested" onSuccess="onFriendRequestsPageObtained" onFail="onFriendRequestsPageFailed"></div>
+				<div loader backupTreatment onRequest="onFriendRequestsPageRequested" onSuccess="onFriendRequestsPageObtained" onFail="onFriendRequestsPageFailed"></div>
 				<div class="recordsWrapper">
 					<h2>
 						<span>Friend requests (</span>
@@ -175,7 +176,7 @@ Changes:
 					<div class="records">
 						
 					</div>
-					<div loader continuous relativeID="requests" onRequest="onFriendRequestsRequested" onSuccess="onFriendRequestsObtained" onFail="onFriendRequestsFailed"></div>
+					<div loader continuous backupTreatment relativeID="requests" onRequest="onFriendRequestsRequested" onSuccess="onFriendRequestsObtained" onFail="onFriendRequestsFailed"></div>
 					<div class="noResults">
 						No more results
 					</div>
