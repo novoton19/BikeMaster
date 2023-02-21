@@ -1,0 +1,79 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/21/23 10:42pm
+	Version: 0.3.6
+Updated on
+	Version: 0.3.6
+
+Description:
+	Css for view account page
+*/
+#friends .buttons
+{
+	border: unset;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+	background-color: transparent;
+}
+#friends .topbar
+{
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 10px 0px;
+	border-bottom: 1px solid #ddd;
+	font-size: 26px;
+
+	display: flex;
+	justify-content: space-between;
+}
+#friends .topbar h2
+{
+	margin-right: 10px;
+	margin-bottom: 0px;
+	padding: 10px;
+	border-bottom: unset;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex: 2;
+}
+#friends .topbar .buttons
+{
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+}
+#friends .topbar .buttons .button
+{
+	overflow-x: unset;
+}
+@media screen and (max-width: 400px)
+{
+	#friends .topbar
+	{
+		flex-direction: column;
+	}
+	#friends .topbar h2
+	{
+		width: 100%;
+
+		margin-bottom: 5px;
+	}
+	#friends .topbar .buttons
+	{
+		width: 100%;
+
+		flex-direction: column;
+	}
+	#friends .topbar .buttons .button
+	{
+		width: 100%;
+	}
+}

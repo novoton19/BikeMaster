@@ -6,7 +6,7 @@ Created on
 	Date: 02/20/23 11:39pm
 	Version: 0.3.5
 Updated on
-	Version: 0.3.5.2
+	Version: 0.3.6
 
 Description:
 	Loads friend requests list
@@ -14,6 +14,7 @@ Description:
 Changes:
 	Version 0.3.5.1 - Accept/Decline friend request
 	Version 0.3.5.2 - Disable buttons on no network
+	Version 0.3.6 - View account url, bug fix, when loaded in offline mode, disable buttons
 */
 //Status request url
 var friendRequestHtmlUrl = '../Resources/Html/Application/friendRequest.html';
@@ -21,6 +22,8 @@ var friendsUrl = '../Api/Social/Account/getFriends.php';
 var respondUrl = '../Api/Social/Account/respondToFriendRequest.php';
 var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
 var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
+var viewAccountUrl = 'View/';
+var returnUrlFromViewAccount = '../';
 //Getting current script name
 var friendsName = document.currentScript.src.split('/').pop();
 
@@ -128,10 +131,16 @@ $(document).ready(() =>
 			let acceptButton = record.find('.acceptButton');
 			let declineButton = record.find('.declineButton');
 
-			//Getting user information
+			//Getting account info
 			let id = friend.id;
 			let profilePictureUrl = friend.profilePictureUrl;
-			//Getting profile picture url
+			
+			//Creating get params for details url
+			let getParams = new URLSearchParams();
+			getParams.set('id', id);
+			getParams.set('returnUrl', returnUrlFromViewAccount + '?section=friends&type=requests');
+			
+			//Getting full profile picture url
 			if (profilePictureUrl)
 			{
 				profilePictureUrl = userProfilePicturesUrl + profilePictureUrl;
@@ -144,7 +153,10 @@ $(document).ready(() =>
 			profilePicture.attr('src', profilePictureUrl);
 			username.text(friend.username);
 			description.text(friend.description);
-			detailsButton.attr('href', id);
+			detailsButton.attr('href', viewAccountUrl + '?' + getParams);
+			//Change state
+			acceptButton.prop('disabled', !networkManager.online);
+			declineButton.prop('disabled', !networkManager.online);
 
 			function respondToRequest(type)
 			{

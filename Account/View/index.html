@@ -1,0 +1,184 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/21/23
+	Version: 0.3.6
+Updated on
+	Version: 0.3.6
+
+Description:
+	View account
+
+Changes:
+	
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../../app.webmanifest">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/account.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/records.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/icons.css">
+	<link rel="stylesheet" href="main.css">
+
+	<title>View Account - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../../registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+	<script src="friendsList.js"></script>
+	<!--Network manager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Require login-->
+	<script src="../../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Content load manager-->
+	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
+	<!--Bottombar Manager-->
+	<script src="../../Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Switch manager-->
+	<script src="../../Resources/Javascript/Application/switchManager.js"></script>
+</head>
+<body>
+	<div id="topbar">
+		<h1>
+			View account
+		</h1>
+	</div>
+	<div id="content">
+		<div id="information" class="section" switchDefault>
+			<div loader onRequest="onAccountRequested" onSuccess="onAccountLoaded" onFail="onAccountLoadFailed">
+
+			</div>
+			<div class="content account">
+				<div class="group generalInformation">
+					<div class="imageWrapper">
+						<img src="../../Assets/ProfilePictures/Default/default.png" class="profilePicture" alt="profile picture">
+					</div>
+					<h2 class="username">
+						Username
+					</h2>
+					<p class="registrationTime">
+						Registration time
+					</p>
+				</div>
+				<div class="group actions">
+					<button class="createCompetitionButton button green">
+						<i class="icon invite inverted"></i>
+						Create competition
+					</button>
+					<button class="addFriendButton button green">
+						<i class="icon addFriend inverted"></i>
+						Add friend
+					</button>
+					<button class="acceptRequestButton button green">
+						<i class="icon addFriend inverted"></i>
+						Accept request
+					</button>
+					<button class="declineRequestButton button red">
+						<i class="icon decline inverted"></i>
+						Decline request
+					</button>
+					<button class="unfriendButton button red">
+						<i class="icon unfriend inverted"></i>
+						Unfriend
+					</button>
+					<button class="cancelRequestButton button red">
+						<i class="icon cancel inverted"></i>
+						Cancel request
+					</button>
+					<button class="reportButton button red">
+						<i class="icon report inverted"></i>
+						Report
+					</button>
+					<button class="cancelReportButton button red">
+						<i class="icon cancelReport inverted"></i>
+						Cancel report
+					</button>
+				</div>
+				<div class="group friends">
+					<h3>
+						Friends
+					</h3>
+					<p class="information">
+						<span class="username">Username</span>
+						<span>has</span>
+						<span class="friendsCount">?</span>
+						<span>friends.</span>
+					</p>
+					<div class="buttons" switcher switcherID="type">
+						<button class="friendsListButton button mini" switchID="friends">
+							View friends list
+						</button>
+					</div>
+				</div>
+				<div class="group descriptionWrapper">
+					<h3>
+						Description
+					</h3>
+					<p class="description limited">
+						Description
+					</p>
+					<div class="buttons">
+						<button class="readMoreDescription button mini">Read more</button>
+						<button class="readLessDescription button mini invisible">Read less</button>
+					</div>
+				</div>
+				<div class="group navigationalButtons">
+					<a href="" class="button backButton gray">
+						<i class="icon back inverted"></i>
+						<span>To previous page</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div id="friends" class="section">
+			<div loader backupTreatment onRequest="onFriendListPageRequested" onSuccess="onFriendListPageObtained" onFail="onFriendListPageFailed"></div>
+			<div class="recordsWrapper">
+				<div class="topbar">
+					<h2>
+						<span class="username">
+							Username
+						</span>
+						<span>
+							's friends (
+						</span>
+						<span class="friendsCount">?</span>
+						<span>)</span>
+					</h2>
+					<div class="buttons" switcher switcherID="type">
+						<button class="button gray" switchID="information">
+							Back
+						</button>
+					</div>
+				</div>
+				<div class="records">
+					
+				</div>
+				<div loader continuous backupTreatment relativeID="friends" onRequest="onFriendListRequested" onSuccess="onFriendListObtained" onFail="onFriendListFailed"></div>
+				<div class="noResults">
+					No more results
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

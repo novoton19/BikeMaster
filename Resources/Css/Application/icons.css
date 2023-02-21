@@ -6,7 +6,7 @@ Created on
 	Date: 01/25/23 12:14pm
 	Version: 0.1.2
 Updated on
-	Version: 0.1.2
+	Version: 0.3.6
 
 Description:
 	Icons
@@ -138,4 +138,28 @@ Description:
 .icon.email
 {
 	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/email.png);
+}
+.icon.addFriend
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/addFriend.png);
+}
+.icon.unfriend
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/unfriend.png);
+}
+.icon.cancel
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/cancel.png);
+}
+.icon.report
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/report.png);
+}
+.icon.cancelReport
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/cancelReport.png);
+}
+.icon.invite
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/invite.png);
 }

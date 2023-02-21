@@ -1,0 +1,193 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/21/23 09:29am
+	Version: 0.3.6
+Updated on
+	Version: 0.3.6
+
+Description:
+	Css for account information
+*/
+.content.account
+{
+	width: 100%;
+}
+.content.account .group
+{
+	width: 100%;
+
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.content.account .group h3
+{
+	font-size: 22px;
+	margin-bottom: 2px;
+}
+.content.account .group.generalInformation .imageWrapper
+{
+	width: 128px;
+	height: 128px;
+
+	margin-bottom: 10px;
+	border-radius: 64px;
+	border: 2px solid #ddd;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+}
+.content.account .group.generalInformation .imageWrapper img
+{
+	width: 100%;
+	height: 100%;
+}
+.content.account .group.generalInformation .username
+{
+	font-size: 35px;
+}
+.content.account .group.generalInformation .email,
+.content.account .group.generalInformation .registrationTime
+{
+	width: 100%;
+
+	color: #666;
+
+	font-size: 16px;
+
+	text-align: center;
+	white-space: nowrap;
+	overflow-x: auto;
+}
+.content.account .group.actions,
+.content.account .group.navigationalButtons
+{
+	max-width: 100%;
+
+	display: flex;
+	flex-direction: row;
+	overflow-x: auto;
+}
+.content.account .group.actions .button,
+.content.account .group.navigationalButtons .button
+{
+	max-width: unset;
+
+	overflow-x: unset;
+}
+.content.account .group.actions .button:first-child,
+.content.account .group.navigationalButtons .button:first-child
+{
+	margin-left: auto;
+}
+.content.account .group.actions .button:last-child,
+.content.account .group.navigationalButtons .button:last-child
+{
+	margin-right: auto;
+}
+.content.account .group.friends .information
+{
+	max-width: 100%;
+
+	display: flex;
+
+	overflow-x: auto;
+}
+.content.account .group.friends .information span:not(:first-child)
+{
+	margin-left: 5px;
+}
+.content.account .group.friends .buttons
+{
+	border: none;
+
+	display: flex;
+	justify-content: center;
+
+	background-color: transparent;
+}
+.content.account .group.descriptionWrapper .description
+{
+	font-size: 16px;
+
+	text-align: justify;
+	white-space: normal;
+	word-break: break-word;
+
+	color: #707070;
+}
+.content.account .group.descriptionWrapper .description.limited
+{
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+	text-overflow: ellipsis;
+    overflow: hidden;
+}
+.content.account .group.descriptionWrapper .buttons
+{
+	display: flex;
+	justify-content: center;
+}
+.content.account .buttons
+{
+	width: 100%;
+
+	margin-top: 10px;
+
+	display: flex;
+	justify-content: right;
+}
+.content.account .group .readMoreDescription
+{
+	float: right;
+}
+.content.account .group.locationWrapper .map
+{
+	width: 100%;
+	height: 300px;
+
+	margin-top: 5px;
+}
+@media screen and (max-width: 400px)
+{
+	.content.account .group.actions,
+	.content.account .group.navigationalButtons
+	{
+		flex-direction: column;
+		overflow-x: unset;
+		justify-content: center;
+	}
+	.content.account .group.actions .button,
+	.content.account .group.navigationalButtons .button
+	{
+		width: 100%;
+
+		margin-left: 0px;
+
+		overflow-x: auto;
+	}
+	.content.account .group.actions .button:first-child,
+	.content.account .group.navigationalButtons .button:first-child
+	{
+		margin-left: 0px;
+	}
+	.content.account .group.actions .button:last-child,
+	.content.account .group.navigationalButtons .button:last-child
+	{
+		margin-right: 0px;
+	}
+	.content.account .group.actions .button:not(:last-child),
+	.content.account .group.navigationalButtons .button:not(:last-child)
+	{
+		margin-bottom: 5px;
+	}
+}

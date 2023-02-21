@@ -3,8 +3,8 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 02/20/23 02:39pm
-	Version: 0.3.5
+	Date: 02/21/23 11:11pm
+	Version: 0.3.6
 Updated on
 	Version: 0.3.6
 
@@ -12,27 +12,22 @@ Description:
 	Loads friend list
 
 Changes:
-	Version 0.3.5.1 - Add friends count
-	Version 0.3.6 - View account url
+
 */
 //Status request url
-var friendHtmlUrl = '../Resources/Html/Application/friend.html';
-var friendsUrl = '../Api/Social/Account/getFriends.php';
-var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
-var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
-var viewAccountUrl = 'View/';
-var returnUrlFromViewAccount = '../';
-//Getting current script name
-var friendsName = document.currentScript.src.split('/').pop();
+var friendHtmlUrl = '../../Resources/Html/Application/friend.html';
+var friendsUrl = '../../Api/Social/Account/getFriends.php';
+var userProfilePicturesUrl = '../../Assets/ProfilePictures/Users/';
+var defaultProfilePictureUrl = '../../Assets/ProfilePictures/Default/default.png';
+var viewAccountUrl = '';
+var returnUrlFromViewAccount = '';
 
 //Waiting for page to load
 $(document).ready(() =>
 {
 	//Getting friends section
 	var friends = $('#friends');
-	var list = friends.find('#list');
-	var recordsWrapper = list.find('.recordsWrapper');
-	var friendsCountElem = recordsWrapper.find('.friendsCount');
+	var recordsWrapper = friends.find('.recordsWrapper');
 	var records = recordsWrapper.find('.records');
 	var noResults = recordsWrapper.find('.noResults');
 	//Current friends page
@@ -40,6 +35,9 @@ $(document).ready(() =>
 	var lastPage = false;
 	var friendHtml = undefined;
 
+	var getParams = new URLSearchParams(window.location.search);
+	var id = getParams.get('id');
+	
 	function onPageRequest()
 	{
 		//Clear current records
@@ -57,7 +55,6 @@ $(document).ready(() =>
 		lastPage = false;
 		//Clear anything from records (' ' is there because of contentLoadManager)
 		records.text(' ');
-		friendsCountElem.text('?');
 		//Show records wrapper
 		noResults.hide();
 		recordsWrapper.show();
@@ -71,6 +68,7 @@ $(document).ready(() =>
 		return [{
 			url : friendsUrl,
 			data : {
+				id : id,
 				page : currentPage,
 				type : 'current'
 			}
@@ -83,8 +81,7 @@ $(document).ready(() =>
 			return;
 		}
 		//Getting result
-		let friendsResult = responses[0]
-		let friendsCount = friendsResult.resultsCount;
+		let friendsResult = responses[0];
 		let friends = friendsResult.result;
 		let page = friendsResult.inputs.page;
 		//Checking page
@@ -105,8 +102,6 @@ $(document).ready(() =>
 			lastPage = true;
 			noResults.show();
 		}
-		//Adding friends count
-		friendsCountElem.text(friendsCount);
 		//Appending friends
 		records.append(friends.map((friend) =>
 		{

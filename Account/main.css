@@ -6,7 +6,7 @@ Created on
 	Date: 02/14/23 05:04pm
 	Version: 0.3.4
 Updated on
-	Version: 0.3.4
+	Version: 0.3.6
 
 Description:
 	Css for account page
@@ -14,84 +14,4 @@ Description:
 .section .content
 {
 	width: 100%;
-}
-#account .content .group
-{
-	width: 100%;
-
-	padding: 10px;
-}
-#account .content .group
-{
-	border-bottom: 1px solid #ddd;
-	
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-#account .content .group .imageWrapper
-{
-	width: 128px;
-	height: 128px;
-
-	margin-bottom: 10px;
-	border-radius: 64px;
-	border: 2px solid #ddd;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	overflow: hidden;
-}
-#account .content .group .imageWrapper img
-{
-	width: 100%;
-	height: 100%;
-}
-#account .content .group .username
-{
-	font-size: 35px;
-}
-#account .content .group .email,
-#account .content .group .registrationTime
-{
-	color: #666;
-
-	font-size: 16px;
-}
-#account .content .group .description
-{
-	font-size: 16px;
-
-	text-align: justify;
-	white-space: normal;
-	word-break: break-word;
-}
-#account .content .group .description.limited
-{
-	display: -webkit-box;
-	-webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-	text-overflow: ellipsis;
-    overflow: hidden;
-}
-#account .content .buttons
-{
-	width: 100%;
-
-	margin-top: 10px;
-
-	display: flex;
-	justify-content: right;
-}
-#account .content .group .readMoreDescription
-{
-	float: right;
-}
-#map
-{
-	width: 100%;
-	height: 300px;
-
-	margin-top: 5px;
 }

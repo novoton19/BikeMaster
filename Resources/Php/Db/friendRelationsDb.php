@@ -70,7 +70,7 @@
 			$amount = null;
 			#Getting friends amount
 			list($querySuccess, $queryResult, ) =  $this->db->getData(
-				'SELECT Count(ID) As Result From FriendRelations Where SenderUserID = :UserID Or ReceiverUserID = :UserID And Accepted',
+				'SELECT Count(ID) As Result From FriendRelations Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) And Accepted',
 				[
 					':UserID' => $userID
 				],

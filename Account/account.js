@@ -6,18 +6,23 @@ Created on
 	Date: 02/14/23 04:56pm
 	Version: 0.3.4
 Updated on
-	Version: 0.3.5.2
+	Version: 0.3.6
 
 Description:
 	Loads account information
 
 Changes:
 	Version 0.3.5.2 - Sign out
+	Version 0.3.6 - Public account url
 */
 //Status request url
 var statusUrl = '../Api/User/status.php';
 var signOutApiUrl = '../Api/User/logout.php';
 var signInUrl = 'SignIn/';
+var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
+var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
+var viewAccountUrl = 'View/';
+var returnUrlFromViewAccount = '../';
 //Getting current script name
 var mainName = document.currentScript.src.split('/').pop();
 
@@ -40,6 +45,7 @@ $(document).ready(() =>
 	var page = $('#account');
 	var content = page.find('.content');
 	var setupDialog = page.find('.setupDialog');
+	var publicProfileButton = page.find('.publicProfileButton');
 	var profilePictureElem = page.find('.profilePicture');
 	var usernameElem = page.find('.username');
 	var emailElem = page.find('.email');
@@ -67,6 +73,7 @@ $(document).ready(() =>
 		//Getting account
 		let status = responses[0];
 		let account = status.account;
+		let id = account.id;
 		let profilePictureUrl = account.profilePictureUrl;
 		let username = account.username;
 		let email = account.email;
@@ -75,13 +82,20 @@ $(document).ready(() =>
 		let latitude = account.latitude;
 		let longitude = account.longitude;
 
+		//Creating get params for public profile url
+		let getParams = new URLSearchParams();
+		getParams.set('id', id);
+		getParams.set('returnUrl', returnUrlFromViewAccount);
+		//Adding public profile url
+		publicProfileButton.attr('href', viewAccountUrl + '?' + getParams.toString());
+
 		if (profilePictureUrl)
 		{
-			profilePictureUrl = `../Assets/ProfilePictures/Users/${profilePictureUrl}`;
+			profilePictureUrl = userProfilePicturesUrl + profilePictureUrl;
 		}
 		else
 		{
-			profilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
+			profilePictureUrl = defaultProfilePictureUrl;
 		}
 		if (!description)
 		{

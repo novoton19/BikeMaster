@@ -6,7 +6,7 @@ Created on
 	Date: 02/10/23 08:32pm
 	Version: 0.3
 Updated on
-	Version: 0.3.5.2
+	Version: 0.3.6
 
 Description:
 	Account information
@@ -29,6 +29,7 @@ Changes:
 	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../app.webmanifest">
 	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/account.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/records.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
@@ -84,12 +85,12 @@ Changes:
 	<div id="content">
 		<div id="account" class="section" switchDefault>
 			<div loader onRequest="onAccountRequested" onSuccess="onAccountLoaded" onFail="onAccountLoadFailed"></div>
-			<div class="content">
+			<div class="content account">
 				<div class="redirect blue">
 					<span>
 						You are now viewing your profile privately.
 					</span>
-					<a href="" class="button blue">
+					<a href="" class="publicProfileButton button blue">
 						Public profile
 					</a>
 				</div>
@@ -101,7 +102,7 @@ Changes:
 						Finish setup
 					</a>
 				</div>
-				<div class="group">
+				<div class="group generalInformation">
 					<div class="imageWrapper">
 						<img src="../Assets/ProfilePictures/Default/default.png" class="profilePicture" alt="profile picture">
 					</div>
@@ -128,7 +129,7 @@ Changes:
 					<p>
 						Your home location
 					</p>
-					<div id="map">
+					<div id="map" class="map">
 			
 					</div>
 				</div>

@@ -17,7 +17,7 @@
 		Version 0.3.5 - Validate page and viewing type
 	*/
 	#Making sure that this script is running independently
-	if (count(debug_backtrace()))
+	if (!count(debug_backtrace()))
 	{
 		return;
 	}
@@ -26,8 +26,7 @@
 	#Require UsersDb
 	require_once(__DIR__.'/../Db/usersDb.php');
 	#Require FriendRelationsDb
-	require_once(__DIR__.'/../Db/friendRelations.php');
-
+	require_once(__DIR__.'/../Db/friendRelationsDb.php');
 	#Validation class
 	class FriendRelationsValidation
 	{
@@ -378,7 +377,7 @@
 				if ($senderID !== $receiverID)
 				{
 					#Getting relation
-					list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByUsers($senderID, $receiverID);
+					list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByUserIDs($senderID, $receiverID);
 					#Checking if success
 					if ($querySuccess and !$relationExists)
 					{

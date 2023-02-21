@@ -100,7 +100,7 @@
 				#Getting accountID
 				$accountID = $loginStatusResult['account']['id'];
 				#Getting user ID
-				$id = GeneralFunctions::getValue($_GET, 'id', $accountID);
+				$id = GeneralFunctions::getValue($_GET, 'id', $accountID, false);
 				#Getting page
 				$page = intval(GeneralFunctions::getValue($_GET, 'page', 0, false));
 				#Getting type
