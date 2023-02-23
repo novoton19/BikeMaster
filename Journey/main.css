@@ -3,17 +3,63 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 12/29/22 04:26pm
-	Version: 0.0.2
+	Date: 02/22/23 09:20am
+	Version: 0.4
 Updated on
-	Version: 0.0.2.1
+	Version: 0.4
+
+Description:
+	Css for journey page
 */
-.Invisible
+#content .buttons
 {
-	display: none;
+	width: 100%;
+
+	padding: 20px 0px;
+	border-bottom: 1px solid #ddd;
+
+	display: flex;
+
+	overflow-x: auto;
 }
-#Map
+#content .buttons .button
 {
-	width: 500px;
-	height: 500px;
+	max-width: 200px;
+
+	overflow-x: unset;
+}
+#content .buttons .button:first-child
+{
+	margin-left: auto;
+}
+#content .buttons .button:last-child
+{
+	margin-right: auto;
+}
+@media screen and (max-width: 400px) {
+	#content .buttons
+	{
+		flex-direction: column;
+		align-items: center;
+
+		overflow-x: unset;
+	}
+	#content .buttons .button
+	{
+		width: 100%;
+
+		margin-left: 0px;
+		margin-bottom: 5px;
+
+		overflow-x: auto;
+	}
+	#content .buttons .button:first-child
+	{
+		margin-left: 0px;
+	}
+	#content .buttons .button:last-child
+	{
+		margin-right: 0px;
+	}
+
 }

@@ -1,0 +1,151 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/22/23 10:02am
+	Version: 0.4
+Updated on
+	Version: 0.4
+
+Description:
+	New journey page
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1.0, user-scalable=0">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../../app.webmanifest">
+	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/account.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/records.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/icons.css">
+	<link rel="stylesheet" href="main.css">
+
+	<title>New Journey - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../../registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+	<!--Network manager-->
+	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Require login-->
+	<script src="../../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Content load manager-->
+	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
+	<!--Bottombar Manager-->
+	<!--<script src="../../Resources/Javascript/Application/bottombarManager.js"></script>-->
+	<!--Switch manager-->
+	<script src="../../Resources/Javascript/Application/switchManager.js"></script>
+	<!--Position Manager-->
+	<script src="../../Resources/Javascript/Application/positionManager.js"></script>
+	<!--Position watcher-->
+	<script src="../../Resources/Javascript/Application/positionWatcher.js"></script>
+	<!--Map manager-->
+	<script src="../../Resources/Javascript/Application/mapManager.js"></script>
+	<!--Journey manager-->
+	<script src="../../Resources/Javascript/Application/journeyManager.js"></script>
+	<!--GPX converter-->
+	<script src="../../Resources/Javascript/Application/gpxConverter.js"></script>
+
+	<!--Mapy.cz Api-->
+	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript">Loader.load();</script>
+</head>
+<body>
+	<div id="topbar">
+		<div switcher switcherID="page">
+			<button class="button unlimitedWidth noRadiusLeft noBorder" switchID="mapView">
+				Map
+			</button>
+			<button class="button unlimitedWidth noRadiusRight noBorder noMargin" switchID="statisticsView">
+				Statistics
+			</button>
+		</div>
+	</div>
+	<div id="content">
+		<div class="journeyInformation">
+			<div id="mapView" switchDefault>
+				<div id="map">
+		
+				</div>
+				<div class="mapControls">
+					<button class="recenterButton button blue">
+						<i class="icon inverted location noMargin"></i>
+					</button>
+				</div>
+			</div>
+			<div id="statisticsView">
+				<div class="parameter">
+					<h3>
+						Elapsed time
+					</h3>
+					<div class="value time">
+						00:25:05
+					</div>
+				</div>
+				<div class="parameter">
+					<h3>
+						Distance driven
+					</h3>
+					<div class="value distance">
+						12.3 km
+					</div>
+				</div>
+				<div class="parameter">
+					<h3>
+						Average speed
+					</h3>
+					<div class="value averageSpeed">
+						26.2 km/h
+					</div>
+				</div>
+				<div class="parameter">
+					<h3>
+						Current speed
+					</h3>
+					<div class="value currentSpeed">
+						34.7 km/h
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="journeyControls">
+			<button class="startButton button green noRadius">
+				<i class="icon start inverted"></i>
+				Start
+			</button>
+			<button class="pauseButton button red noRadius">
+				<i class="icon pause inverted"></i>
+				Pause
+			</button>
+			<button class="resumeButton button green noRadius">
+				<i class="icon resume inverted"></i>
+				Resume
+			</button>
+			<button class="endButton button red noRadius">
+				<i class="icon end inverted"></i>
+				End
+			</button>
+		</div>
+	</div>
+</body>
+</html>

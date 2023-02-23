@@ -163,3 +163,23 @@ Description:
 {
 	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/invite.png);
 }
+.icon.newJourney
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/newJourney.png);
+}
+.icon.location
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/location.png);
+}
+.icon.pause
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/pause.png);
+}
+.icon.resume
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/resume.png);
+}
+.icon.end
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/end.png);
+}

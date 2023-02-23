@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.7
 Updated on
-	Version: 0.3.4
+	Version: 0.4
 
 Description:
 	Loads a map, displays current location on a map
@@ -17,6 +17,7 @@ Changes:
 	Version 0.0.5.4.1 - Add unload gpx function
 	Version 0.3.3 - Enable default controls
 	Version 0.3.4 - Disable default controls on default
+	Version 0.4 - Add option to disable position watcher, move position watcher to another file
 */
 //Map manager
 class MapManager
@@ -27,12 +28,12 @@ class MapManager
 	#gpxLayer;
 	
 	//Position manager
-	#positionManager;
+	positionManager;
 	//Current position watcher
 	#positionWatcher;
 
 	//Constructor
-	constructor(mapElementID, watchPosition = true)
+	constructor(mapElementID, watchPositionOnStart = true)
 	{
 		//Creating map
 		let map = new SMap(
@@ -40,56 +41,49 @@ class MapManager
 			undefined,
 			12
 		);
-		//Adding default layer
-		map.addDefaultLayer(SMap.DEF_TURIST).enable();
+		//Creating position watcher
+		let positionWatcher = new PositionWatcher(watchPositionOnStart);
+		//Getting position manager
+		let positionManager = positionWatcher.positionManager;
 
+		
 		//Adding map
 		this.map = map;
+		//Adding managers
+		this.positionWatcher = positionWatcher;
+		this.positionManager = positionManager;
 
-		//Checking if allow watching position
-		if (watchPosition)
+
+		//Adding default layer
+		map.addDefaultLayer(SMap.DEF_TURIST).enable();
+		
+		//Adding position manager evnet listeners
+		//On position updated
+		positionManager.addEventListener('onPositionUpdated', () =>
 		{
-			//Creating position manager
-			let positionManager = new PositionManager();
-			
-			this.#positionManager = positionManager;
-			
-			//Adding position manager evnet listeners
-			//Op permissions updated
-			positionManager.addEventListener('onPermissionsUpdated', () =>
+			//Update map position
+			this.updatePosition(positionManager.mostRecentCoordinates);
+		})
+		//On position not updated
+		positionManager.addEventListener('onPositionNotUpdated', (event) =>
+		{
+			//Getting detail
+			let detail = event.detail;
+			//Getting error
+			let error = detail.error;
+			//Checking error code
+			if (error == GeolocationPositionError.PERMISSION_DENIED)
 			{
-				//Update positionWatcher
-				this.#updatePositionWatcher();
-			});
-			//On position updated
-			positionManager.addEventListener('onPositionUpdated', () =>
+				//Cannot get location anymore
+				//Update position watcher
+				positionWatcher.update(true);
+			}
+			else
 			{
-				//Update map position
-				this.updatePosition(positionManager.mostRecentCoordinates);
-			})
-			//On position not updated
-			positionManager.addEventListener('onPositionNotUpdated', (event) =>
-			{
-				//Getting detail
-				let detail = event.detail;
-				//Getting error
-				let error = detail.error;
-				//Checking error code
-				if (error == GeolocationPositionError.PERMISSION_DENIED)
-				{
-					//Cannot get location anymore
-					//Update position watcher
-					this.#updatePositionWatcher();
-				}
-				else
-				{
-					//Print error
-					console.error(error);
-				}
-			});
-			//Updating position watcher manually
-			this.#updatePositionWatcher();
-		}
+				//Print error
+				console.error(error);
+			}
+		});
 	}
 	//Creates a GPX layer
 	loadGpx(gpx)
@@ -136,37 +130,5 @@ class MapManager
 			coords.latitude
 		);
 		this.map.setCenter(center);
-	}
-	//Updates position watcher
-	#updatePositionWatcher()
-	{
-		//Checking if position can be obtained
-		if (this.#positionManager.canGetPosition)
-		{
-			//Checking if position watcher not exists
-			if (this.#positionWatcher === undefined)
-			{
-				//Trying to update position now
-				this.#positionManager.tryUpdatePosition();
-				//Creating a new position watcher
-				this.#positionWatcher = setInterval(() =>
-				{
-					//Trying to update position
-					this.#positionManager.tryUpdatePosition();
-				}, 5000);
-				console.log('Position watcher activated');
-			}
-		}
-		else
-		{
-			//Checking if position watcher exists
-			if (this.#positionWatcher !== undefined)
-			{
-				//Disabling position watcher
-				clearInterval(this.#positionWatcher);
-				this.#positionWatcher = undefined;
-				console.log('Position watcher deactivated');
-			}
-		}
 	}
 }

@@ -3,25 +3,16 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 12/29/22 04:26pm
-	Version: 0.0.2
+	Date: 02/22/23 09:13am
+	Version: 0.4
 Updated on
-	Version: 0.0.4.2
+	Version: 0.4
 
 Description:
-	Page for Journey Mode
+	Journey welcome page
 
 Changes:
-	Version 0.0.2.1 - <noscript>, Dialog for location access request
-	Version 0.0.2.2 - Pause/Resume journey buttons
-	Version 0.0.2.3 - Display map
-	Version 0.0.2.3.5 - Added 'locationManager.js' and 'journeyModeManager.js' scripts
-	Version 0.0.2.5 - Added Save and Delete buttons
-	Version 0.0.2.6 - Rename 'locationManager.js' to 'positionManager.js'
-	Version 0.0.2.7 - Add 'mapManager.js'
-	Version 0.0.3 - Added link back
-	Version 0.0.3.2.2 - Update path to icons
-	Version 0.0.4.2 - Add 'gpxConverter.js'
+
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -29,64 +20,75 @@ Changes:
 	<!--Metas-->
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Bike Master - Journey">
+	<meta name="description" content="Bike Master">
 	<meta name="theme-color" content="#d17702">
-
+	
 	<!--Links-->
 	<link rel="apple-touch-icon" href="../Assets/Icons/Application/icon-192.png">
 	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="../app.webmanifest">
+	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/account.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/records.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
 	<link rel="stylesheet" href="main.css">
 
-	<title>BikeMaster - Journey</title>
+	<title>Journey - BikeMaster</title>
 	<!--jQuery-->
 	<script src="../jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="../registerServiceWorker.js"></script>
-	
-	<!--Api.mapy.cz-->
-	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
-    <script type="text/javascript">Loader.load();</script>
-	<!--Position Manager-->
-	<script src="positionManager.js"></script>
-	<!--Journey Mode Manager-->
-	<script src="journeyModeManager.js"></script>
-	<!--GPX converter-->
-	<script src="gpxConverter.js"></script>
-	<!--Map Manager-->
-	<script src="mapManager.js"></script>
-	<!--Main Script-->
+	<!--Javascript for this page-->
 	<script src="main.js"></script>
+	<!--Network manager-->
+	<script src="../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Require login-->
+	<script src="../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Content load manager-->
+	<script src="../Resources/Javascript/Application/contentLoadManager.js"></script>
+	<!--Bottombar Manager-->
+	<script src="../Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Switch manager-->
+	<script src="../Resources/Javascript/Application/switchManager.js"></script>
 </head>
 <body>
-	<a href="..">Back</a>
-	<noscript>
-		Please allow Javascript on this page. Journey Mode will not work without Javascript.
-	</noscript>
-	<div id="Mentions" class="Invisible">
-		<div id="GeolocationServiceMention">
-			Your browser does not support geolocation. Journey Mode will unfortunately not work here.
-		</div>
-		<div id="LocationAccessMention">
-			<p>
-				Please grant location access on this page. Journey Mode will not work without location access.
-			</p>
-			<button id="PromptLocationAccessButton">
-				Grant location access
-			</button>
-		</div>
+	<div id="topbar">
+		<h1>
+			Journey
+		</h1>
 	</div>
-	<div>
-		<div id="JourneyModeButtons" class="Invisible">
-			<button id="Start">Start Journey</button>
-			<button id="Pause">Pause Journey</button>
-			<button id="Resume">Resume Journey</button>
-			<button id="End">End Journey</button>
-			<button id="Save">Save Journey</button>
-			<button id="Delete">Delete Journey</button>
+	<div id="content">
+		<div class="buttons section">
+			<a href="New/" class="button green">
+				<i class="icon inverted newJourney"></i>
+				New journey
+			</a>
+			<a href="Upload/" class="button gray">
+				<i class="icon inverted new"></i>
+				Add journey
+			</a>
 		</div>
-		<div id="Map">
-
+		<div class="section">
+			<div loader backupTreatment onRequest="" onSuccess="" onFail=""></div>
+			<div class="recordsWrapper">
+				<h2>
+					<span>Journey history (</span>
+					<span class="journeysCount">?</span>
+					<span>)</span>
+				</h2>
+				<div class="records">
+					
+				</div>
+				<div loader continuous backupTreatment relativeID="requests" onRequest="" onSuccess="" onFail=""></div>
+				<div class="noResults">
+					No more results
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

@@ -6,7 +6,7 @@ Created on
 	Date: 12/29/22
 	Version: 0.0.1
 Updated on
-	Version: 0.3.1
+	Version: 0.4
 
 Description:
 	Service worker
@@ -21,6 +21,7 @@ Changes:
 	Version 0.0.3.2.2 - Temporarily disable cached files list because it's become hard to manage
 	Version 0.1 - Different requests may have different fetching strategies
 	Version 0.3.1 - Fixed service worker not returning response when neither of the options is available NETWORK-FIRST FIX ONLY
+	Version 0.4 - IndexedDb
 */
 //Cache name
 const cacheName = 'pwa-assets';
@@ -69,18 +70,90 @@ const defaultResponse = new Response(
 		statusText: 'Not found'
 	}
 );
+//Database name
+const dbName = 'pwa-db';
+const dbVersion = 1;
 
 //Intall event
-self.addEventListener('install', function(event)
+self.addEventListener('install', (event) =>
 {
-	console.log('Service Worker has been installed.');
 	//Waiting for files to cache
 	event.waitUntil(
-		caches.open(cacheName).then(function(cache)
+		indexedDB.open(dbName, dbVersion).onupgradeneeded = (event) =>
+		{
+			//Getting db
+			let db = event.target.result;
+			let objectStore = db.createObjectStore('journeys', {
+				keyPath : 'id'
+			});
+			objectStore.createIndex('title', 'title', { unique : false });
+			objectStore.createIndex('description', 'description', { unique : false });
+			objectStore.createIndex('segments', 'segments', { unique : false });
+			objectStore.createIndex('status', 'status', { unique : false });
+		},
+		caches.open(cacheName).then((cache) =>
 		{
 			cache.addAll(files);
 		})
 	);
+	console.log('Service Worker has been installed.');
+});
+self.addEventListener('message', (event) =>
+{
+	//Getting data
+	let data = event.data;
+	//Checking if data exists
+	if (!data)
+	{
+		return;
+	}
+	//Checking message
+	if (data.type === 'SAVE_JOURNEY')
+	{
+		//Getting journey
+		let journey = data.journey;
+		//Checking if journey exists
+		if (journey)
+		{
+			console.log('save journey', journey)
+			//Opening database
+			let request = indexedDB.open(dbName, dbVersion);
+			//On success
+			request.onsuccess = (event) =>
+			{
+				//Getting db
+				let db = event.target.result;
+				let transaction = db.transaction(['journeys'], 'readwrite');
+				//On complete
+				transaction.oncomplete = () => {};
+				transaction.onerror = (event) => console.log(event);
+				//Getting journeys object store
+				let journeys = transaction.objectStore('journeys');
+				let getRequest = journeys.get(journey.id);
+				//On success
+				getRequest.onsuccess = () =>
+				{
+					//Checking if result exists
+					if (getRequest.result)
+					{
+						//Update
+						let putRequest = journeys.put(journey);
+						//On success
+						putRequest.onsuccess = () => {};
+						putRequest.onerror = (event) => console.log(event);
+					}
+					else
+					{
+						let addRequest = journeys.add(journey);
+						addRequest.onsuccess = () => {};
+						addRequest.onerror = (event) => console.log(event);
+					}
+				};
+				getRequest.onerror = (event) => console.log(event);
+			};
+			request.onerror = (event) => console.log(event);
+		}
+	}
 });
 //Activate event
 self.addEventListener('activate', function(event)

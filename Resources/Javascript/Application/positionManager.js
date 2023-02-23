@@ -119,7 +119,7 @@ class PositionManager extends EventTarget
 		));
 	}
 	//Attempts to update position
-	tryUpdatePosition(options = { enableHighAccuracy : true, maximumAge : 1000, timeout : 5000 }, allowAttempt = false)
+	tryUpdatePosition(options = { enableHighAccuracy : true, maximumAge : 1000, timeout : 10000 }, allowAttempt = false)
 	{
 		//Checking if can get position or if can attempt to get the position 
 		if (this.canGetPosition || (allowAttempt && this.canRequestPosition))
@@ -128,7 +128,7 @@ class PositionManager extends EventTarget
 			navigator.geolocation.getCurrentPosition(
 				(position) => this.#onPositionObtained(position),
 				(error) => this.#onPositionNotObtained(error),
-				options || { enableHighAccuracy : true, maximumAge : 1000, timeout : 5000 }
+				options || { enableHighAccuracy : true, maximumAge : 1000, timeout : 10000 }
 			);
 		}
 		else
