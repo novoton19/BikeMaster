@@ -7,13 +7,14 @@
 		Date: 01/05/23 08:37pm
 		Version: 0.0.4
 	Updated on
-		Version: 0.0.4.1
+		Version: 0.4.3
 
 	Description:
 		Saves user's journey to the database
 
 	Changes:
 		Version 0.0.4.1 - Save journey into database
+		Version 0.4.3 - Add title and description
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -74,10 +75,14 @@
 
 	#Received inputs
 	$inputs = [
+		'title' => null,
+		'description' => null,
 		'track' => null
 	];
 	#Input reasons
 	$inputReasons = [
+		'title' => null,
+		'description' => null,
 		'track' => null
 	];
 	#Checking if succeeded to get reasonIDs
@@ -91,31 +96,43 @@
 			#Getting account
 			$account = $loginStatusResult['account'];
 			$userID = $account['id'];
-
 			#Checking if post exists
 			if ($_POST)
 			{
+				#Getting title
+				$title = GeneralFunctions::getValue($_POST, 'title', '');
+				#Getting description
+				$description = GeneralFunctions::getValue($_POST, 'description', '');
 				#Getting track
 				$track = GeneralFunctions::getValue($_POST, 'track', []);
-				#Adding to inputs
+
+				#Adding inputs
+				$inputs['title'] = $title;
+				$inputs['description'] = $description;
 				$inputs['track'] = $track;
 				
+				#Validating title
+				$titleValidation = $validation->validateTitle($title);
+				#Validating description
+				$descriptionValidation = $validation->validateDescription($description);
 				#Validating track
 				$trackValidation = $validation->validateTrack($track);
-				#Adding to input reasons
-				$inputReasons['track'] = $trackValidation['status'];
+			
+				#Adding input reasons
+				$inputReasons['title'] = $titleValidation;
+				$inputReasons['description'] = $descriptionValidation;
+				$inputReasons['track'] = $trackValidation;
 				#Checking if valid
-				if ($trackValidation['status']['valid'])
+				if ($titleValidation['valid'] and $descriptionValidation['valid'] and $trackValidation['valid'])
 				{
 					#Valid
 					$valid = true;
-					$trackObject = $trackValidation['object'];
 					$reasonID = $reasonIDs->Accepted;
 				}
-				else#if (!$trackValidation['valid'])
+				else#if (!$titleValidation['valid'] or !$descriptionValidation['valid'] or !$trackValidation['valid'])
 				{
 					$reasonID = $reasonIDs->InvalidInputs;
-					$reason = 'Track not valid';
+					$reason = 'One of the inputs is invalid';
 				}
 			}
 			else#if (!$_POST)
@@ -149,7 +166,7 @@
 	if ($valid)
 	{
 		#Getting segments
-		$segments = $trackObject->segments;
+		$segments = Track::fromArray($track)->segments;
 		#Getting startTime and endTime
 		$startTime = intval($segments[0]->points[0]->timestamp / 1000);
 		$endTime = intval(end(end($segments)->points)->timestamp / 1000);
@@ -179,9 +196,7 @@
 							$point->latitude,
 							$point->longitude,
 							$point->accuracy,
-							$point->timestamp,
-							$point->altitude,
-							$point->altitudeAccuracy
+							$point->timestamp
 						);
 						#Checking if success
 						if ($success)

@@ -191,6 +191,7 @@ $(document).ready(() =>
 		//Adding title and description
 		journey.title = titleInput.val();
 		journey.description = descriptionInput.val();
+		journey.readyToUpload = true;
 		//Getting registration
 		navigator.serviceWorker.ready.then((registration) => {
 			//Sending message to save journey

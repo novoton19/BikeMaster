@@ -7,7 +7,7 @@
 		Date: 01/05/23 08:48pm
 		Version: 0.0.4
 	Updated on
-		Version: 0.0.4.1
+		Version: 0.4.3
 
 	Description:
 		Validation of journey
@@ -42,6 +42,90 @@
 			$this->reasonIDs = new ReasonIDsDb();
 			$this->settingsDb = new SettingsDb();
 		}
+		#Validates title
+		public function validateTitle($title)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Whether valid
+			$valid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			#Checking type
+			if (gettype($title) === 'string')
+			{
+				#Checking length
+				if (strlen($title) <= 32)
+				{
+					$valid = true;
+					$reasonID = $reasonIDs->Accepted;
+				}
+				else
+				{
+					$reasonID = $reasonIDs->TooLong;
+					$reason = 'Title must not be longer than 32 characters';
+				}
+			}
+			else
+			{
+				$reasonID = $reasonIDs->InvalidType;
+				$reason = 'Not a string';
+			}
+			#Checking if reason exists
+			if (is_null($reasonID))
+			{
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates description
+		public function validateDescription($description)
+		{
+			#Getting reasonIDs
+			$reasonIDs = $this->reasonIDs;
+			#Whether valid
+			$valid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			#Checking type
+			if (gettype($description) === 'string')
+			{
+				#Checking length
+				if (strlen($description) <= 32)
+				{
+					$valid = true;
+					$reasonID = $reasonIDs->Accepted;
+				}
+				else
+				{
+					$reasonID = $reasonIDs->TooLong;
+					$reason = 'Description must not be longer than 512 characters';
+				}
+			}
+			else
+			{
+				$reasonID = $reasonIDs->InvalidType;
+				$reason = 'Not a string';
+			}
+			#Checking if reason exists
+			if (is_null($reasonID))
+			{
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
+			return [
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
 		#Validates latitude
 		private function validateLatitude($latitude)
 		{
@@ -49,8 +133,6 @@
 			$reasonIDs = $this->reasonIDs;
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$latitudeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -63,7 +145,6 @@
 				#Valid
 				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$latitudeValue = round($latitude, 7);
 			}
 			else#if ($latitude < -90 or $latitude > 90)
 			{
@@ -71,15 +152,16 @@
 				$reasonID = $reasonIDs->OutOfRange;
 				$reason = 'Not latitude';
 			}
+			#Checking if reason exists
+			if (is_null($reasonID))
+			{
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
 			#Return result
 			return [
-				'value' => $latitudeValue,
-				'status' =>
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason
-				]
+				'valid' => $valid, 
+				'reasonID' => $reasonID,
+				'reason' => $reason
 			];
 		}
 		#Validates longitude
@@ -89,8 +171,6 @@
 			$reasonIDs = $this->reasonIDs;
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$longitudeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -103,7 +183,6 @@
 				#Valid
 				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$longitudeValue = round($longitude, 7);
 			}
 			else#if ($longitude < -90 or $longitude > 90)
 			{
@@ -111,15 +190,16 @@
 				$reasonID = $reasonIDs->OutOfRange;
 				$reason = 'Not longitude';
 			}
+			#Checking if reason exists
+			if (is_null($reasonID))
+			{
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
 			#Return result
 			return [
-				'value' => $longitudeValue,
-				'status' =>
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason
-				]
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
 			];
 		}
 		#Validates accuracy
@@ -135,8 +215,6 @@
 
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$accuracyValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -149,7 +227,6 @@
 				#Valid
 				$reasonID = $reasonIDs->Accepted;
 				$valid = true;
-				$accuracyValue = round($accuracy, 3);
 			}
 			elseif ($accuracy > $maximumAccuracy)
 			{
@@ -157,7 +234,6 @@
 				$reasonID = $reasonIDs->OutOfRange;
 				$reason = 'Out of range, capped';
 				$valid = true;
-				$accuracyValue = $maximumAccuracy;
 			}
 			else#if ($accuracy < 0)
 			{
@@ -165,160 +241,20 @@
 				$reasonID = $reasonIDs->OutOfRange;
 				$reason = 'Invalid';
 			}
-			#Return result
-			return [
-				'value' => $accuracyValue,
-				'status' =>
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason
-				]
-			];
-		}
-		#Validates altitude
-		private function validateAltitude($altitude)
-		{
-			#Getting reasonIDs
-			$reasonIDs = $this->reasonIDs;
-			#Getting settingsDb
-			$settingsDb = $this->settingsDb;
-
-			#Getting minimum altitude
-			$minimumAltitude = intval($settingsDb->MinimumAltitude);
-			#Getting maximum altitude
-			$maximumAltitude = intval($settingsDb->MaximumAltitude);
-
-			#Whether valid
-			$valid = false;
-			#Filtered result
-			$altitudeValue = null;
-			#ReasonID
-			$reasonID = null;
-			$reason = null;
-
-			#Checking if set
-			if ((!is_null($altitude)) and !empty($altitude))
+			#Checking if reason exists
+			if (is_null($reasonID))
 			{
-				#Convert to double
-				$altitude = doubleval($altitude);
-				#Checking range
-				if ($altitude >= $minimumAltitude and $altitude <= $maximumAltitude)
-				{
-					#Valid
-					$reasonID = $reasonIDs->Accepted;
-					$valid = true;
-					$altitudeValue = round($altitude, 3);
-				}
-				elseif ($altitude > $maximumAltitude)
-				{
-					#Not necessarily marked as invalid, rather capped
-					$reasonID = $reasonIDs->OutOfRange;
-					$reason = 'Out of range, capped';
-					$valid = true;
-					$altitudeValue = $maximumAltitude;
-				}
-				else#if ($altitude < $minimumAltitude)
-				{
-					#Not necessarily marked as invalid, rather capped
-					$reasonID = $reasonIDs->OutOfRange;
-					$reason = 'Out of range, capped';
-					$valid = true;
-					$altitudeValue = $minimumAltitude;
-				}
-			}
-			else#if (is_null($altitude) or empty($altitude))
-			{
-				#Can be null
-				$valid = true;
-				$altitudeValue = null;
-				$reasonID = $reasonIDs->IsNull;
-				$reason = 'Not set';
+				$reasonID = $reasonIDs->NoReasonAvailable;
 			}
 			#Return result
 			return [
-				'value' => $altitudeValue,
-				'status' => 
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason
-				]
-			];
-		}
-		#Validates altitude
-		private function validateAltitudeAccuracy($accuracy)
-		{
-			#Getting reasonIDs
-			$reasonIDs = $this->reasonIDs;
-			#Getting settingsDb
-			$settingsDb = $this->settingsDb;
-
-			#Getting minimum altitude accuracy
-			$minimumAccuracy = 0;
-			#Getting maximum altitude
-			$maximumAccuracy = intval($settingsDb->MaximumAltitudeAccuracy);
-
-			#Whether valid
-			$valid = false;
-			#ReasonID
-			$reasonID = null;
-			$reason = null;
-			#Filtered result
-			$accuracyValue = null;
-
-			#Checking if set
-			if ((!is_null($accuracy)) and !empty($accuracy))
-			{
-				#Convert to double
-				$accuracy = doubleval($accuracy);
-				#Checking range
-				if ($accuracy >= $minimumAccuracy and $accuracy <= $maximumAccuracy)
-				{
-					#Valid
-					$valid = true;
-					$accuracyValue = round($accuracy, 3);
-					$reasonID = $reasonIDs->Accepted;
-				}
-				elseif ($accuracy > $maximumAccuracy)
-				{
-					#Not necessarily marked as invalid, rather capped
-					$valid = true;
-					$accuracyValue = $maximumAccuracy;
-					$reasonID = $reasonIDs->OutOfRange;
-					$reason = 'Out of range, capped';
-				}
-				else#if ($accuracy < $minimumAccuracy)
-				{
-					#Not necessarily marked as invalid, rather capped
-					$valid = true;
-					$accuracyValue = $minimumAccuracy;
-					$reasonID = $reasonIDs->OutOfRange;
-					$reason = 'Out of range, capped';
-				}
-			}
-			else#if (is_null($accuracy) or empty($accuracy))
-			{
-				#Can be null
-				$valid = true;
-				$accuracyValue = null;
-				$reasonID = $reasonIDs->IsNull;
-				$reason = 'Not set';
-			}
-
-			#Return result
-			return [
-				'value' => $accuracyValue,
-				'status' =>
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason
-				]
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
 			];
 		}
 		#Validates time
-		private function validateTime($time, $timeFrom)
+		private function validateTime($time)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
@@ -327,20 +263,9 @@
 
 			#Getting minimum time
 			$minimumTime = intval($settingsDb->MinimumTime);
-			#Checking if timeFrom exists
-			if (!is_null($timeFrom))
-			{
-				#Comparing times
-				if ($timeFrom > $minimumTime)
-				{
-					$minimumTime = $timeFrom;
-				}
-			}
 
 			#Whether valid
 			$valid = false;
-			#Filtered result
-			$timeValue = null;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
@@ -352,7 +277,6 @@
 			{
 				#Valid
 				$valid = true;
-				$timeValue = $time;
 				$reasonID = $reasonIDs->Accepted;
 			}
 			else#if ($time < $minimumTime or $time > time() * 1000)
@@ -361,19 +285,20 @@
 				$reasonID = $reasonIDs->OutOfRange;
 				$reason = 'Invalid';
 			}
+			#Checking if reason exists
+			if (is_null($reasonID))
+			{
+				$reasonID = $reasonIDs->NoReasonAvailable;
+			}
 			#Return result
 			return [
-				'value' => $timeValue,
-				'status' =>
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason
-				]
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
 			];
 		}
 		#Validates track point
-		private function validatePoint($point, $timeFrom)
+		private function validatePoint($point)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
@@ -383,8 +308,6 @@
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
-			#Result pointObject
-			$pointObject = null;
 
 			#Attribute reasons
 			$attributeReasons = [];
@@ -396,56 +319,31 @@
 				$latitude = GeneralFunctions::getValue($point, 'latitude');
 				$longitude = GeneralFunctions::getValue($point, 'longitude');
 				$accuracy = GeneralFunctions::getValue($point, 'accuracy');
-				$altitude = GeneralFunctions::getValue($point, 'altitude');
-				$altitudeAccuracy = GeneralFunctions::getValue($point, 'altitudeAccuracy');
 				$timestamp = GeneralFunctions::getValue($point, 'timestamp');
 
 				#Validating attributes
 				$latitudeValidation = $this->validateLatitude($latitude);
 				$longitudeValidation = $this->validateLongitude($longitude);
 				$accuracyValidation = $this->validateAccuracy($accuracy);
-				$altitudeValidation = $this->validateAltitude($altitude);
-				$altitudeAccuracyValidation = $this->validateAltitudeAccuracy($altitudeAccuracy);
-				$timestampValidation = $this->validateTime($timestamp, $timeFrom);
-
-				#Getting statuses
-				$latitudeStatus = $latitudeValidation['status'];
-				$longitudeStatus = $longitudeValidation['status'];
-				$accuracyStatus = $accuracyValidation['status'];
-				$altitudeStatus = $altitudeValidation['status'];
-				$altitudeAccuracyStatus = $altitudeAccuracyValidation['status'];
-				$timestampStatus = $timestampValidation['status'];
+				$timestampValidation = $this->validateTime($timestamp);
 
 				#Adding attribute reasons
 				$attributeReasons = [
-					'latitude' => $latitudeStatus,
-					'longitude' => $longitudeStatus,
-					'accuracy' => $accuracyStatus,
-					'altitude' => $altitudeStatus,
-					'altitudeAccuracy' => $altitudeAccuracyStatus,
-					'timestamp' => $timestampStatus
+					'latitude' => $latitudeValidation,
+					'longitude' => $longitudeValidation,
+					'accuracy' => $accuracyValidation,
+					'timestamp' => $timestampValidation
 				];
 				#Whether valid
 				$valid = (
-					$latitudeStatus['valid'] and
-					$longitudeStatus['valid'] and
-					$accuracyStatus['valid'] and
-					$altitudeStatus['valid'] and
-					$altitudeAccuracyStatus['valid'] and
-					$timestampStatus['valid']
+					$latitudeValidation['valid'] and
+					$longitudeValidation['valid'] and
+					$accuracyValidation['valid'] and
+					$timestampValidation['valid']
 				);
 				#Checking if valid
 				if ($valid)
 				{
-					#Creating point
-					$pointObject = new TrackPoint(
-						$latitudeValidation['value'],
-						$longitudeValidation['value'],
-						$accuracyValidation['value'],
-						$timestampValidation['value'],
-						$altitudeValidation['value'],
-						$altitudeAccuracyValidation['value']
-					);
 					$reasonID = $reasonIDs->Accepted;
 				}
 				else#if (!$valid)
@@ -473,34 +371,23 @@
 			}
 			#Return result
 			return [
-				'object' => $pointObject,
-				'status' =>
-				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason,
-					'inputReasons' => $attributeReasons
-				]
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason,
+				'inputReasons' => $attributeReasons
 			];
 		}
 		#Validates segment
-		private function validateSegment($segment, $timeFrom)
+		private function validateSegment($segment)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
-			#Getting settingsDb
-			$settingsDb = $this->settingsDb;
 
-			#Getting maximum speed
-			$maximumSpeed = doubleval($settingsDb->MaximumSpeed);
-			
 			#Whether is valid
 			$valid = false;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
-			#Resulting segments
-			$segmentObjects = [];
 			#Point reasons
 			$pointReasons = [];
 			
@@ -512,32 +399,22 @@
 				#Checking type
 				if (gettype($points) === 'array')
 				{
+					#Getting pointsCount
+					$pointsCount = count($points);
 					#Whether points are valid (default true)
 					$pointsValid = true;
-					#Points objects
-					$pointObjects = [];
-					#Getting pointObjects
+					#Validating points
 					foreach ($points as $pointNum => $point)
 					{
 						#Validating point
-						$pointValidation = $this->validatePoint($point, $timeFrom);
-						#Getting pointObject
-						$pointObject = $pointValidation['object'];
+						$pointValidation = $this->validatePoint($point);
 						#Getting status
-						$pointStatus = $pointValidation['status'];
-						$pointValid = $pointStatus['valid'];
+						$pointValid = $pointValidation['valid'];
 
 						#Adding point to pointReasons
-						array_push($pointReasons, $pointStatus);
+						array_push($pointReasons, $pointValidation);
 						#Checking if point valid
-						if ($pointValid)
-						{
-							#Adding point to pointObjects
-							array_push($pointObjects, $pointObject);
-							#Getting object time
-							$timeFrom = $pointObject->timestamp;
-						}
-						else#if (!$pointValid)
+						if (!$pointValid)
 						{
 							#Points are not valid
 							$pointsValid = false;
@@ -546,124 +423,8 @@
 					#Checking if points are valid
 					if ($pointsValid)
 					{
-						#Current points to be added to the next segment
-						$segmentPointObjects = [
-							$pointObjects[0]
-						];
-						#Getting pointsCount
-						$pointObjectsCount = count($pointObjects);
-						#Creating segmentObjects
-						for ($pointNum = 1; $pointNum < $pointObjectsCount; $pointNum++)
-						{
-							#Getting points
-							$prevPointObject = $pointObjects[$pointNum - 1];
-							$thisPointObject = $pointObjects[$pointNum];
-
-							#Getting distance (meters)
-							$distance = $prevPointObject->getDistanceTo($thisPointObject);
-							#Taking into account accuracy difference (worst case scenario)
-							$distance -= $prevPointObject->accuracy + $thisPointObject->accuracy;
-							#Getting time difference (seconds)
-							$timeDifference = ($thisPointObject->timestamp - $prevPointObject->timestamp) / 1000;
-
-							#Checking if there is any distance between the points
-							if ($distance == 0)
-							{
-								#Points are identical
-								if ($timeDifference > 0)
-								{
-									#Points have different times
-									#Adding point to the list
-									array_push($segmentPointObjects, $thisPointObject);
-								}
-								else#if ($timeDifference <= 0)
-								{
-									#Do not add point, because points are completely identical
-								}
-							}
-							elseif ($distance > 0)
-							{
-								#Checking time
-								if ($timeDifference > 0)
-								{
-									#Calculating speed (m/s) => (km/h)
-									$speed = ($distance / $timeDifference) / 3.6;
-									#Checking speed
-									if ($speed <= $maximumSpeed)
-									{
-										#Point is valid, add it to the list
-										array_push($segmentPointObjects, $thisPointObject);
-									}
-									else#if ($speed > $maximumSpeed)
-									{
-										#Too high speed, split segments
-										#Closing segment
-										$segmentObject = new Segment($segmentPointObjects);
-										#Checking if has any distance
-										if ($segmentObject->length > 0)
-										{
-											#Adding to segments
-											array_push($segmentObjects, $segmentObject);
-										}
-										#Resetting array starting with current point
-										$segmentPointObjects = [
-											$thisPointObject
-										];
-									}
-								}
-								else#if ($timeDifference <= 0)
-								{
-									#Teleportation, split segments
-									#Closing segment
-									$segmentObject = new Segment($segmentPointObjects);
-									#Checking if has any distance
-									if ($segmentObject->length > 0)
-									{
-										#Adding to segments
-										array_push($segmentObjects, $segmentObject);
-									}
-									#Resetting array starting with current point
-									$segmentPointObjects = [
-										$thisPointObject
-									];
-								}
-							}
-							else#if ($distance < 0)
-							{
-								#The accuracy is too low, the points can be identical => their real distance can be 0
-								#Checking if time difference is not 0
-								if ($timeDifference > 0)
-								{
-									#Adding point to the list
-									array_push($segmentPointObjects, $thisPointObject);
-								}
-								else#if ($timeDifference <= 0)
-								{
-									#Skip
-								}
-							}
-						}
-						#Finish segment
-						$segmentObject = new Segment($segmentPointObjects);
-						#Checking if has any distance
-						if ($segmentObject->length > 0)
-						{
-							#Adding to segments
-							array_push($segmentObjects, $segmentObject);
-						}
-						#Checking if there are any segments
-						if (!empty($segmentObjects))
-						{
-							#Valid
-							$valid = true;
-							$reasonID = $reasonIDs->Accepted;
-						}
-						else#if (empty($segmentObjects))
-						{
-							#Invalid speed
-							$reasonID = $reasonIDs->InvalidInputs;
-							$reason = 'There were either identical points, too high speed or teleportation between the points';
-						}
+						$valid = true;
+						$reason = $reasonIDs->Accepted;
 					}
 					else#if (!$pointsValid)
 					{
@@ -704,16 +465,12 @@
 			}
 			#Return result
 			return [
-				'object' => $segmentObjects,
-				'status' =>
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason,
+				'inputReasons' =>
 				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason,
-					'inputReasons' =>
-					[
-						'points' => $pointReasons
-					]
+					'points' => $pointReasons
 				]
 			];
 		}
@@ -722,19 +479,21 @@
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
+			#Getting settingsDb
+			$settingsDb = $this->settingsDb;
 			#Whether valid
 			$valid = false;
 			#ReasonID
 			$reasonID = null;
 			$reason = null;
-			#Resulting track
-			$trackObject = null;
 			#Segment reasons
 			$segmentReasons = [];
 
 			#Checking if succeeded to get reasonIDs and settings
-			if ($reasonIDs->success and $this->settingsDb->success)
+			if ($reasonIDs->success and $settingsDb->success)
 			{
+				#Getting maximum speed
+				$maximumSpeed = doubleval($settingsDb->MaximumSpeed);
 				#Checking type
 				if (gettype($track) === 'array')
 				{
@@ -743,38 +502,22 @@
 					#Checking type
 					if (gettype($segments) === 'array')
 					{
-						#Resulting segmentObjects
-						$segmentObjects = [];
-						#Valid segment start time
-						$timeFrom = null;
+						#Getting segments count
+						$segmentsCount = count($segments);
 						#Whether segments are valid
 						$segmentsValid = true;
 						#Validating segments
 						foreach ($segments as $segmentNum => $segment)
 						{
 							#Getting segment validation
-							$segmentValidation = $this->validateSegment($segment, $timeFrom);
-							#Getting segmentObject
-							$segmentValidationObjects = $segmentValidation['object'];
+							$segmentValidation = $this->validateSegment($segment);
 							#Getting status
-							$segmentStatus = $segmentValidation['status'];
-							$segmentValid = $segmentStatus['valid'];
-
+							$segmentValid = $segmentValidation['valid'];
+							
 							#Adding segment to segmentReasons
-							array_push($segmentReasons, $segmentStatus);
+							array_push($segmentReasons, $segmentValidation);
 							#Checking if segment is valid
-							if ($segmentValid)
-							{
-								#Adding objects
-								foreach ($segmentValidationObjects as $segmentNum => $segmentObject)
-								{
-									#Adding segment to segmentObjects
-									array_push($segmentObjects, $segmentObject);
-								}
-								#Getting segment start time
-								$timeFrom = end($segmentValidationObjects)->endTime;
-							}
-							else#if (!$segmentValid)
+							if (!$segmentValid)
 							{
 								#Segments are not valid
 								$segmentsValid = false;
@@ -783,20 +526,111 @@
 						#Checking if segments are valid
 						if ($segmentsValid)
 						{
-							#Creating trackObject
-							$trackObject = new Track($segmentObjects);
-							#Checking length of track
-							if ($trackObject->length > 0)
+							#Checking amount of segments
+							if ($segmentsCount > 0)
 							{
-								#Valid
-								$valid = true;
-								$reasonID = $reasonIDs->Accepted;
+								#List of all points
+								$points = [];
+								$chronological = true;
+								$teleportation = false;
+								#Adding points
+								foreach ($segments as $segmentNum => $segment)
+								{
+									foreach ($segment['points'] as $pointNum => $point)
+									{
+										#Adding point
+										array_push($points, $point);
+									}
+								}
+								#Getting amount of points
+								$pointsCount = count($points);
+								#Checking amount of points
+								if ($pointsCount > 1)
+								{
+									$pointNum = 1;
+									#Validating points
+									for ($pointNum = 1; $pointNum < $pointsCount; $pointNum++)
+									{
+										#Getting points
+										$prevPoint = $points[$pointNum - 1];
+										$thisPoint = $points[$pointNum];
+										#Getitng timestamps
+										$prevTimestamp = intval($prevPoint['timestamp']);
+										$thisTimestamp = intval($thisPoint['timestamp']);
+										#Getting coordinates
+										$prevLat = round(floatval($prevPoint['latitude']), 4);
+										$prevLon = round(floatval($prevPoint['longitude']), 4);
+										$thisLat = round(floatval($thisPoint['latitude']), 4);
+										$thisLon = round(floatval($thisPoint['longitude']), 4);
+										#Checking time
+										if ($thisTimestamp === $prevTimestamp and !($prevLat === $thisLat and $prevLon === $thisLon))
+										{
+											$teleportation = true;
+											break;
+										}
+										elseif ($prevTimestamp > $thisTimestamp)
+										{
+											$chronological = false;
+											break;
+										}
+									}
+									if ($chronological and !$teleportation)
+									{
+										#Creating track
+										$trackObj = Track::fromArray($track);
+										#Checking length and time
+										if ($trackObj->length > 0 and $trackObj->time > 0)
+										{
+											//Checking speed
+											if ($trackObj->speed <= $maximumSpeed)
+											{
+												#Valid
+												$valid = true;
+												$reasonID = $reasonIDs->Accepted;
+											}
+											else
+											{
+												$reasonID = $reasonIDs->TooHighSpeed;
+												$reason = 'Too high speed';
+											}
+										}
+										elseif ($trackObj->length <= 0)
+										{
+											#No distance
+											$reasonID = $reasonIDs->TooShort;
+											$reason = 'Track does not have any distance';
+										}
+										else#if ($trackObj->time <= 0)
+										{
+											#No time
+											$reasonID = $reasonIDs->TooShort;
+											$reason = 'Track has no time';
+										}
+									}
+									elseif (!$chronological)
+									{
+										#Time travel
+										$reasonID = $reasonIDs->TimeTravel;
+										$reason = 'Points are not in chronological order (at point index '.($pointNum - 1).')';
+									}
+									else#if ($teleportation)
+									{
+										#Teleportation
+										$reasonID = $reasonIDs->Teleportation;
+										$reason = 'Different coordinates at the same time (at point index '.($pointNum - 1).')';
+									}
+								}
+								else
+								{
+									$reasonID = $reasonIDs->TooShort;
+									$reason = 'Too few points';
+								}
 							}
-							else#if ($trackObject->length <= 0)
+							else
 							{
 								#Invalid
 								$reasonID = $reasonIDs->Empty;
-								$reason = 'Does not have any distance';
+								$reason = 'Does not have any segments';
 							}
 						}
 						else#if (!$segmentsValid)
@@ -851,16 +685,12 @@
 			}
 			#Return result
 			return [
-				'object' => $trackObject,
-				'status' =>
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason,
+				'inputReasons' =>
 				[
-					'valid' => $valid,
-					'reasonID' => $reasonID,
-					'reason' => $reason,
-					'inputReasons' =>
-					[
-						'segments' => $segmentReasons
-					]
+					'segments' => $segmentReasons
 				]
 			];
 		}

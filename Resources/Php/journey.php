@@ -7,13 +7,14 @@
 		Date: 01/05/23 10:45pm
 		Version: 0.0.4
 	Updated on
-		Version: 0.0.4.1
+		Version: 0.4.3
 
 	Description:
 		Contains track, segment and trackPoint classes
 
 	Changes:
 		Version 0.0.4.1 - Add startTime and endTime, speed
+		Version 0.4.3 - Load journey from array, remove altitude
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -27,28 +28,22 @@
 		public $latitude;
 		public $longitude;
 		public $accuracy;
-		public $altitude;
-		public $altitudeAccuracy;
 		public $timestamp;
 		#Constructor
 		public function __construct(
 			$latitude,
 			$longitude,
 			$accuracy,
-			$timestamp,
-			$altitude = null,
-			$altitudeAccuracy = null,
+			$timestamp
 		)
 		{
 			$this->latitude = $latitude;
 			$this->longitude = $longitude;
 			$this->accuracy = $accuracy;
-			$this->altitude = $altitude;
-			$this->altitudeAccuracy = $altitudeAccuracy;
 			$this->timestamp = $timestamp;
 		}
 		#Returns distance to point in meters
-		#https://www.geeksforgeeks.org/program-distance-two-points-earth/
+		#https:#www.geeksforgeeks.org/program-distance-two-points-earth/
 		public function getDistanceTo($point)
 		{
 			#Radius of the Earth
@@ -66,8 +61,8 @@
 			
 			$val = pow(sin($latDist / 2), 2) + cos($latA) * cos($latB) * pow(sin($lonDist / 2), 2);
 			$res = 2 * asin(sqrt($val));
-			#Resulting distance (meters)
-			return ($res*$radius) * 1000;
+			#Resulting distance (kilometers)
+			return ($res*$radius);
 		}
 	}
 	#Segment
@@ -160,7 +155,61 @@
 			$this->startTime = $startTime;
 			$this->endTime = $endTime;
 			$this->time = $time;
-			$this->speed = ($time == 0) ? -1 : ($length / $time);
+			$this->speed = ($time == 0) ? -1 : ($length / ($time / 1000 / 60 / 60));
+		}
+		public static function fromArray($array)
+		{
+			#Getting segments
+			$plainSegments = $array['segments'];
+			#Resulting segments
+			$segments = [];
+			#Converting segments
+			foreach ($plainSegments as $segmentNum => $plainSegment)
+			{
+				#Getting points
+				$plainPoints = $plainSegment['points'];
+				#Resulting points
+				$points = [];
+				#Converting points
+				foreach ($plainPoints as $pointNum => $plainPoint)
+				{
+					#Creating point
+					$point = new TrackPoint(
+						round(doubleval($plainPoint['latitude']), 7),
+						round(doubleval($plainPoint['longitude']), 7),
+						round(doubleval($plainPoint['accuracy']), 3),
+						intval($plainPoint['timestamp'])
+					);
+					#Whether identical
+					$identical = false;
+					#Checking if there are any points already
+					if (count($points) > 0)
+					{
+						#Getting last point
+						$lastPoint = end($points);
+						#Getting distance
+						$identical = ($point->latitude === $lastPoint->latitude and $point->longitude === $lastPoint->longitude);
+					}
+					if (!$identical)
+					{
+						#Adding point
+						array_push(
+							$points, $point
+						);
+					}
+				}
+				#Creating segment
+				$segment = new Segment($points);
+				#Checking distance
+				if ($segment->length > 0)
+				{
+					#Add to segments
+					array_push($segments, $segment);
+				}
+			}
+			#Creating journey
+			$track = new Track($segments);
+			return $track;
 		}
 	}
 ?>
