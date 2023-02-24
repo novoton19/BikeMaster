@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:09pm
 	Version: 0.0.2.3.5
 Updated on
-	Version: 0.4
+	Version: 0.4.1
 
 Description:
 	Responsible for Journey Mode location tracking and backing up
@@ -98,7 +98,7 @@ class Journey extends EventTarget
 	status;
 
 	//Private variables
-	#positionManager;
+	positionManager;
 	//Current position watcher
 	#positionWatcher;
 	//On track changed
@@ -125,7 +125,7 @@ class Journey extends EventTarget
 		//Adding status
 		this.status = status;
 		//Adding position manager
-		this.#positionManager = positionManager;
+		this.positionManager = positionManager;
 		//Adding position watcher
 		this.#positionWatcher = positionWatcher;
 
@@ -160,7 +160,7 @@ class Journey extends EventTarget
 		if (this.status !== journeyModeStatuses.Idle)
 		{
 			//Trying to update position now
-			this.#positionManager.tryUpdatePosition();
+			this.positionManager.tryUpdatePosition();
 		}
 		//Updating position watcher
 		this.#updatePositionWatcher();
@@ -177,7 +177,7 @@ class Journey extends EventTarget
 	start()
 	{
 		//Checking if can get position
-		if (!this.#positionManager.canGetPosition)
+		if (!this.positionManager.canGetPosition)
 		{
 			//Cannot get position to start
 			return;
@@ -219,7 +219,7 @@ class Journey extends EventTarget
 	resume()
 	{
 		//Checking if can get position
-		if (!this.#positionManager.canGetPosition)
+		if (!this.positionManager.canGetPosition)
 		{
 			//Cannot get position to start
 			return;

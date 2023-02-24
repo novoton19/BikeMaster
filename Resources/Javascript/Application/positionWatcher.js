@@ -6,13 +6,13 @@ Created on
 	Date: 02/23/23 04:27pm
 	Version: 0.4
 Updated on
-	Version: 0.4
+	Version: 0.4.1
 
 Description:
 	Watches position
 
 Changes:
-
+	Version 0.4.1 - Bug fix - kept being deactivated after permission update
 */
 class PositionWatcher
 {
@@ -22,17 +22,19 @@ class PositionWatcher
 	#processID;
 	//Whether active
 	active;
+	#requestedState;
 
 	//Constructor
 	constructor(activateOnStart = true)
 	{
 		//Creating position manager
 		this.positionManager = new PositionManager();
+		this.#requestedState = activateOnStart;
 
 		//Listening for permission changes and checking position watcher on event
 		this.positionManager.addEventListener('onPermissionsUpdated', () =>
 		{
-			this.update(this.active);
+			this.update(this.#requestedState);
 		});
 		//Checking if should activate right away
 		if (activateOnStart)
@@ -74,6 +76,8 @@ class PositionWatcher
 	//Update watcher
 	update(state)
 	{
+		this.#requestedState = state;
+
 		if (state && this.positionManager.canGetPosition)
 		{
 			//Activate watcher

@@ -6,13 +6,13 @@ Created on
 	Date: 02/22/23 10:02am
 	Version: 0.4
 Updated on
-	Version: 0.4
+	Version: 0.4.1
 
 Description:
 	New journey page
 
 Changes:
-
+	Version 0.4.1 - Added overlay for location permission
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -71,6 +71,22 @@ Changes:
     <script type="text/javascript">Loader.load();</script>
 </head>
 <body>
+	<div id="permissionOverlay">
+		<div class="wrapper">
+			<h2>
+				Location access
+			</h2>
+			<p>
+				This page requires location access in order to work. You can grant the permission in the website settings.
+			</p>
+			<button class="grantButton button green">
+				Grant access
+			</button>
+			<button class="refreshButton button gray">
+				Refresh
+			</button>
+		</div>
+	</div>
 	<div id="topbar">
 		<div switcher switcherID="page">
 			<button class="button unlimitedWidth noRadiusLeft noBorder" switchID="mapView">

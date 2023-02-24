@@ -6,7 +6,7 @@ Created on
 	Date: 12/30/22 10:07pm
 	Version: 0.0.2.3.5
 Updated on
-	Version: 0.0.2.7
+	Version: 0.4.1
 
 Description:
 	Responsible for keeping track of permissions and position of this device
@@ -47,7 +47,7 @@ class PositionManager extends EventTarget
 	{
 		super();
 		//Refreshing permissions
-		this.#refreshPermissions();
+		this.refreshPermissions();
 		//Checking if geolocation is supported
 		if (this.supportsGeolocation)
 		{
@@ -59,12 +59,12 @@ class PositionManager extends EventTarget
 			).then((result) =>
 			{
 				//Adding event on change
-				result.onchange = () => this.#refreshPermissions();
+				result.onchange = () => this.refreshPermissions();
 			});
 		}
 	}
 	//Refreshes the permissions
-	#refreshPermissions()
+	refreshPermissions()
 	{
 		//Whether supports geolocation
 		this.supportsGeolocation = 'geolocation' in navigator;
@@ -107,16 +107,23 @@ class PositionManager extends EventTarget
 	//On position not obtained
 	#onPositionNotObtained(error)
 	{
-		//Eventual resolver
-		//Dispatching event
-		this.dispatchEvent(new CustomEvent(
-			this.#positionNotUpdatedEventName,
-			{
-				detail : {
-					error : error
+		//Checking error code
+		if (error.code === 1)
+		{
+			this.refreshPermissions();
+		}
+		else
+		{
+			//Dispatching event
+			this.dispatchEvent(new CustomEvent(
+				this.#positionNotUpdatedEventName,
+				{
+					detail : {
+						error : error
+					}
 				}
-			}
-		));
+			));
+		}
 	}
 	//Attempts to update position
 	tryUpdatePosition(options = { enableHighAccuracy : true, maximumAge : 1000, timeout : 10000 }, allowAttempt = false)

@@ -6,13 +6,13 @@ Created on
 	Date: 02/22/23 09:33am
 	Version: 0.4
 Updated on
-	Version: 0.4
+	Version: 0.4.1
 
 Description:
 	Javascript for journey page
 
 Changes:
-
+	Version 0.4.1 - Overlay for location permission
 */
 //Waiting for document to load
 $(document).ready(() =>
@@ -24,7 +24,13 @@ $(document).ready(() =>
 	var journeyManager = new JourneyManager();
 	//Creating position watcher
 	var positionWatcher = new PositionWatcher(true);
+	//Getting position manager
+	var positionManager = positionWatcher.positionManager;
 	
+	//Getting overlay
+	var permissionOverlay = $('#permissionOverlay');
+	var grantButton = permissionOverlay.find('.grantButton');
+	var refreshButton = permissionOverlay.find('.refreshButton');
 	//Getting map element
 	var mapElement = $('#map')[0];
 	var recenterButton = $('.recenterButton');
@@ -79,6 +85,44 @@ $(document).ready(() =>
 	markers.addMarker(marker);
 	
 
+	//Called when the permissions change
+	function onPermissionsUpdated()
+	{
+		//Checking if location can be obtained
+		if (!positionManager.canGetPosition)
+		{
+			//Checking if can request location
+			if (positionManager.canRequestPosition)
+			{
+				//Show grant button
+				grantButton.show();
+			}
+			else
+			{
+				//Hide grant button
+				grantButton.hide();
+			}
+			//Show overlay
+			permissionOverlay.show();
+		}
+		else
+		{
+			//Hide overlay
+			permissionOverlay.hide();
+		}
+	}
+	//On grant button clicked
+	function onGrantButtonClicked()
+	{
+		positionManager.tryUpdatePosition(undefined, true);
+	}
+	//On refresh button clicked
+	function onRefreshButtonClicked()
+	{
+		positionManager.refreshPermissions();
+		journeyManager.journey.positionManager.refreshPermissions();
+		mapManager.positionManager.refreshPermissions();
+	}
 	//Called on journey status change
 	function onJourneyStatusChanged()
 	{
@@ -270,6 +314,10 @@ $(document).ready(() =>
 		recenterButton.hide();
 	});
 
+	positionManager.addEventListener('onPermissionsUpdated', onPermissionsUpdated);
+	onPermissionsUpdated();
+	grantButton.click(() => onGrantButtonClicked());
+	refreshButton.click(() => onRefreshButtonClicked());
 	//Adding journey change event listener
 	journeyManager.addEventListener('onJourneyChanged', onJourneyChanged);
 	onJourneyChanged();
