@@ -6,13 +6,14 @@ Created on
 	Date: 02/22/23 09:33am
 	Version: 0.4
 Updated on
-	Version: 0.4.1
+	Version: 0.4.2
 
 Description:
 	Javascript for journey page
 
 Changes:
 	Version 0.4.1 - Overlay for location permission
+	Version 0.4.2 - Overlay for journey information
 */
 //Waiting for document to load
 $(document).ready(() =>
@@ -27,10 +28,18 @@ $(document).ready(() =>
 	//Getting position manager
 	var positionManager = positionWatcher.positionManager;
 	
-	//Getting overlay
+	//Getting permission overlay
 	var permissionOverlay = $('#permissionOverlay');
 	var grantButton = permissionOverlay.find('.grantButton');
 	var refreshButton = permissionOverlay.find('.refreshButton');
+	//Getting information overlay
+	var finishOverlay = $('#finishOverlay');
+	var form = finishOverlay.find('form');
+	var titleInput = form.find('#title');
+	var titleInformation = form.find('label.information[for=\"title\"]');
+	var descriptionInput = form.find('#description');
+	var descriptionInformation = form.find('label.information[for=\"description\"]');
+	var submitButton = form.find('submitButton');
 	//Getting map element
 	var mapElement = $('#map')[0];
 	var recenterButton = $('.recenterButton');
@@ -46,7 +55,9 @@ $(document).ready(() =>
 	var pauseButton = controlButtons.filter('.pauseButton');
 	var resumeButton = controlButtons.filter('.resumeButton');
 	var endButton = controlButtons.filter('.endButton');
-	//Hide unncessary buttons
+	//Hide unncessary elements
+	permissionOverlay.hide();
+	finishOverlay.hide();
 	recenterButton.hide();
 	controlButtons.hide();
 	//Adding default controls to the map
@@ -154,13 +165,40 @@ $(document).ready(() =>
 	//On journey finished
 	function onJourneyFinished()
 	{
+		finishOverlay.show();
+	}
+	function updateForm()
+	{
+		//Getting lengths
+		let titleLength = titleInput.val().length;
+		let descriptionLength = descriptionInput.val().length;
+		let titleMaxLength = parseInt(titleInput.attr('maxlength'));
+		let descriptionMaxLength = parseInt(descriptionInput.attr('maxlength'))
+		
+		//Updating text
+		titleInformation.text(`${titleLength}/${titleMaxLength}`);
+		descriptionInformation.text(`${descriptionLength}/${descriptionMaxLength}`);
+		//Updating button
+		submitButton.prop('disabled', titleLength > titleMaxLength || descriptionLength > descriptionMaxLength);
+	}
+	function onFormSubmitted(event)
+	{
+		event.preventDefault();
+		//Getting journey
+		let journey = journeyManager.journey;
+		//Creating copy
+		journey = JSON.parse(JSON.stringify(journey));
+		//Adding title and description
+		journey.title = titleInput.val();
+		journey.description = descriptionInput.val();
 		//Getting registration
 		navigator.serviceWorker.ready.then((registration) => {
 			//Sending message to save journey
 			registration.active.postMessage({
 				type: 'SAVE_JOURNEY',
-				journey : Object.fromEntries(Object.entries(journeyManager.journey))
+				journey : journey
 			});
+			window.location.href = '../';
 		});
 	}
 	//Called when current journey changes
@@ -318,6 +356,10 @@ $(document).ready(() =>
 	onPermissionsUpdated();
 	grantButton.click(() => onGrantButtonClicked());
 	refreshButton.click(() => onRefreshButtonClicked());
+	//Inputs
+	titleInput.on('keyup change', () => updateForm());
+	descriptionInput.on('keyup change', () => updateForm());
+	form.submit((event) => onFormSubmitted(event));
 	//Adding journey change event listener
 	journeyManager.addEventListener('onJourneyChanged', onJourneyChanged);
 	onJourneyChanged();

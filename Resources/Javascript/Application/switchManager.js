@@ -6,13 +6,14 @@ Created on
 	Date: 01/26/23 9:18am
 	Version: 0.2
 Updated on
-	Version: 0.3.2
+	Version: 0.4.2
 
 Description:
 	Switch manager
 
 Changes:
 	Version 0.3.2 - Include switchers.css
+	Version 0.4.2 - Disable animation
 */
 //Switcher css
 var switcherCssUrl = '/Pwa/BikeMaster/Resources/Css/Application/switchers.css';
@@ -83,12 +84,12 @@ $(document).ready(() =>
 				if (switchID === targetSwitchID)
 				{
 					$(switchElem).addClass('blue');
-					switchTarget.show(200);
+					switchTarget.show();
 				}
 				else
 				{
 					$(switchElem).removeClass('blue');
-					switchTarget.hide(200);
+					switchTarget.hide();
 				}
 			});
 			//Getting get params
