@@ -6,13 +6,13 @@ Created on
 	Date: 02/24/23 04:44pm
 	Version: 0.4.4
 Updated on
-	Version: 0.4.4
+	Version: 0.4.4.1
 
 Description:
-
+	Loads journey history
 
 Changes:
-
+	Version 0.4.4.1 - Download button
 */
 //Url to journey html
 var journeyHtmlUrl = '../Resources/Html/Application/journey.html';
@@ -108,6 +108,7 @@ $(document).ready(() =>
 			let map = record.find('.map');
 			let title = record.find('.title');
 			let description = record.find('.description');
+			let downloadButton = record.find('.downloadButton');
 			let detailsButton = record.find('.detailsButton');
 			let dateElem = record.find('span.date');
 			let durationElem = record.find('span.duration');
@@ -116,6 +117,8 @@ $(document).ready(() =>
 			//Getting journey info
 			let id = journey.id;
 			let date = new Date(journey.creationTime * 1000).toLocaleDateString();
+			//Converting to gpx
+			let gpx = GpxConverter.toGpx(journey);
 
 			//Getting seconds
 			let seconds = journey.endTime - journey.startTime;
@@ -132,7 +135,7 @@ $(document).ready(() =>
 			hours = hours >= 10 ? hours : '0' + hours;
 		
 			//Adding ID to map
-			map.attr('id', 'online_' + id);
+			map.attr('id', 'onlineSource_' + id);
 			//Adding texts
 			dateElem.text(date);
 			durationElem.text(`${hours}:${minutes}:${seconds}`);
@@ -144,12 +147,15 @@ $(document).ready(() =>
 			
 			title.text(journey.title);
 			description.text(journey.description);
+			//https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
+			downloadButton.attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(gpx));
+			downloadButton.attr('download', 'downloadedJourney_onlineSource_' + id + '.gpx');
 			detailsButton.attr('href', viewJourneyUrl + '?' + getParams.toString());
 			
 			records.append($(record));
 			//Creating map manager
-			let mapManager = new MapManager('online_' + id, false);
-			mapManager.loadGpx(GpxConverter.toGpx(journey));
+			let mapManager = new MapManager('onlineSource_' + id, false);
+			mapManager.loadGpx(gpx);
 			mapManager.fitGpxLayer();
 		});
 	}
