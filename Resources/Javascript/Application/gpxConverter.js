@@ -6,7 +6,7 @@ Created on
 	Date: 01/07/23
 	Version: 0.0.4.2
 Updated on
-	Version: 0.0.4.2
+	Version: 0..4
 
 Description:
 	Converts Journey to GPX
@@ -40,7 +40,7 @@ class GpxConverter
 			points.forEach(point =>
 			{
 				//Adding point element
-				gpx += `<trkpt lat=\"${point.latitude}\" lon=\"${point.longitude}\" ele=\"${point.elevation}\" time=\"${new Date(point.timestamp).toUTCString()}\">`;
+				gpx += `<trkpt lat=\"${point.latitude}\" lon=\"${point.longitude}\" time=\"${new Date(point.timestamp).toUTCString()}\">`;
 			});
 			//Ending segment element
 			gpx += '</trkseg>';

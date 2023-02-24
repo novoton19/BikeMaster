@@ -55,8 +55,10 @@
 	$reason = null;
 	
 	#Track to be submitted
+	$title = null;
+	$description = null;
 	$track = null;
-	$trackObject = null;
+	$trackObj = null;
 	$segments = null;
 	$points = null;
 	#Journey
@@ -64,6 +66,9 @@
 	$segmentID = null;
 	
 	#Other variables
+	$titleValidation = null;
+	$descriptionValidation = null;
+	$trackValidation = null;
 	$loggedIn = null;
 	$account = null;
 	$userID = null;
@@ -72,6 +77,8 @@
 	$segment = null;
 	$pointNum = null;
 	$point = null;
+	$startTime = null;
+	$endTime = null;
 
 	#Received inputs
 	$inputs = [
@@ -166,12 +173,20 @@
 	if ($valid)
 	{
 		#Getting segments
-		$segments = Track::fromArray($track)->segments;
+		$trackObj = Track::fromArray($track);
+		$segments = $trackObj->segments;
 		#Getting startTime and endTime
 		$startTime = intval($segments[0]->points[0]->timestamp / 1000);
 		$endTime = intval(end(end($segments)->points)->timestamp / 1000);
 		#Creating a new journey
-		list($querySuccess, $journeyID) = $journeysDb->createNewJourney($userID, $startTime, $endTime);
+		list($querySuccess, $journeyID) = $journeysDb->createNewJourney(
+			$userID,
+			$title,
+			$description,
+			$trackObj->length,
+			$startTime,
+			$endTime
+		);
 		#Checking if success
 		if ($querySuccess)
 		{
@@ -242,16 +257,22 @@
 		$segmentsDb,
 		$trackPointsDb,
 		$validation,
+		$loginStatusResult,
 		$valid,
 		$success,
 		$reasonID,
 		$reason,
+		$title,
+		$description,
 		$track,
-		$trackObject,
+		$trackObj,
 		$segments,
 		$points,
 		$journeyID,
 		$segmentID,
+		$titleValidation,
+		$descriptionValidation,
+		$trackValidation,
 		$loggedIn,
 		$account,
 		$userID,
@@ -260,7 +281,9 @@
 		$segment,
 		$pointNum,
 		$point,
+		$startTime,
+		$endTime,
 		$inputs,
-		$inputReasons,
+		$inputReasons
 	);
 ?>

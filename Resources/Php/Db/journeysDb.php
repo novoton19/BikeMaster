@@ -37,15 +37,18 @@
 			$this->db = new Db();
 		}
 		#Create new Journey
-		public function createNewJourney($userID, $startTime, $endTime)
+		public function createNewJourney($userID, $title, $description, $length, $startTime, $endTime)
 		{
 			#Insert
 			list($success, ,) = $this->db->getData(
 				'Insert Into Journeys
-					(UserID, StartTime, EndTime) Values
-					(:UserID, :StartTime, :EndTime)',
+					(UserID, Title, Description, Length, StartTime, EndTime) Values
+					(:UserID, :Title, :Description, :Length, :StartTime, :EndTime)',
 				[
 					':UserID' => $userID,
+					':Title' => $title,
+					':Description' => $description,
+					':Length' => $length,
 					':StartTime' => $startTime,
 					':EndTime' => $endTime
 				]
@@ -60,6 +63,76 @@
 			return [
 				$success,
 				$lastInsertedID
+			];
+		}
+		#Returns journeys
+		public function getJourneys($userID, $page = 0, $limit = 3)
+		{
+			#Return result
+			return $this->db->getData(
+				sprintf('SELECT * From Journeys Where UserID = :UserID And Not Archived Order By CreationTime Desc Limit %d Offset %d', $limit, $page * $limit),
+				[
+					':UserID' => $userID
+				]
+			);
+		}
+		#Returns archive
+		public function getArchive($userID, $page = 0, $limit = 3)
+		{
+			#Return result
+			return $this->db->getData(
+				sprintf('SELECT * From Journeys Where UserID = :UserID And Archived Order By CreationTime Desc Limit %d Offset %d', $limit, $page * $limit),
+				[
+					':UserID' => $userID
+				]
+			);
+		}
+		#Returns amount of journeys
+		public function getJourneysCount($userID)
+		{
+			#Amount of journeys
+			$amount = null;
+			#Getting journeys amount
+			list($querySuccess, $queryResult, ) =  $this->db->getData(
+				'SELECT Count(ID) As Result From Journeys Where UserID = :UserID And Not Archived',
+				[
+					':UserID' => $userID
+				],
+				true
+			);
+			#Checking if success
+			if ($querySuccess)
+			{
+				$amount = intval($queryResult['Result']);
+			}
+			#Return result
+			return [
+				$querySuccess,
+				$amount
+			];
+		}
+		#Returns amount of items in archive
+		public function getArchivedJourneysCount($userID)
+		{
+			#Amount of journeys
+			$amount = null;
+			#Getting journeys amount
+			list($querySuccess, $queryResult, ) =  $this->db->getData(
+				'SELECT Count(ID) As Result From Journeys Where UserID = :UserID And Archived',
+				[
+					':UserID' => $userID
+				],
+				true
+			);
+			#Checking if success
+			if ($querySuccess)
+			{
+				$amount = intval($queryResult['Result']);
+			}
+			#Return result
+			return [
+				$querySuccess,
+				$amount
 			];
 		}
 		#Returns journey information

@@ -6,21 +6,24 @@ Created on
 	Date: 02/22/23 09:20am
 	Version: 0.4
 Updated on
-	Version: 0.4
+	Version: 0.4.4
 
 Description:
 	Css for journey page
 */
-#content .buttons
+#content .buttons.section
 {
 	width: 100%;
 
 	padding: 20px 0px;
-	border-bottom: 1px solid #ddd;
-
+	
 	display: flex;
-
+	
 	overflow-x: auto;
+}
+#content .buttons.section
+{
+	border-bottom: 1px solid #ddd;
 }
 #content .buttons .button
 {
@@ -28,11 +31,11 @@ Description:
 
 	overflow-x: unset;
 }
-#content .buttons .button:first-child
+#content .buttons.section .button:first-child
 {
 	margin-left: auto;
 }
-#content .buttons .button:last-child
+#content .buttons.section .button:last-child
 {
 	margin-right: auto;
 }
@@ -44,7 +47,7 @@ Description:
 
 		overflow-x: unset;
 	}
-	#content .buttons .button
+	#content .buttons.section .button
 	{
 		width: 100%;
 
@@ -53,11 +56,11 @@ Description:
 
 		overflow-x: auto;
 	}
-	#content .buttons .button:first-child
+	#content .buttons.section .button:first-child
 	{
 		margin-left: 0px;
 	}
-	#content .buttons .button:last-child
+	#content .buttons.section .button:last-child
 	{
 		margin-right: 0px;
 	}

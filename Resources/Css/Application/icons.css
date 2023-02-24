@@ -6,7 +6,7 @@ Created on
 	Date: 01/25/23 12:14pm
 	Version: 0.1.2
 Updated on
-	Version: 0.3.6
+	Version: 0.4.4
 
 Description:
 	Icons
@@ -182,4 +182,20 @@ Description:
 .icon.end
 {
 	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/end.png);
+}
+.icon.download
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/download.png);
+}
+.icon.date
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/date.png);
+}
+.icon.duration
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/duration.png);
+}
+.icon.length
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/length.png);
 }

@@ -170,11 +170,16 @@ function sendUploadRequest(journey)
 {
 	//Create journey copy
 	journey = Object.fromEntries(Object.entries(journey));
+	//Getting description and title
+	let title = journey.title;
+	let description = journey.description;
 	//Remove some properties from journey
 	delete journey.id;
 	delete journey.status;
 	delete journey.positionManager;
 	delete journey.readyToUpload;
+	delete journey.title;
+	delete journey.description;
 	//https://stackoverflow.com/questions/35325370/how-do-i-post-a-x-www-form-urlencoded-request-using-fetch
 	//Changing content type to application/x-www-form-urlencoded
 	function encodeObject(obj, prefix = '')
@@ -222,7 +227,7 @@ function sendUploadRequest(journey)
 		}
 		return body;
 	}
-	let body = encodeObject({ track : journey });
+	let body = encodeObject({ track : journey, title : title, description : description });
 	//Creating request
 	let request = new Request(
 		journeyUploadUrl,

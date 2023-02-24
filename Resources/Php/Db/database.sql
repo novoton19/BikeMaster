@@ -109,6 +109,13 @@ Create Table BikeMaster.Journeys(
     UserID int
     	Unsigned
     	Not Null,
+	Title varchar(32)
+		Not Null,
+	Description varchar(512)
+		Not Null,
+	Length float
+		Unsigned
+		Not Null,
     StartTime int
     	Unsigned
     	Not Null,
@@ -118,6 +125,9 @@ Create Table BikeMaster.Journeys(
     CreationTime int
     	Unsigned
 		Default Unix_Timestamp()
+		Not Null,
+	Archived tinyint
+		Default 0
 		Not Null,
     Foreign Key (UserID)
     	References BikeMaster.Users(ID)
@@ -156,11 +166,11 @@ Create Table BikeMaster.TrackPoints(
     Accuracy double(9, 3)
     	Not Null,
     /*Altitude in meters. Up to 9999 meters. Precision 3 decimal places (mm)*/
-    Altitude double(7, 3)
-    	Default Null,
+    /*Altitude double(7, 3)
+    	Default Null,*/
     /*Accuracy in meters. Precision 3 decimal places (mm)*/
-    AltitudeAccuracy double(7, 3)
-    	Default Null,
+    /*AltitudeAccuracy double(7, 3)
+    	Default Null,*/
     Timestamp bigint
     	Unsigned
     	Not Null,
@@ -241,11 +251,11 @@ Insert Into BikeMaster.Settings (NameID, Value) Values
 	/*Minimum altitude: https://www.universetoday.com/15027/lowest-point-on-earth/*/
 	('MinimumAltitude', '-420'),
 	/*Maximum altitude: https://www.britannica.com/place/Mount-Everest*/
-	('MaximumAltitude', '8849'),
-	('MaximumAltitudeAccuracy', '500'),
+	/*('MaximumAltitude', '8849'),
+	('MaximumAltitudeAccuracy', '500'),*/
 	/*Minimum time: First time application introduced (1672948580000), https://www.unixtimestamp.com/
 	Actually, it's not necessary to keep minimum time to application start in case of data from other source
 	*/
-	('MinimumTime', '1672948580000'),
+	('MinimumTime', '0'),
 	/*Maximum speed: https://www.moultonbicycles.co.uk/heritage.html#recordsracing*/
 	('MaximumSpeed', '82.54');
