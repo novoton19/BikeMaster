@@ -7,7 +7,7 @@
 		Date: 01/01/23 02:48pm
 		Version: 0.0.3
 	Updated on
-		Version: 0.0.5.2
+		Version: 0.5.1
 
 	Description:
 		Class containing functions which execute sql queries on database
@@ -140,11 +140,11 @@
 			);
 		}
 		#Searches for users
-		public function search($term, $page = 0, $limit = 3)
+		public function search($term, $page = 0, $pageSize = 3)
 		{
 			#Return result
 			return $this->db->getData(
-				sprintf('SELECT ID, Username, Description, ProfilePictureUrl, RegistrationTime From Users Where Username Like :Term Or Description Like :Term Order By Username Like :Term Desc, RegistrationTime Desc Limit %d Offset %d', $limit, $page * $limit),
+				sprintf('SELECT ID, Username, Description, ProfilePictureUrl, RegistrationTime From Users Where Username Like :Term Or Description Like :Term Order By Username Like :Term Desc, RegistrationTime Desc Limit %d Offset %d', $pageSize, $page * $pageSize),
 				[
 					':Term' => '%'.$term.'%'
 				]

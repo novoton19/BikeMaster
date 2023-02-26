@@ -6,10 +6,10 @@ Created on
 	Date: 02/20/23 09:31pm
 	Version: 0.3.5
 Updated on
-	Version: 0.4.5
+	Version: 0.5.1
 
 Description:
-	Css for any types of  records
+	Css for any types of records
 */
 #content .recordsWrapper
 {
@@ -46,13 +46,19 @@ Description:
 }
 #content .recordsWrapper .records .record.friend,
 #content .recordsWrapper .records .record.friendRequest,
-#content .recordsWrapper .records .record.journey .information
+#content .recordsWrapper .records .record.journey .userDetails,
+#content .recordsWrapper .records .record.journey .journeyInformation
 {
 	display: flex;
 	justify-content: space-between;
 }
+#content .recordsWrapper .records .record.journey .userDetails
+{
+	margin-bottom: 10px;
+}
 #content .recordsWrapper .records .record.friend .iconWrapper,
-#content .recordsWrapper .records .record.friendRequest .iconWrapper
+#content .recordsWrapper .records .record.friendRequest .iconWrapper,
+#content .recordsWrapper .records .record.journey .userDetails .iconWrapper
 {
 	max-width: 48px;
 	min-width: 48px;
@@ -61,7 +67,8 @@ Description:
 	align-items: center;
 }
 #content .recordsWrapper .records .record.friend .iconWrapper .profilePicture,
-#content .recordsWrapper .records .record.friendRequest .iconWrapper .profilePicture
+#content .recordsWrapper .records .record.friendRequest .iconWrapper .profilePicture,
+#content .recordsWrapper .records .record.journey .userDetails .iconWrapper .profilePicture
 {
 	max-width: 100%;
 
@@ -70,7 +77,8 @@ Description:
 }
 #content .recordsWrapper .records .record.friend .information,
 #content .recordsWrapper .records .record.friendRequest .information,
-#content .recordsWrapper .records .record.journey .information .general
+#content .recordsWrapper .records .record.journey .userDetails .information,
+#content .recordsWrapper .records .record.journey .journeyInformation .general
 {
 	width: 100%;
 
@@ -82,7 +90,8 @@ Description:
 }
 #content .recordsWrapper .records .record.friend .information .username,
 #content .recordsWrapper .records .record.friendRequest .information .username,
-#content .recordsWrapper .records .record.journey .information .general .title
+#content .recordsWrapper .records .record.journey .userDetails .information .username,
+#content .recordsWrapper .records .record.journey .journeyInformation .general .title
 {
 	font-size: 20px;
 	margin-bottom: 3px;
@@ -95,13 +104,15 @@ Description:
 }
 #content .recordsWrapper .records .record.friend .information .username *,
 #content .recordsWrapper .records .record.friendRequest .information .username *,
-#content .recordsWrapper .records .record.journey .information .general .title *
+#content .recordsWrapper .records .record.journey .userDetails .information .username *,
+#content .recordsWrapper .records .record.journey .journeyInformation .general .title *
 {
 	float: unset;
 }
 #content .recordsWrapper .records .record.friend .information .description,
 #content .recordsWrapper .records .record.friendRequest .information .description,
-#content .recordsWrapper .records .record.journey .information .general .description
+#content .recordsWrapper .records .record.journey .userDetails .information .description,
+#content .recordsWrapper .records .record.journey .journeyInformation .general .description
 {
 	width: auto;
 
@@ -118,13 +129,15 @@ Description:
 }
 #content .recordsWrapper .records .record.friend .information .description *,
 #content .recordsWrapper .records .record.friendRequest .information .description *,
-#content .recordsWrapper .records .record.journey .information .general .description *
+#content .recordsWrapper .records .record.journey .userDetails .information .description *,
+#content .recordsWrapper .records .record.journey .journeyInformation .general .description *
 {
 	float: unset;
 }
 #content .recordsWrapper .records .record.friend .buttons,
 #content .recordsWrapper .records .record.friendRequest .buttons,
-#content .recordsWrapper .records .record.journey .information .buttons
+#content .recordsWrapper .records .record.journey .userDetails .buttons,
+#content .recordsWrapper .records .record.journey .journeyInformation .buttons
 {
 	display: flex;
 	justify-content: end;
@@ -141,11 +154,13 @@ Description:
 	width: 100%;
 	height: 300px;
 
+	border-radius: 10px;
+
 	margin-bottom: 10px;
 	margin-left: auto;
 	margin-right: auto;
 }
-#content .recordsWrapper .records .record.journey .information
+#content .recordsWrapper .records .record.journey .journeyInformation
 {
 	width: 100%;
 

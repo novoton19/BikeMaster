@@ -7,7 +7,7 @@
 		Date: 01/06/23 12:10pm
 		Version: 0.0.4.1
 	Updated on
-		Version: 0.4.5
+		Version: 0.5.1
 
 	Description:
 		Manages the Journeys database
@@ -15,6 +15,7 @@
 	Changes:
 		Version 0.0.4.3 - Get recent journeys from user
 		Version 0.4.5 - Change archivation
+		Version 0.5.1 - Journey search
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -194,6 +195,42 @@
 				$querySuccess,
 				$journeyIDs,
 				!empty($journeyIDs)
+			];
+		}
+		#Search journeys
+		public function search($term, $userID, $page = 0, $pageSize = 3)
+		{
+			#Return result
+			return $this->db->getData(
+				sprintf('SELECT ID From Journeys Where (UserID = :UserID Or Not Archived) And (Title Like :Term Or Description Like :Term) Order By Title Like :Term Desc, CreationTime Desc Limit %d Offset %d', $pageSize, $page * $pageSize),
+				[
+					':Term' => '%'.$term.'%',
+					':UserID' => $userID
+				]
+			);
+		}
+		#Returns amount of search results
+		public function getSearchResultsCount($term, $userID)
+		{
+			#Resulting amout
+			$amount = null;
+			#Geting result
+			list($querySuccess, $queryResult, ) = $this->db->getData(
+				'SELECT Count(ID) As Result From Journeys Where (UserID = :UserID Or Not Archived) And (Title Like :Term Or Description Like :Term)',
+				[
+					':Term' => '%'.$term.'%',
+					':UserID' => $userID
+				],
+				true
+			);
+			#Checking if query succeeded
+			if ($querySuccess)
+			{
+				$amount = intval($queryResult['Result']);
+			}
+			return [
+				$querySuccess,
+				$amount
 			];
 		}
 	}

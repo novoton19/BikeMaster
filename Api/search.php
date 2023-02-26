@@ -7,13 +7,13 @@
 		Date: 02/26/23 02:17pm
 		Version: 0.5
 	Updated on
-		Version: 0.5
+		Version: 0.5.1
 
 	Description:
 		Returns search searchR
 
 	Changes:
-
+		Version 0.5.1 - Search journeys
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -36,6 +36,8 @@
 	require_once(__DIR__.'/../Resources/Php/InputValidation/search.php');
 	#Require general functions
 	require_once(__DIR__.'/../Resources/Php/general.php');
+	#Require JourneyLoader
+	require_once(__DIR__.'/../Resources/Php/journeyLoader.php');
 
 	#Create ReasonIDsDb
 	$reasonIDs = new ReasonIDsDb();
@@ -47,6 +49,8 @@
 	$journeysDb = new JourneysDb();
 	#Create SearchValidation
 	$validation = new SearchValidation();
+	#Create JourneyLoader
+	$journeyLoader = new JourneyLoader();
 
 	#Whether succeeded
 	$success = false;
@@ -130,7 +134,7 @@
 					if ($querySuccess)
 					{
 						#Getting results
-						list($querySuccess, $queryResults, ) = $usersDb->search($term, $page, ($page + 1) * $pageSize);
+						list($querySuccess, $queryResults, ) = $usersDb->search($term, $page, $pageSize);
 						#Checking if success
 						if ($querySuccess)
 						{
@@ -141,8 +145,8 @@
 							{
 								array_push($searchResults, [
 									'id' => intval($queryResult['ID']),
-									'username' => str_replace($term, '<b>'.$term.'</b>', $queryResult['Username']),
-									'description' => str_replace($term, '<b>'.$term.'</b>', $queryResult['Description']),
+									'username' => str_replace($term, '<b>'.$term.'</b>', htmlspecialchars($queryResult['Username'])),
+									'description' => str_replace($term, '<b>'.$term.'</b>', htmlspecialchars($queryResult['Description'])),
 									'profilePictureUrl' => $queryResult['ProfilePictureUrl'],
 									'registrationTime' => intval($queryResult['RegistrationTime'])
 								]);
@@ -162,7 +166,43 @@
 				}
 				elseif ($sector === 'journeys')
 				{
-	
+					#Getting resultsCount
+					list($querySuccess, $searchResultsCount) = $journeysDb->getSearchResultsCount($term, $accountID);
+					#Checking if query success
+					if ($querySuccess)
+					{
+						#Getting results
+						list($querySuccess, $queryResults, ) = $journeysDb->search($term, $accountID, $page, $pageSize);
+						#Checking if success
+						if ($querySuccess)
+						{
+							$success = true;
+							$reasonID = $reasonIDs->Accepted;
+							#Getting results
+							foreach ($queryResults as $queryResultNum => $queryResult)
+							{
+								#Getting journey
+								$journey = $journeyLoader->loadJourney($queryResult['ID']);
+								#Getting title and description
+								$title = $journey['title'];
+								$description = $journey['description'];
+								#Highlighting term
+								$journey['title'] = str_replace($term, '<b>'.$term.'</b>', htmlspecialchars($title));
+								$journey['description'] = str_replace($term, '<b>'.$term.'</b>', htmlspecialchars($description));
+								array_push($searchResults, $journey);
+							}
+						}
+						else#if (!$querySuccess)
+						{
+							$reasonID = $reasonIDs->DatabaseError;
+							$reason = 'Server experienced an error while processing the request (1)';
+						} 
+					}
+					else#if (!$querySuccess)
+					{
+						$reasonID = $reasonIDs->DatabaseError;
+						$reason = 'Server experienced an error while processing the request (2)';
+					}
 				}
 				elseif ($sector === 'competitions')
 				{

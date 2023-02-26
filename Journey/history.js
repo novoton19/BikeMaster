@@ -107,6 +107,7 @@ $(document).ready(() =>
 			//Creating new record
 			let record = $(journeyHtml);
 			//Getting elements
+			let userDetails = record.find('.userDetails');
 			let map = record.find('.map');
 			let title = record.find('.title');
 			let description = record.find('.description');
@@ -118,6 +119,7 @@ $(document).ready(() =>
 			let durationElem = record.find('span.duration');
 			let length = record.find('span.distance');
 
+			userDetails.hide();
 			unarchiveButton.hide();
 			
 			//Getting journey info
