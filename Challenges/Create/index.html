@@ -31,26 +31,95 @@ Changes:
 	<link rel="stylesheet" href="../../Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../../Resources/Css/Application/icons.css">
-
+	<link rel="stylesheet" href="../../Resources/Css/Application/forms.css">
+	<link rel="stylesheet" href="../../Resources/Css/Application/records.css">
+	
 	<title>Create competition - BikeMaster</title>
 	<!--jQuery-->
 	<script src="../../jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="../../registerServiceWorker.js"></script>
 	<!--Javascript for this page-->
-	<!--<script src="main.js"></script>-->
+	<script src="main.js"></script>
+	<!--Forwarder-->
+	<script src="../../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Request handler-->
+	<script src="../../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Require sign in-->
+	<script src="../../Resources/Javascript/Application/requireSignIn.js"></script>
 	<!--Bottombar Manager-->
 	<script src="../../Resources/Javascript/Application/bottombarManager.js"></script>
-	<!--Switch manager-->
-	<script src="../../Resources/Javascript/Application/switchManager.js"></script>
 	<!--Network manager-->
 	<script src="../../Resources/Javascript/Application/networkManager.js"></script>
-	<!--Response manager-->
-	<script src="../../Resources/Javascript/Application/responseManager.js"></script>
 	<!--Content load manager-->
 	<script src="../../Resources/Javascript/Application/contentLoadManager.js"></script>
 </head>
 <body>
-	Create
+	<div id="topbar">
+		<h1>
+			Create competition
+		</h1>
+	</div>
+	<div id="content">
+		<div class="section" loader onRequest="onPageRequested" onSuccess="onPageLoaded" onFail="onPageFailed"></div>
+		<div id="create" class="section">
+			<div class="formWrapper">
+				<form>
+					<div class="formReason">
+						Text
+					</div>
+					<div class="record friend">
+						<div class="iconWrapper">
+							<img class="profilePicture" alt="Profile picture">
+						</div>
+						<div class="information">
+							<div class="username">
+								Username
+							</div>
+							<div class="description">
+								Description
+							</div>
+						</div>
+						<div class="buttons">
+							<a href="SearchOpponent/" class="button mini">
+								<i class="icon edit noMargin"></i>
+							</a>
+						</div>
+					</div>
+					<div class="formRow">
+						<label for="title">
+							Title
+						</label>
+						<input type="text" name="title" id="title" placeholder="Title" maxlength="32">
+						<label for="title" class="information">
+							0/32
+						</label>
+					</div>
+					<div class="formRow">
+						<label for="description">
+							Description
+						</label>
+						<textarea name="description" id="description" placeholder="Description" maxlength="512"></textarea>
+						<label for="description" class="information">
+							0/512
+						</label>
+					</div>
+					<div class="formRow">
+						<label for="distance">
+							Winning condition
+						</label>
+						<input type="range" name="distance" id="distance" min="5" max="100" step="0.5" value="25">
+						<label for="distance" class="information">
+							25km
+						</label>
+					</div>
+					<button class="submitButton button green">
+						<i class="icon challenge inverted"></i>
+						Create competition
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

@@ -178,6 +178,46 @@ Create Table BikeMaster.TrackPoints(
     Foreign Key (SegmentID)
     	References BikeMaster.TrackSegments(ID)
 );
+/*Table of competitions*/
+Create Table BikeMaster.Competitions(
+	ID int
+		Unsigned
+		Primary Key
+		Auto_Increment
+		Not Null,
+	SenderUserID int
+		Unsigned
+		Not Null,
+	ReceiverUserID int
+		Unsigned
+		Not Null,
+	Title varchar(32)
+		Not Null,
+	Description varchar(512)
+		Not Null,
+	Distance int
+		Not Null,
+	Accepted tinyint(1)
+		Default 0
+		Not Null,
+	RequestTime int
+    	Unsigned
+    	Default Unix_Timestamp()
+    	Not Null,
+    AcceptTime int 
+    	Unsigned,
+	FinishTime int
+		Unsigned,
+	WinnerID int
+		Unsigned,
+
+	Foreign Key (SenderUserID)
+    	References BikeMaster.Users(ID),
+	Foreign Key (ReceiverUserID)
+    	References BikeMaster.Users(ID),
+	Foreign Key (WinnerID)
+		References BikeMaster.Users(ID)
+);
 /*Table of reasonIDs*/
 Create Table BikeMaster.ReasonIDs(
   	ID int

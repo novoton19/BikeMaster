@@ -6,7 +6,7 @@ Created on
 	Date: 02/20/23 09:31pm
 	Version: 0.3.5
 Updated on
-	Version: 0.5.1
+	Version: 0.6.1
 
 Description:
 	Css for any types of records
@@ -44,7 +44,7 @@ Description:
 	padding: 15px 10px;
 	border-bottom: 1px solid #ddd;
 }
-#content .recordsWrapper .records .record.friend,
+.record.friend,
 #content .recordsWrapper .records .record.friendRequest,
 #content .recordsWrapper .records .record.journey .userDetails,
 #content .recordsWrapper .records .record.journey .journeyInformation
@@ -56,7 +56,7 @@ Description:
 {
 	margin-bottom: 10px;
 }
-#content .recordsWrapper .records .record.friend .iconWrapper,
+.record.friend .iconWrapper,
 #content .recordsWrapper .records .record.friendRequest .iconWrapper,
 #content .recordsWrapper .records .record.journey .userDetails .iconWrapper
 {
@@ -66,7 +66,7 @@ Description:
 	display: flex;
 	align-items: center;
 }
-#content .recordsWrapper .records .record.friend .iconWrapper .profilePicture,
+.record.friend .iconWrapper .profilePicture,
 #content .recordsWrapper .records .record.friendRequest .iconWrapper .profilePicture,
 #content .recordsWrapper .records .record.journey .userDetails .iconWrapper .profilePicture
 {
@@ -75,7 +75,7 @@ Description:
 	border-radius: 24px;
 	border: 1px solid #ddd;
 }
-#content .recordsWrapper .records .record.friend .information,
+.record.friend .information,
 #content .recordsWrapper .records .record.friendRequest .information,
 #content .recordsWrapper .records .record.journey .userDetails .information,
 #content .recordsWrapper .records .record.journey .journeyInformation .general
@@ -88,7 +88,7 @@ Description:
 	flex-direction: column;
 	justify-content: center;
 }
-#content .recordsWrapper .records .record.friend .information .username,
+.record.friend .information .username,
 #content .recordsWrapper .records .record.friendRequest .information .username,
 #content .recordsWrapper .records .record.journey .userDetails .information .username,
 #content .recordsWrapper .records .record.journey .journeyInformation .general .title
@@ -102,14 +102,14 @@ Description:
 	overflow: hidden;
 	word-break: break-all;
 }
-#content .recordsWrapper .records .record.friend .information .username *,
+.record.friend .information .username *,
 #content .recordsWrapper .records .record.friendRequest .information .username *,
 #content .recordsWrapper .records .record.journey .userDetails .information .username *,
 #content .recordsWrapper .records .record.journey .journeyInformation .general .title *
 {
 	float: unset;
 }
-#content .recordsWrapper .records .record.friend .information .description,
+.record.friend .information .description,
 #content .recordsWrapper .records .record.friendRequest .information .description,
 #content .recordsWrapper .records .record.journey .userDetails .information .description,
 #content .recordsWrapper .records .record.journey .journeyInformation .general .description
@@ -127,14 +127,14 @@ Description:
 	color: #666;
 	font-style: italic;
 }
-#content .recordsWrapper .records .record.friend .information .description *,
+.record.friend .information .description *,
 #content .recordsWrapper .records .record.friendRequest .information .description *,
 #content .recordsWrapper .records .record.journey .userDetails .information .description *,
 #content .recordsWrapper .records .record.journey .journeyInformation .general .description *
 {
 	float: unset;
 }
-#content .recordsWrapper .records .record.friend .buttons,
+.record.friend .buttons,
 #content .recordsWrapper .records .record.friendRequest .buttons,
 #content .recordsWrapper .records .record.journey .userDetails .buttons,
 #content .recordsWrapper .records .record.journey .journeyInformation .buttons

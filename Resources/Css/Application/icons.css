@@ -6,7 +6,7 @@ Created on
 	Date: 01/25/23 12:14pm
 	Version: 0.1.2
 Updated on
-	Version: 0.4.4
+	Version: 0.6.1
 
 Description:
 	Icons
@@ -214,4 +214,8 @@ Description:
 .icon.invitation
 {
 	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/invitation.png);
+}
+.icon.edit
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/edit.png);
 }

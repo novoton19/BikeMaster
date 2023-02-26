@@ -1,0 +1,28 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/26/23 09:47pm
+	Version: 0.6.1
+Updated on
+	Version: 0.6.1
+
+Description:
+	Css for craete competition page
+*/
+#content .section
+{
+	display: flex;
+	justify-content: center;
+}
+#content .section .record
+{
+	width: 100%;
+
+	margin: 10px 0px;
+}
+#content .section .button
+{
+	max-width: 200px;
+}

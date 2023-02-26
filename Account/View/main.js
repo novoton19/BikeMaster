@@ -6,13 +6,13 @@ Created on
 	Date: 02/21/23 09:14am
 	Version: 0.3.6
 Updated on
-	Version: 0.3.6
+	Version: 0.6.1
 
 Description:
 	View user information
 
 Changes:
-
+	Version 0.6.1 - Create competition url, back button working through history not search params
 */
 //Url to request account information
 var getInformationUrl = '../../Api/Social/Account/getInformation.php';
@@ -23,6 +23,7 @@ var unfriendUrl = '../../Api/Social/Account/unfriend.php';
 var addFriendUrl = '../../Api/Social/Account/sendFriendRequest.php';
 var userProfilePicturesUrl = '../../Assets/ProfilePictures/Users/';
 var defaultProfilePictureUrl = '../../Assets/ProfilePictures/Default/default.png';
+var createCompetitionUrl = '../../Challenges/Create/';
 //Getting current script name
 var mainName = document.currentScript.src.split('/').pop();
 
@@ -64,22 +65,10 @@ $(document).ready(() =>
 	//Getting search params
 	var getParams = new URLSearchParams(window.location.search);
 	var id = getParams.get('id');
-	var returnUrl = getParams.get('returnUrl');
-
-	var returnUrlExists = returnUrl !== null;
 	//Checking if ID exists
 	if (id === null)
 	{
-		//Checking if return url exists
-		if (returnUrlExists)
-		{
-			//Return
-			window.location.href = returnUrl;
-		}
-		else
-		{
-			forwardToErrorPage('User doesn\'t exist', mainName);
-		}
+		forwardToErrorPage('User doesn\'t exist', mainName);
 	}
 
 	function disableButtons()
@@ -216,6 +205,7 @@ $(document).ready(() =>
 		readMoreButton.hide();
 		readLessButton.hide();
 
+		createCompetitionButton.attr('href', createCompetitionUrl + '?id=' + id);
 		profilePictureElem.prop('src', profilePictureUrl);
 		usernameElem.text(username);
 		registrationElem.text('Member since ' + new Date(registrationTime * 1000).toLocaleDateString());
@@ -263,14 +253,10 @@ $(document).ready(() =>
 	window.onAccountLoaded = onAccountLoaded;
 	window.onAccountLoadFailed = (information) => information.reason;
 
-	if (returnUrlExists)
+	backButton.click(() =>
 	{
-		backButton.attr('href', returnUrl);
-	}
-	else
-	{
-		navigationalButtons.hide();
-	}
+		window.history.back();	
+	});
 	readMoreButton.click(() =>
 	{
 		descriptionElem.removeClass('limited');
