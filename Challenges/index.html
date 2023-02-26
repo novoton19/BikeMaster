@@ -6,7 +6,7 @@ Created on
 	Date: 01/24/23 11:33am
 	Version: 0.2
 Updated on
-	Version: 0.3.1
+	Version: 0.6
 
 Description:
 	Competition page containing basic information about user's challenges and achievements
@@ -32,7 +32,7 @@ Changes:
 	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
-
+	
 	<title>Challenges - BikeMaster</title>
 	<!--jQuery-->
 	<script src="../jquery.min.js"></script>
@@ -76,14 +76,17 @@ Changes:
 						</h2>
 						<div class="buttons noBackground" switcherID="page" switcher>
 							<button class="button gray" switchID="archive">
+								<i class="icon archive inverted"></i>
 								Archive
 							</button>
-							<a class="button blue" href="Create/">
-								New
-							</a>
 							<button class="button green" switchID="invitations">
+								<i class="icon invitation inverted"></i>
 								Invitations
 							</button>
+							<a class="button blue" href="Create/SearchOpponent/">
+								<i class="icon challenge inverted"></i>
+								New Competition
+							</a>
 						</div>
 					</div>
 					<div loaderUrl="../Api/Challenges/Competitions/getCompetitions.php?category=actual" onRequest="onCompetitionsRequested" onSuccess="onCompetitionsLoaded" onFail="onRequestFailed" loader></div>
@@ -180,6 +183,7 @@ Changes:
 						</h2>
 						<div class="buttons noBackground" switcherID="page" switcher>
 							<button class="button gray" switchID="actual">
+								<i class="icon back inverted"></i>
 								Back
 							</button>
 							<!--<button class="button gray" switchID="archive">
@@ -199,6 +203,7 @@ Changes:
 						</h2>
 						<div class="buttons noBackground" switcherID="page" switcher>
 							<button class="button gray" switchID="actual">
+								<i class="icon back inverted"></i>
 								Back
 							</button>
 							<!--<button class="button green" switchID="invitations">

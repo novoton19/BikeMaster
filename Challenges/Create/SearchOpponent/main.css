@@ -1,0 +1,32 @@
+/*
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/26/23 06:27pm
+	Version: 0.6
+Updated on
+	Version: 0.6
+
+Description:
+	Css for find opponent page
+*/
+#content .section .navigationalButtons,
+#content .section .formWrapper
+{
+	width: 100%;
+
+	padding: 20px 10px;
+	border-bottom: 1px solid #ddd;
+
+	display: flex;
+	justify-content: center;
+}
+#content .section .navigationalButtons
+{
+	padding-top: 10px;
+}
+#content .section .navigationalButtons .button
+{
+	max-width: 200px;
+}

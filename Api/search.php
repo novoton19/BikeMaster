@@ -252,7 +252,7 @@
 		'success' => $success,
 		'results' => $searchResults,
 		'resultsCount' => $searchResultsCount,
-		'totalPages' => (is_null($searchResultsCount) or is_null($pageSize)) ? null : floor($searchResultsCount / $pageSize),
+		'totalPages' => (is_null($searchResultsCount) or is_null($pageSize)) ? null : ceil($searchResultsCount / $pageSize),
 		'reasonID' => $reasonID,
 		'reason' => $reason,
 		'inputs' => $inputs,

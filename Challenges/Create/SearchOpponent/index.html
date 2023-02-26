@@ -1,0 +1,103 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/26/23 06:21pm
+	Version: 0.6
+Updated on
+	Version: 0.6
+
+Description:
+	Page for finding opponent
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../../../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../../../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../../../app.webmanifest">
+	<link rel="stylesheet" href="main.css">
+	<link rel="stylesheet" href="../../../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../../../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../../../Resources/Css/Application/icons.css">
+	<link rel="stylesheet" href="../../../Resources/Css/Application/forms.css">
+	<link rel="stylesheet" href="../../../Resources/Css/Application/records.css">
+
+	<title>Find opponent - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../../../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../../../registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+	<!--Forwarder-->
+	<script src="../../../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Request handler-->
+	<script src="../../../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Require sign in-->
+	<script src="../../../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Bottombar Manager-->
+	<script src="../../../Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Network manager-->
+	<script src="../../../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Content load manager-->
+	<script src="../../../Resources/Javascript/Application/contentLoadManager.js"></script>
+</head>
+<body>
+	<div id="topbar">
+		<h1>
+			Find opponent
+		</h1>
+	</div>
+	<div id="content">
+		<div class="section">
+			<div class="navigationalButtons">
+				<a href="../../" class="button gray">
+					<i class="icon back inverted"></i>
+					Back to overview
+				</a>
+			</div>
+			<div class="formWrapper">
+				<form>
+					<div class="formRow">
+						<label for="search">
+							Opponent's name
+						</label>
+						<input type="text" name="search" id="search" placeholder="Username">
+					</div>
+					<button class="submitButton button gray">
+						<i class="icon search inverted"></i>
+						Search
+					</button>
+				</form>
+			</div>
+			<div loader backupTreatment onRequest="onPageRequested" onSuccess="onPageLoaded" onFail="onPageFailed"></div>
+			<div class="recordsWrapper searchResults">
+				<h2>
+					<span>Search results (</span>
+					<span class="resultsCount">?</span>
+					<span>)</span>
+				</h2>
+				<div id="records" class="records">
+					
+				</div>
+				<div loader continuous backupTreatment relativeID="records" onRequest="onResultsRequested" onSuccess="onResultsObtained" onFail="onResultsFailed"></div>
+				<div class="noResults">
+					No more results
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

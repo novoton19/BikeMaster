@@ -207,3 +207,11 @@ Description:
 {
 	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/unarchive.png);
 }
+.icon.pending
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/pending.png);
+}
+.icon.invitation
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/invitation.png);
+}

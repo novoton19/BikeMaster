@@ -63,14 +63,21 @@ Description:
 	margin-top: 5px;
 
 	display: flex;
-	justify-content: center;
 }
 #competitions .page .navigation .buttons .button
 {
+	max-width: 200px;
 	flex: 1;
 
-	text-overflow: ellipsis;
-	overflow: hidden;
+	overflow: unset;
+}
+#competitions .page .navigation .buttons .button:first-child
+{
+	margin-left: auto;
+}
+#competitions .page .navigation .buttons .button:last-child
+{
+	margin-right: auto;
 }
 #competitions .page .list
 {
@@ -254,7 +261,7 @@ Description:
 }
 
 
-@media screen and (max-width: 350px)
+@media screen and (max-width: 400px)
 {
 	#competitions .page .navigation
 	{
@@ -281,6 +288,14 @@ Description:
 	#competitions .page .navigation .buttons .button:not(:first-child)
 	{
 		margin-top: 5px;
+	}
+	#competitions .page .navigation .buttons .button:first-child
+	{
+		margin-left: unset;
+	}
+	#competitions .page .navigation .buttons .button:last-child
+	{
+		margin-right: unset;
 	}
 	/*#competitions .page .navigation
 	{
