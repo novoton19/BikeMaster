@@ -6,7 +6,7 @@ Created on
 	Date: 02/26/23 08:35am
 	Version: 0.5
 Updated on
-	Version: 0.5.1
+	Version: 0.5.1.1
 
 Description:
 	Searching
@@ -156,7 +156,7 @@ $(document).ready(() =>
 				username.html(result.username);
 				description.html(result.description);
 				detailsButton.attr('href', viewAccountUrl + '?' + getParams.toString());
-				results.append(record);
+				records.append(record);
 				return;
 			}
 			else if (sector === 'journeys')
@@ -295,8 +295,8 @@ $(document).ready(() =>
 
 	//Loading search params
 	let searchParams = new URLSearchParams(window.location.search);
-	searchTerm = searchParams.get('term');
-	searchSector = searchParams.get('sector');
+	searchTerm = searchParams.get('term') || '';
+	searchSector = searchParams.get('sector') || 'users';
 	//Loading search term and sector
 	searchInput.val(searchTerm);
 	sectorInput.val(searchSector);
