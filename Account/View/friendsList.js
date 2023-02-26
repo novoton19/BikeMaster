@@ -15,7 +15,7 @@ Changes:
 
 */
 //Status request url
-var friendHtmlUrl = '../../Resources/Html/Application/friend.html';
+var friendHtmlUrl = '../../Resources/Html/Application/user.html';
 var friendsUrl = '../../Api/Social/Account/getFriends.php';
 var userProfilePicturesUrl = '../../Assets/ProfilePictures/Users/';
 var defaultProfilePictureUrl = '../../Assets/ProfilePictures/Default/default.png';

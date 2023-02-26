@@ -153,13 +153,13 @@
 						$reason = 'Cannot load page lower than 0';
 					}
 				}
-				elseif (is_null($userID))
+				elseif (is_null($page))
 				{
 					#Not set
 					$reasonID = $reasonIDs->IsNull;
 					$reason = 'Not specified';
 				}
-				else#if (!is_numeric($userID))
+				else#if (!is_numeric($page))
 				{
 					#Not number
 					$reasonID = $reasonIDs->InvalidInputs;
@@ -169,7 +169,7 @@
 			else#if (!$reasonIDs->success)
 			{
 				$reasonID = $reasonIDs->DatabaseError;
-				$reason = 'Server experienced an error while processing the request (2)';
+				$reason = 'Server experienced an error while processing the request (1)';
 			}
 			#Checking if reasonID is set
 			if (is_null($reasonID))

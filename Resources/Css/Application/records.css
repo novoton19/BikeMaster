@@ -93,6 +93,12 @@ Description:
 	overflow: hidden;
 	word-break: break-all;
 }
+#content .recordsWrapper .records .record.friend .information .username *,
+#content .recordsWrapper .records .record.friendRequest .information .username *,
+#content .recordsWrapper .records .record.journey .information .general .title *
+{
+	float: unset;
+}
 #content .recordsWrapper .records .record.friend .information .description,
 #content .recordsWrapper .records .record.friendRequest .information .description,
 #content .recordsWrapper .records .record.journey .information .general .description
@@ -109,6 +115,12 @@ Description:
 	
 	color: #666;
 	font-style: italic;
+}
+#content .recordsWrapper .records .record.friend .information .description *,
+#content .recordsWrapper .records .record.friendRequest .information .description *,
+#content .recordsWrapper .records .record.journey .information .general .description *
+{
+	float: unset;
 }
 #content .recordsWrapper .records .record.friend .buttons,
 #content .recordsWrapper .records .record.friendRequest .buttons,

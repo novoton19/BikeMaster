@@ -16,6 +16,7 @@
 		Version 0.0.3.1 - Add getUserByIDSecure
 		Version 0.0.4.4 - Added function for searching for users and for getting amount of results
 		Version 0.0.5.2 - Added friends count
+		Version 0.5 - Improved searching
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -139,26 +140,26 @@
 			);
 		}
 		#Searches for users
-		public function search($username, $page = 0, $limit = 3)
+		public function search($term, $page = 0, $limit = 3)
 		{
 			#Return result
 			return $this->db->getData(
-				sprintf('SELECT ID, Username, Email, RegistrationTime From Users Where Username Like :Username Limit %d Offset %d', $limit, $page * $limit),
+				sprintf('SELECT ID, Username, Description, ProfilePictureUrl, RegistrationTime From Users Where Username Like :Term Or Description Like :Term Order By Username Like :Term Desc, RegistrationTime Desc Limit %d Offset %d', $limit, $page * $limit),
 				[
-					':Username' => '%'.$username.'%'
+					':Term' => '%'.$term.'%'
 				]
 			);
 		}
 		#Returns amount of search results
-		public function getSearchResultsCount($username)
+		public function getSearchResultsCount($term)
 		{
 			#Resulting amout
 			$amount = null;
 			#Geting result
 			list($querySuccess, $queryResult, ) = $this->db->getData(
-				'SELECT Count(ID) As Result From Users Where Username Like :Username',
+				'SELECT Count(ID) As Result From Users Where Username Like :Term Or Description Like :Term',
 				[
-					':Username' => '%'.$username.'%'
+					':Term' => '%'.$term.'%'
 				],
 				true
 			);

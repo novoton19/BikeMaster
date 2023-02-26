@@ -1,0 +1,117 @@
+<!--
+Developer: Ondrej Novotny
+Contact: contact.bike@novotnyondrej.com
+
+Created on
+	Date: 02/26/23 08:36am
+	Version: 0.5
+Updated on
+	Version: 0.5
+
+Description:
+	Search page
+
+Changes:
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!--Metas-->
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Bike Master">
+	<meta name="theme-color" content="#d17702">
+	
+	<!--Links-->
+	<link rel="apple-touch-icon" href="../Assets/Icons/Application/icon-192.png">
+	<link rel="icon" href="../Assets/Icons/Application/icon-192.png">
+	<link rel="manifest" href="../app.webmanifest">
+	<link rel="stylesheet" href="../Resources/Css/Application/general.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/forms.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/records.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/buttons.css">
+	<link rel="stylesheet" href="../Resources/Css/Application/icons.css">
+	<link rel="stylesheet" href="main.css">
+
+	<title>Search - BikeMaster</title>
+	<!--jQuery-->
+	<script src="../jquery.min.js"></script>
+	<!--Registering service worker-->
+	<script src="../registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="main.js"></script>
+	<!--Network manager-->
+	<script src="../Resources/Javascript/Application/networkManager.js"></script>
+	<!--Request handler-->
+	<script src="../Resources/Javascript/Application/requestHandler.js"></script>
+	<!--Forwarder-->
+	<script src="../Resources/Javascript/Application/forwarder.js"></script>
+	<!--Require login-->
+	<script src="../Resources/Javascript/Application/requireSignIn.js"></script>
+	<!--Content load manager-->
+	<script src="../Resources/Javascript/Application/contentLoadManager.js"></script>
+	<!--Bottombar Manager-->
+	<script src="../Resources/Javascript/Application/bottombarManager.js"></script>
+	<!--Position Watcher-->
+	<script src="../Resources/Javascript/Application/positionWatcher.js"></script>
+	<!--Position Manager-->
+	<script src="../Resources/Javascript/Application/positionManager.js"></script>
+	<!--Map Manager-->
+	<script src="../Resources/Javascript/Application/mapManager.js"></script>
+
+	<!--Mapy.cz Api-->
+	<script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript">Loader.load();</script>
+</head>
+<body>
+	<div id="topbar">
+		<h1>
+			Search
+		</h1>
+	</div>
+	<div id="content">
+		<div class="section">
+			<div class="tools formWrapper">
+				<form>
+					<div class="formRow">
+						<label for="search">
+							Search term
+						</label>
+						<input type="text" name="search" id="search">
+					</div>
+					<div class="formRow">
+						<label for="sector">
+							Search sector
+						</label>
+						<select name="sector" id="sector">
+							<option value="users"> Users </option>
+							<option value="journeys"> Journeys </option>
+							<option value="competitions"> Competitions </option>
+							<option value="achievements"> Achievements </option>
+						</select>
+					</div>
+					<button class="submitButton button gray">
+						Search
+					</button>
+				</form>
+			</div>
+			<div loader backupTreatment onRequest="onPageRequested" onSuccess="onPageLoaded" onFail="onPageFailed"></div>
+			<div class="recordsWrapper searchResults">
+				<h2>
+					<span>Search results (</span>
+					<span class="resultsCount">?</span>
+					<span>)</span>
+				</h2>
+				<div id="records" class="records">
+					
+				</div>
+				<div loader continuous backupTreatment relativeID="records" onRequest="onResultsRequested" onSuccess="onResultsObtained" onFail="onResultsFailed"></div>
+				<div class="noResults">
+					No more results
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
