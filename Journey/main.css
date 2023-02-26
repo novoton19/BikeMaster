@@ -6,7 +6,7 @@ Created on
 	Date: 02/22/23 09:20am
 	Version: 0.4
 Updated on
-	Version: 0.4.4
+	Version: 0.4.5
 
 Description:
 	Css for journey page
@@ -25,29 +25,52 @@ Description:
 {
 	border-bottom: 1px solid #ddd;
 }
-#content .buttons .button
+#content .buttons .button,
+.page .recordsWrapper .pageButtons .button
 {
 	max-width: 200px;
 
 	overflow-x: unset;
 }
-#content .buttons.section .button:first-child
+#content .buttons.section .button:first-child,
+.page .recordsWrapper .pageButtons .button:first-child
 {
 	margin-left: auto;
 }
-#content .buttons.section .button:last-child
+#content .buttons.section .button:last-child,
+.page .recordsWrapper .pageButtons .button:last-child
 {
 	margin-right: auto;
 }
+.page .recordsWrapper h2
+{
+	margin-bottom: 0px;
+	padding-bottom: 5px;
+	border-bottom: 0px;
+}
+.page .recordsWrapper .pageButtons
+{
+	width: 100%;
+
+	padding: 5px 0px 10px 0px;
+	border-bottom: 1px solid #ddd;
+
+	display: flex;
+	flex-direction: row;
+	overflow-x: auto;
+}
+
 @media screen and (max-width: 400px) {
-	#content .buttons
+	#content .buttons,
+	.page .recordsWrapper .pageButtons
 	{
 		flex-direction: column;
 		align-items: center;
 
 		overflow-x: unset;
 	}
-	#content .buttons.section .button
+	#content .buttons.section .button,
+	.page .recordsWrapper .pageButtons .button
 	{
 		width: 100%;
 
@@ -56,11 +79,13 @@ Description:
 
 		overflow-x: auto;
 	}
-	#content .buttons.section .button:first-child
+	#content .buttons.section .button:first-child,
+	.page .recordsWrapper .pageButtons .button:first-child
 	{
 		margin-left: 0px;
 	}
-	#content .buttons.section .button:last-child
+	#content .buttons.section .button:last-child,
+	.page .recordsWrapper .pageButtons .button:last-child
 	{
 		margin-right: 0px;
 	}

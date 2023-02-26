@@ -6,7 +6,7 @@ Created on
 	Date: 02/11/23 05:21pm
 	Version: 0.3
 Updated on
-	Version: 0.3.5
+	Version: 0.4.5
 
 Description:
 	Handles requests
@@ -38,7 +38,7 @@ function sendRequest(url, data = {}, method = 'get', processData = undefined, co
 			method : method,
 			processData : processData,
 			contentType : contentType,
-			timeout : 5000,
+			timeout : timeout,
 			success : (response) =>
 			{
 				//Whether valid

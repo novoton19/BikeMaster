@@ -6,13 +6,14 @@ Created on
 	Date: 02/22/23 09:13am
 	Version: 0.4
 Updated on
-	Version: 0.4.4
+	Version: 0.4.5
 
 Description:
 	Journey welcome page
 
 Changes:
-	Load journeys
+	Version 0.4.4 - Load journeys
+	Version 0.4.5 - Load archive and pending
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -40,7 +41,8 @@ Changes:
 	<!--Registering service worker-->
 	<script src="../registerServiceWorker.js"></script>
 	<!--Javascript for this page-->
-	<script src="main.js"></script>
+	<script src="history.js"></script>
+	<script src="archive.js"></script>
 	<!--Network manager-->
 	<script src="../Resources/Javascript/Application/networkManager.js"></script>
 	<!--Request handler-->
@@ -80,12 +82,12 @@ Changes:
 				<i class="icon inverted newJourney"></i>
 				New journey
 			</a>
-			<a href="Upload/" class="button gray">
+			<!--<a href="Upload/" class="button gray">
 				<i class="icon inverted new"></i>
 				Add journey
-			</a>
+			</a>-->
 		</div>
-		<div id="history" class="section">
+		<div id="history" class="section page" switchDefault>
 			<div loader backupTreatment onRequest="onHistoryPageRequested" onSuccess="onHistoryPageLoaded" onFail="onHistoryPageNotLoaded"></div>
 			<div class="recordsWrapper">
 				<h2>
@@ -93,10 +95,62 @@ Changes:
 					<span class="journeysCount">?</span>
 					<span>)</span>
 				</h2>
+				<div class="pageButtons noBackground" switcherID="page" switcher>
+					<button class="button gray" switchID="pending">
+						Pending journeys
+					</button>
+					<button class="button gray" switchID="archive">
+						Archive
+					</button>
+				</div>
 				<div class="records">
 					
 				</div>
 				<div loader continuous backupTreatment relativeID="history" onRequest="onHistoryRequested" onSuccess="onHistoryLoaded" onFail="onHistoryNotLoaded"></div>
+				<div class="noResults">
+					No more results
+				</div>
+			</div>
+		</div>
+		<div id="pending" class="section page">
+			<div loader backupTreatment onRequest="onPendingPageRequested" onSuccess="onPendingPageLoaded" onFail="onPendingPageNotLoaded"></div>
+			<div class="recordsWrapper">
+				<h2>
+					<span>Pending journeys (</span>
+					<span class="journeysCount">?</span>
+					<span>)</span>
+				</h2>
+				<div class="pageButtons noBackground" switcherID="page" switcher>
+					<button class="button gray" switchID="history">
+						Back
+					</button>
+				</div>
+				<div class="records">
+					
+				</div>
+				<div loader continuous backupTreatment relativeID="pending" onRequest="onPendingRequested" onSuccess="onPendingLoaded" onFail="onPendingNotLoaded"></div>
+				<div class="noResults">
+					No more results
+				</div>
+			</div>
+		</div>
+		<div id="archive" class="section page">
+			<div loader backupTreatment onRequest="onArchivePageRequested" onSuccess="onArchivePageLoaded" onFail="onArchivePageNotLoaded"></div>
+			<div class="recordsWrapper">
+				<h2>
+					<span>Archived journeys (</span>
+					<span class="journeysCount">?</span>
+					<span>)</span>
+				</h2>
+				<div class="pageButtons noBackground" switcherID="page" switcher>
+					<button class="button gray" switchID="history">
+						Back
+					</button>
+				</div>
+				<div class="records">
+					
+				</div>
+				<div loader continuous backupTreatment relativeID="archive" onRequest="onArchiveRequested" onSuccess="onArchiveLoaded" onFail="onArchiveNotLoaded"></div>
 				<div class="noResults">
 					No more results
 				</div>

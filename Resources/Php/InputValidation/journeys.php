@@ -22,17 +22,21 @@
 	}
 	#Require reason IDs
 	require_once(__DIR__.'/../Db/reasonIDsDb.php');
+	#Require JourneysDb
+	require_once(__DIR__.'/../Db/journeysDb.php');
 	
 	#Validation class
 	class JourneysValidation
 	{
 		#Reason IDs
 		private $reasonIDs;
+		private $journeysDb;
 		#Constructor
 		public function __construct()
 		{
 			#Creating ReasonIDsDb
 			$this->reasonIDs = new ReasonIDsDb();
+			$this->journeysDb = new JourneysDb();
 		}
 		#Validates viewing type
 		public function validateViewingType($type)
@@ -82,7 +86,7 @@
 			];
 		}
 		#Validates recordID
-		/*public function validateRecordID($recordID)
+		public function validateRecordID($recordID, $requestingUserID)
 		{
 			#Getting reasonIDs
 			$reasonIDs = $this->reasonIDs;
@@ -101,16 +105,28 @@
 				{
 					#Converting to number
 					$recordID = intval($recordID);
-					#Getting relation
-					list($querySuccess, $relation, $relationExists) = $this->friendRelationsDb->getRelationByID($recordID);
+					#Getting journey
+					list($querySuccess, $journey, $journeyExists) = $this->journeysDb->getJourney($recordID);
 					
 					#Checking if query succeeded
-					if ($querySuccess and $relationExists)
+					if ($querySuccess and $journeyExists)
 					{
-						#Valid
+						#Getting userID
+						$userID = intval($journey['UserID']);
+						$archived = ($journey['Archived'] === '1');
 						$success = true;
-						$valid = true;
-						$reasonID = $reasonIDs->Accepted;
+
+						if ((!$archived) or ($userID === $requestingUserID))
+						{
+							#Valid
+							$valid = true;
+							$reasonID = $reasonIDs->Accepted;
+						}
+						else
+						{
+							$reasonID = $reasonIDs->NotAllowed;
+							$reason = 'Operation not allowed';
+						}
 					}
 					elseif (!$querySuccess)
 					{
@@ -118,11 +134,11 @@
 						$reasonID = $reasonIDs->DatabaseError;
 						$reason = 'Server experienced an error while processing the request (1)';
 					}
-					else#if (!$relationExists)
+					else#if (!$journeyExists)
 					{
 						$success = true;
 						$reasonID = $reasonIDs->NotFound;
-						$reason = 'Relation doesn\'t exist';
+						$reason = 'Journey doesn\'t exist';
 					}
 				}
 				elseif (is_null($recordID))
@@ -157,6 +173,6 @@
 				'reasonID' => $reasonID,
 				'reason' => $reason
 			];
-		}*/
+		}
 	}
 ?>

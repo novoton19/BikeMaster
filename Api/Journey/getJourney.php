@@ -26,12 +26,6 @@
 	require_once(__DIR__.'/../../Resources/Php/Db/reasonIDsDb.php');
 	#Require settings DB
 	require_once(__DIR__.'/../../Resources/Php/Db/settingsDb.php');
-	#Require UsersDb
-	require_once(__DIR__.'/../../Resources/Php/Db/usersDb.php');
-	#Require JourneysDb
-	require_once(__DIR__.'/../../Resources/Php/Db/journeysDb.php');
-	#Require FriendRelationsValidation
-	require_once(__DIR__.'/../../Resources/Php/InputValidation/friendRelations.php');
 	#Require JourneysValidation
 	require_once(__DIR__.'/../../Resources/Php/InputValidation/journeys.php');
 	#Require general functions
@@ -48,12 +42,6 @@
 	$reasonIDs = new ReasonIDsDb();
 	#Creating SettingsDb
 	$settingsDb = new SettingsDb();
-	#Creating UsersDb
-	$usersDb = new UsersDb();
-	#Creating JourneysDb
-	$journeysDb = new JourneysDb();
-	#Creating FriendRelationsValidation
-	$friendRelationsValidation = new FriendRelationsValidation();
 	#Creating JourneysValidation
 	$journeysValidation = new JourneysValidation();
 	#Creating JourneyLoader
@@ -77,6 +65,9 @@
 	$pageSize = null;
 	$account = null;
 	$accountID = null;
+	$latitude = null;
+	$longitude = null;
+	$home = null;
 	$idValidation = null;
 	$pageValidation = null;
 	$typeValidation = null;
@@ -91,15 +82,11 @@
 	
 	#Received inputs
 	$inputs = [
-		'id' => null,
-		'page' => null,
-		'type' => null
+		'id' => null
 	];
 	#Input reasons
 	$inputReasons = [
-		'id' => null,
-		'page' => null,
-		'type' => null
+		'id' => null
 	];
 	#Checking if succeeded to get reasonIDs
 	if ($reasonIDs->success and $settingsDb->success)
@@ -116,91 +103,25 @@
 				$account = $loginStatusResult['account'];
 				$accountID = $account['id'];
 
-				#Getting user ID
-				$id = GeneralFunctions::getValue($_GET, 'id', $accountID, false);
-				#Getting page
-				$page = intval(GeneralFunctions::getValue($_GET, 'page', 0, false));
-				#Getting type
-				$type = GeneralFunctions::getValue($_GET, 'type');
+				#Getting journey ID
+				$id = GeneralFunctions::getValue($_GET, 'id');
 
 				#Adding received inputs
 				$inputs['id'] = $id;
-				$inputs['page'] = $page;
-				$inputs['type'] = $type;
 
 				#Validating inputs
-				$idValidation = $friendRelationsValidation->validateUserID($id);
-				$pageValidation = $friendRelationsValidation->validatePage($page);
-				$typeValidation = $journeysValidation->validateViewingType($type);
+				$idValidation = $journeysValidation->validateRecordID($id);
 
 				#Adding input reasons
 				$inputReasons['id'] = $idValidation;
-				$inputReasons['page'] = $pageValidation;
-				$inputReasons['type'] = $typeValidation;
 
 				#Ensure numbers
 				$id = intval($id);
-				$page = intval($page);
 
 				#Checking if inputs are valid
-				if ($idValidation['valid'] and $pageValidation['valid'] and $typeValidation['valid'])
+				if ($idValidation['valid'])
 				{
-					#Check requested user ID if should return archive (user cannot see archive of someone else)
-					if (($type !== 'archive') || ($type === 'archive' and $id === $accountID))
-					{
-						#Checking if should get archive
-						if ($type === 'current')
-						{
-							#Getting friends count
-							list($querySuccess, $resultsCount) = $journeysDb->getJourneysCount($id);
-							#Checking if query succeeded
-							if ($querySuccess)
-							{
-								#Get friend list
-								list($querySuccess, $queryResults, ) = $journeysDb->getJourneys($id, $page, $pageSize);
-							}
-						}
-						else#if ($type !== 'current') || ($type === 'archive')
-						{
-							#Getting friend requests count
-							list($querySuccess, $resultsCount) = $journeysDb->getArchivedJourneysCount($id);
-							#Checking if query succeeded
-							if ($querySuccess)
-							{
-								#Get friend requests
-								list($querySuccess, $queryResults, ) = $journeysDb->getArchive($id, $page, $pageSize);
-							}
-						}
-						#Checking if query success
-						if ($querySuccess)
-						{
-							#Success
-							#Adding journeys
-							foreach ($queryResults as $journeyNum => $journeyInfo)
-							{
-								$journey = $journeyLoader->loadJourney($journeyInfo['ID']);
-								#Checking if exists
-								if (is_array($journey))
-								{
-									array_push($result, $journey);
-								}
-							}
-							$success = true;
-							$reasonID = $reasonIDs->Accepted;
-						}
-						else#if (!$querySuccess)
-						{
-							#Error
-							$reasonID = $reasonIDs->DatabaseError;
-							$reason = 'Server experienced an error while processing the request (2)';
-						}
-					}
-					else#if ($id !=== $accountID)
-					{
-						#Not authorized
-						$reasonID = $reasonIDs->NotAuthorized;
-						$reason = 'Not allowed to view archive';
-					}
+					$result = $journeyLoader->loadJourney($id);
 				}
 				else#if (!inputs valid)
 				{
@@ -246,8 +167,6 @@
 	echo json_encode([
 		'success' => $success,
 		'result' => $result,
-		'resultsCount' => $resultsCount,
-		'totalPages' => ceil($resultsCount / 3),
 		'reasonID' => $reasonID,
 		'reason' => $reason,
 		'loginStatusResult' => $loginStatusResult,
@@ -258,9 +177,6 @@
 	unset(
 		$reasonIDs,
 		$settingsDb,
-		$usersDb,
-		$journeysDb,
-		$friendRelationsValidation,
 		$journeysValidation,
 		$journeyLoader,
 		$success,
@@ -274,6 +190,9 @@
 		$pageSize,
 		$account,
 		$accountID,
+		$latitude,
+		$longitude,
+		$home,
 		$idValidation,
 		$pageValidation,
 		$typeValidation,

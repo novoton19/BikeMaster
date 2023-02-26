@@ -199,3 +199,11 @@ Description:
 {
 	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/length.png);
 }
+.icon.archive
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/archive.png);
+}
+.icon.unarchive
+{
+	background-image: url(/Pwa/BikeMaster/Assets/Icons/Google/unarchive.png);
+}

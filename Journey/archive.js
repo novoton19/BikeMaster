@@ -3,28 +3,30 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 02/24/23 04:44pm
-	Version: 0.4.4
+	Date: 02/24/23 10:22pm
+	Version: 0.4.5
 Updated on
-	Version: 0.4.4.1
+	Version: 0.4.5
 
 Description:
-	Loads journey history
+	Loads journey archive
 
 Changes:
-	Version 0.4.4.1 - Download button
+
 */
 //Url to journey html
 var journeyHtmlUrl = '../Resources/Html/Application/journey.html';
 var viewJourneyUrl = 'View/';
 //Url to get journeys
 var getJourneysUrl = '../Api/Journey/getJourneys.php';
+//Url to change archivation
+var changeArchivationUrl = '../Api/Journey/changeArchivation.php';
 
 //Waiting for document to load
 $(document).ready(() =>
 {
-	var history = $('#history');
-	var recordsWrapper = history.find('.recordsWrapper');
+	var archive = $('#archive');
+	var recordsWrapper = archive.find('.recordsWrapper');
 	var journeysCountElem = recordsWrapper.find('.journeysCount');
 	var records = recordsWrapper.find('.records');
 	var noResults = recordsWrapper.find('.noResults');
@@ -33,14 +35,14 @@ $(document).ready(() =>
 	var currentPage = 0;
 	var lastPage = false;
 
-	function onHistoryPageRequested()
+	function onArchivePageRequested()
 	{
 		recordsWrapper.hide();
 		return [{
 			url : journeyHtmlUrl
 		}];
 	}
-	function onHistoryPageLoaded(responses)
+	function onArchivePageLoaded(responses)
 	{
 		//Getting journey html
 		journeyHtml = responses[0];
@@ -54,7 +56,7 @@ $(document).ready(() =>
 		noResults.hide();
 		recordsWrapper.show();
 	}
-	function onHistoryRequested()
+	function onArchiveRequested()
 	{
 		if (lastPage)
 		{
@@ -64,11 +66,11 @@ $(document).ready(() =>
 			url : getJourneysUrl,
 			data : {
 				page : currentPage,
-				type : 'current'
+				type : 'archive'
 			}
 		}];
 	}
-	function onHistoryLoaded(responses)
+	function onArchiveLoaded(responses)
 	{
 		if (lastPage)
 		{
@@ -110,9 +112,13 @@ $(document).ready(() =>
 			let description = record.find('.description');
 			let downloadButton = record.find('.downloadButton');
 			let detailsButton = record.find('.detailsButton');
+			let archiveButton = record.find('.archiveButton');
+			let unarchiveButton = record.find('.unarchiveButton');
 			let dateElem = record.find('span.date');
 			let durationElem = record.find('span.duration');
 			let length = record.find('span.distance');
+
+			archiveButton.hide();
 
 			//Getting journey info
 			let id = journey.id;
@@ -134,6 +140,34 @@ $(document).ready(() =>
 			minutes = minutes >= 10 ? minutes : '0' + minutes;
 			hours = hours >= 10 ? hours : '0' + hours;
 		
+
+			//Adding button click events
+			archiveButton.click(() =>
+			{
+				//Send to archive
+				sendRequest(changeArchivationUrl, { id : id }).then(() =>
+				{
+					archiveButton.hide();
+					unarchiveButton.show();
+				}).catch(() =>
+				{
+
+				});
+			});
+			unarchiveButton.click(() =>
+			{
+				//Send back to history
+				sendRequest(changeArchivationUrl, { id : id }).then(() =>
+				{
+					unarchiveButton.hide();
+					archiveButton.show();
+				}).catch(() =>
+				{
+
+				});
+			});
+
+
 			//Adding ID to map
 			map.attr('id', 'onlineSource_' + id);
 			//Adding texts
@@ -160,10 +194,10 @@ $(document).ready(() =>
 		});
 	}
 
-	window.onHistoryPageRequested = onHistoryPageRequested;
-	window.onHistoryPageLoaded = onHistoryPageLoaded;
-	window.onHistoryPageNotLoaded = (information) => information.reason;
-	window.onHistoryRequested = onHistoryRequested;
-	window.onHistoryLoaded = onHistoryLoaded;
-	window.onHistoryNotLoaded = (information) => information.reason;
+	window.onArchivePageRequested = onArchivePageRequested;
+	window.onArchivePageLoaded = onArchivePageLoaded;
+	window.onArchivePageNotLoaded = (information) => information.reason;
+	window.onArchiveRequested = onArchiveRequested;
+	window.onArchiveLoaded = onArchiveLoaded;
+	window.onArchiveNotLoaded = (information) => information.reason;
 });

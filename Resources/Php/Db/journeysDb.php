@@ -7,13 +7,14 @@
 		Date: 01/06/23 12:10pm
 		Version: 0.0.4.1
 	Updated on
-		Version: 0.0.4.3
+		Version: 0.4.5
 
 	Description:
 		Manages the Journeys database
 
 	Changes:
 		Version 0.0.4.3 - Get recent journeys from user
+		Version 0.4.5 - Change archivation
 	*/
 	#Making sure that this script is running as module
 	if (!count(debug_backtrace()))
@@ -64,6 +65,19 @@
 				$success,
 				$lastInsertedID
 			];
+		}
+		#Changes archivation
+		public function changeArchivation($journeyID, $userID)
+		{
+			#Update
+			list($success, , ) = $this->db->getData(
+				'Update Journeys Set Archived = Not Archived Where ID = :JourneyID And UserID = :UserID Limit 1',
+				[
+					':JourneyID' => $journeyID,
+					':UserID' => $userID
+				]
+			);
+			return $success;
 		}
 		#Returns journeys
 		public function getJourneys($userID, $page = 0, $limit = 3)

@@ -89,6 +89,18 @@
 				true
 			);
 		}
+		#Get user by ID
+		public function getUserByID($id)
+		{
+			#Return result
+			return $this->db->getData(
+				'SELECT * From Users Where ID = :ID Limit 1',
+				[
+					':ID' => $id
+				],
+				true
+			);
+		}
 		#Get user by username
 		public function getUserByUsername($username)
 		{
