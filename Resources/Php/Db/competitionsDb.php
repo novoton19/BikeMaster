@@ -52,6 +52,25 @@
 			);
 			return $querySuccess;
 		}
+		#Adds distance
+		public function updateDistance($userID, $distanceDriven, $startTime)
+		{
+			#Updating information
+			list($querySuccess, , ) = $this->db->getData(
+				'UPDATE Competitions Set
+					SenderDistanceDriven = SenderDistanceDriven + If(SenderUserID = :UserID, :Distance, 0),
+					ReceiverDistanceDriven = ReceiverDistanceDriven + If(ReceiverUserID = :UserID, :Distance, 0),
+					Finished = (If(SenderUserID = :UserID, SenderDistanceDriven, ReceiverDistanceDriven) + :Distance >= Distance),
+					FinishTime = If(If(SenderUserID = :UserID, SenderDistanceDriven, ReceiverDistanceDriven) + :Distance >= Distance, Unix_Timestamp(), Null)
+					Where Accepted And AcceptTime < :StartTime And Not Finished',
+				[
+					':UserID' => $userID,
+					':Distance' => $distanceDriven,
+					':StartTime' => $startTime
+				]
+			);
+			return $querySuccess;
+		}
 		#Get competition by ID
 		public function getCompetitionByID($id)
 		{

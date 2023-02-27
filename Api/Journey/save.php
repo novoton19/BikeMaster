@@ -31,6 +31,8 @@
 	require_once(__DIR__.'/../../Resources/Php/Db/segmentsDb.php');
 	#Require TrackPointsDb
 	require_once(__DIR__.'/../../Resources/Php/Db/trackPointsDb.php');
+	#Require CompetitionsDb
+	require_once(__DIR__.'/../../Resources/Php/Db/competitionsDb.php');
 	#Require status
 	require_once(__DIR__.'/../User/status.php');
 	#Require journey validation
@@ -44,6 +46,8 @@
 	$journeysDb = new JourneysDb();
 	$segmentsDb = new SegmentsDb();
 	$trackPointsDb = new TrackPointsDb();
+	#Creating CompetitionsDb
+	$competitionsDb = new CompetitionsDb();
 	#Creating JourneyValidation
 	$validation = new JourneyValidation();
 
@@ -192,6 +196,8 @@
 		{
 			#Success
 			$success = true;
+			#Updating distance in compeititions
+			$competitionsDb->updateDistance($userID, $trackObj->length, $startTime);
 			#Creating segments
 			foreach ($segments as $segmentNum => $segment)
 			{
