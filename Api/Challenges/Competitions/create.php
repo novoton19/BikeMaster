@@ -7,13 +7,13 @@
 		Date: 02/26/23 10:51pm
 		Version: 0.6.1
 	Updated on
-		Version: 0.6.1
+		Version: 0.6.2
 
 	Description:
 		Create competition
 
 	Changes:
-
+		Version 0.6.2 - Unset variables
 	*/
 	#Making sure that this script is running independently
 	if (count(debug_backtrace()))
@@ -175,4 +175,22 @@
 		'inputs' => $inputs,
 		'inputReasons' => $inputReasons
 	]);
+	unset(
+		$reasonIDs,
+		$competitionsDb,
+		$friendValidation,
+		$competitionsValidation,
+		$success,
+		$reasonID,
+		$reason,
+		$requestedUserID,
+		$title,
+		$description,
+		$distance,
+		$account,
+		$accountID,
+		$querySuccess,
+		$inputs,
+		$inputReasons
+	);
 ?>

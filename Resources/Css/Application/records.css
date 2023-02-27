@@ -47,18 +47,22 @@ Description:
 .record.friend,
 #content .recordsWrapper .records .record.friendRequest,
 #content .recordsWrapper .records .record.journey .userDetails,
-#content .recordsWrapper .records .record.journey .journeyInformation
+#content .recordsWrapper .records .record.journey .journeyInformation,
+#content .recordsWrapper .records .record.competition .userDetails
 {
 	display: flex;
 	justify-content: space-between;
 }
-#content .recordsWrapper .records .record.journey .userDetails
+#content .recordsWrapper .records .record.journey .userDetails,
+#content .recordsWrapper .records .record.competition .userDetails,
+#content .recordsWrapper .records .record.competition .competitionDetails
 {
 	margin-bottom: 10px;
 }
 .record.friend .iconWrapper,
 #content .recordsWrapper .records .record.friendRequest .iconWrapper,
-#content .recordsWrapper .records .record.journey .userDetails .iconWrapper
+#content .recordsWrapper .records .record.journey .userDetails .iconWrapper,
+#content .recordsWrapper .records .record.competition .userDetails .iconWrapper
 {
 	max-width: 48px;
 	min-width: 48px;
@@ -68,7 +72,8 @@ Description:
 }
 .record.friend .iconWrapper .profilePicture,
 #content .recordsWrapper .records .record.friendRequest .iconWrapper .profilePicture,
-#content .recordsWrapper .records .record.journey .userDetails .iconWrapper .profilePicture
+#content .recordsWrapper .records .record.journey .userDetails .iconWrapper .profilePicture,
+#content .recordsWrapper .records .record.competition .userDetails .iconWrapper .profilePicture
 {
 	max-width: 100%;
 
@@ -78,7 +83,9 @@ Description:
 .record.friend .information,
 #content .recordsWrapper .records .record.friendRequest .information,
 #content .recordsWrapper .records .record.journey .userDetails .information,
-#content .recordsWrapper .records .record.journey .journeyInformation .general
+#content .recordsWrapper .records .record.journey .journeyInformation .general,
+#content .recordsWrapper .records .record.competition .userDetails .information,
+#content .recordsWrapper .records .record.competition .competitionDetails .information
 {
 	width: 100%;
 
@@ -91,7 +98,9 @@ Description:
 .record.friend .information .username,
 #content .recordsWrapper .records .record.friendRequest .information .username,
 #content .recordsWrapper .records .record.journey .userDetails .information .username,
-#content .recordsWrapper .records .record.journey .journeyInformation .general .title
+#content .recordsWrapper .records .record.journey .journeyInformation .general .title,
+#content .recordsWrapper .records .record.competition .userDetails .information .username,
+#content .recordsWrapper .records .record.competition .competitionDetails .information .title
 {
 	font-size: 20px;
 	margin-bottom: 3px;
@@ -105,14 +114,18 @@ Description:
 .record.friend .information .username *,
 #content .recordsWrapper .records .record.friendRequest .information .username *,
 #content .recordsWrapper .records .record.journey .userDetails .information .username *,
-#content .recordsWrapper .records .record.journey .journeyInformation .general .title *
+#content .recordsWrapper .records .record.journey .journeyInformation .general .title *,
+#content .recordsWrapper .records .record.competition .userDetails .information .username *,
+#content .recordsWrapper .records .record.competition .competitionDetails .information .title *
 {
 	float: unset;
 }
 .record.friend .information .description,
 #content .recordsWrapper .records .record.friendRequest .information .description,
 #content .recordsWrapper .records .record.journey .userDetails .information .description,
-#content .recordsWrapper .records .record.journey .journeyInformation .general .description
+#content .recordsWrapper .records .record.journey .journeyInformation .general .description,
+#content .recordsWrapper .records .record.competition .userDetails .information .description,
+#content .recordsWrapper .records .record.competition .competitionDetails .information .description
 {
 	width: auto;
 
@@ -131,13 +144,16 @@ Description:
 #content .recordsWrapper .records .record.friendRequest .information .description *,
 #content .recordsWrapper .records .record.journey .userDetails .information .description *,
 #content .recordsWrapper .records .record.journey .journeyInformation .general .description *
+#content .recordsWrapper .records .record.competition .userDetails .information .description *,
+#content .recordsWrapper .records .record.competition .competitionDetails .information .description *
 {
 	float: unset;
 }
 .record.friend .buttons,
 #content .recordsWrapper .records .record.friendRequest .buttons,
 #content .recordsWrapper .records .record.journey .userDetails .buttons,
-#content .recordsWrapper .records .record.journey .journeyInformation .buttons
+#content .recordsWrapper .records .record.journey .journeyInformation .buttons,
+#content .recordsWrapper .records .record.competition .userDetails .buttons
 {
 	display: flex;
 	justify-content: end;
@@ -197,6 +213,83 @@ Description:
 #content .recordsWrapper .records .record.journey .miniDetails div:not(:first-child)
 {
 	border-left: 1px solid #ddd;
+}
+#content .recordsWrapper .records .record.journey .journeyInformation,
+#content .recordsWrapper .records .record.competition .userDetails
+{
+	width: 100%;
+
+	margin-bottom: 5px;
+}
+#content .recordsWrapper .records .record.competition .progress
+{
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+#content .recordsWrapper .records .record.competition .progress .team
+{
+	width: 100%;
+
+	margin-top: 10px;
+}
+#content .recordsWrapper .records .record.competition .progress .team .miniDetails
+{
+	width: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+#content .recordsWrapper .records .record.competition .progress .team .miniDetails .distance
+{
+	font-size: 13px;
+}
+#content .recordsWrapper .records .record.competition .progress .team .name
+{
+	width: 100%;
+
+	font-size: 13px;
+
+	text-align: center;
+}
+#content .recordsWrapper .records .record.competition .progress .team .barWrapper,
+#content .recordsWrapper .records .record.competition .progress .team .barWrapper .bar
+{
+	width: 100%;
+
+	white-space: nowrap;
+
+	padding: 10px 15px;
+	border-radius: 20px;
+}
+#content .recordsWrapper .records .record.competition .progress .team .barWrapper
+{
+	border: 1px solid #ddd;
+
+	position: relative;
+
+	background-color: #eee;
+}
+#content .recordsWrapper .records .record.competition .progress .team .barWrapper .bar
+{
+	min-width: min-content;
+
+	position: absolute;
+	top: 0px;
+	left: 0px;
+
+	color: #f7f7f7;
+}
+#content .recordsWrapper .records .record.competition .progress .team .barWrapper .bar.red
+{
+	background-color: #b1262c;
+}
+#content .recordsWrapper .records .record.competition .progress .team .barWrapper .bar.blue
+{
+	background-color: #2664b1;
 }
 #content .recordsWrapper .noResults
 {

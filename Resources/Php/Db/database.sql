@@ -197,7 +197,18 @@ Create Table BikeMaster.Competitions(
 		Not Null,
 	Distance int
 		Not Null,
+	SenderDistanceDriven int
+		Unsigned
+		Default 0
+		Not Null,
+	ReceiverDistanceDriven int
+		Unsigned
+		Default 0
+		Not Null,
 	Accepted tinyint(1)
+		Default 0
+		Not Null,
+	Finished tinyint(1)
 		Default 0
 		Not Null,
 	RequestTime int

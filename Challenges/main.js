@@ -21,21 +21,10 @@ var competitionsUrl = '../Api/Challenges/Competitions/getCompetitions.php';
 $(document).ready(() =>
 {
 	//Getting competitions
-	const actualList = $('#actual .list');
 	const invitationsList = $('#invitations .list');
 	const archiveList = $('#archive .list');
 
-	function onCompetitionsRequested()
-	{
-		actualList.text('');
-		//Return requested urls
-		return [{
-			url : competitionsUrl,
-			data : {
-				category : 'actual'
-			}
-		}];
-	}
+	
 	function onInvitationsRequested()
 	{
 		invitationsList.text('');
@@ -58,10 +47,6 @@ $(document).ready(() =>
 			}
 		}]
 	}
-	function onCompetitionsLoaded(competitions)
-	{
-
-	}
 	function onInvitationsLoaded(invitations)
 	{
 
@@ -71,11 +56,9 @@ $(document).ready(() =>
 
 	}
 
-	window.onCompetitionsRequested = onCompetitionsRequested;
-	window.onInvitationsRequested = onInvitationsRequested;
+	/*window.onInvitationsRequested = onInvitationsRequested;
 	window.onArchiveRequested = onArchiveRequested;
-	window.onCompetitionsLoaded = onCompetitionsLoaded;
 	window.onInvitationsLoaded = onInvitationsLoaded;
 	window.onArchiveLoaded = onArchiveLoaded;
-	window.onRequestFailed = (information) => information.reason;
+	window.onRequestFailed = (information) => information.reason;*/
 });

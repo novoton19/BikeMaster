@@ -52,5 +52,70 @@
 			);
 			return $querySuccess;
 		}
+		#Get competitions
+		public function getCompetitions($userID, $viewingType, $page = 0, $pageSize = 3)
+		{
+			#Resulting sql
+			$sql = 'SELECT * From Competitions Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) ';
+			#Checking viewing type
+			if ($viewingType === 'actual')
+			{
+				$sql .= 'And Accepted And Not Finished Order By AcceptTime Desc';
+			}
+			elseif ($viewingType === 'invitations')
+			{
+				$sql .= 'And Not Accepted And Not Finished Order By RequestTime Desc';
+			}
+			else#if ($viewingType === 'archive')
+			{
+				$sql .= 'And Accepted And Finished Order By FinishTime Desc';
+			}
+			$sql .= ' Limit %d Offset %d';
+			#Getting search results
+			return $this->db->getData(
+				sprintf($sql, $pageSize, $page * $pageSize),
+				[
+					':UserID' => $userID
+				]
+			);
+		}
+		#Get results count
+		public function getCompetitionsCount($userID, $viewingType)
+		{
+			#Result
+			$result = null;
+			#Resulting sql
+			$sql = 'SELECT Count(ID) As Result From Competitions Where (SenderUserID = :UserID Or ReceiverUserID = :UserID) ';
+			#Checking viewing type
+			if ($viewingType === 'actual')
+			{
+				$sql .= 'And Accepted And Not Finished';
+			}
+			elseif ($viewingType === 'invitations')
+			{
+				$sql .= 'And Not Accepted And Not Finished';
+			}
+			else#if ($viewingType === 'archive')
+			{
+				$sql .= 'And Accepted And Finished';
+			}
+			#Getting search results
+			list($querySuccess, $queryResult, ) = $this->db->getData(
+				$sql,
+				[
+					':UserID' => $userID
+				],
+				true
+			);
+			#Checking if success
+			if ($querySuccess)
+			{
+				$result = intval($queryResult['Result']);
+			}
+			return [
+				$querySuccess,
+				$result
+			];
+		}
 	}
 ?>

@@ -26,6 +26,8 @@
 	#Validation class
 	class CompetitionsValidation
 	{
+		#Valida viewing types
+		static $validViewingTypes = ['actual', 'invitations', 'archive'];
 		#Reason IDs
 		private $reasonIDs;
 		#Constructor
@@ -193,7 +195,7 @@
 						$reason = 'Distance cannot be bigger than 100km';
 					}
 				}
-				elseif (is_null($description))
+				elseif (is_null($distance))
 				{
 					$reasonID = $reasonIDs->IsNull;
 					$reason = 'Distance not set';
@@ -201,7 +203,61 @@
 				else
 				{
 					$reasonID = $reasonIDs->InvalidType;
-					$reason = 'Description is not a number';
+					$reason = 'Distance is not a number';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = -1;
+				$reason = 'Server experienced an error while processing the request (1)';
+			}
+			return [
+				'success' => $success,
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates viewing type
+		public function validateViewingType($type)
+		{
+			#Reasons
+			$reasonIDs = $this->reasonIDs;
+			#Whether is valid
+			$success = false;
+			$valid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				$success = true;
+				#Checking type
+				if (gettype($type) === 'string')
+				{
+					#Checking if type if valid
+					if (in_array($type, CompetitionsValidation::$validViewingTypes))
+					{
+						$valid = true;
+						$reasonID = $reasonIDs->Accepted;
+					}
+					else#if (!in_array($type, CompetitionsValidation::$validViewingTypes))
+					{
+						$reasonID = $reasonIDs->NotAllowed;
+						$reason = 'Viewing type doesn\'t exist'; 
+					}
+				}
+				elseif (is_null($type))
+				{
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Viewing type not set';
+				}
+				else#if (gettype($type) !-- 'string' and !is_null($type))
+				{
+					$reasonID = $reasonIDs->InvalidType;
+					$reason = 'Viewing type is not a string';
 				}
 			}
 			else#if (!$reasonIDs->success)
