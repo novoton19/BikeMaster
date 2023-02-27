@@ -22,19 +22,100 @@
 	}
 	#Require reason IDs
 	require_once(__DIR__.'/../Db/reasonIDsDb.php');
+	#Require CompetitionsDb
+	require_once(__DIR__.'/../Db/competitionsDb.php');
 
 	#Validation class
 	class CompetitionsValidation
 	{
-		#Valida viewing types
+		#Valid viewing types
 		static $validViewingTypes = ['actual', 'invitations', 'archive'];
+		#Valid response types
+		static $validResponseTypes = ['accept', 'decline'];
 		#Reason IDs
 		private $reasonIDs;
+		private $competitionsDb;
+
 		#Constructor
 		public function __construct()
 		{
 			#Creating ReasonIDsDb
 			$this->reasonIDs = new ReasonIDsDb();
+			$this->competitionsDb = new CompetitionsDb();
+		}
+		#Validates competition ID
+		public function validateCompetitionID($id)
+		{
+			#Reasons
+			$reasonIDs = $this->reasonIDs;
+			#Whether is valid
+			$success = false;
+			$valid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				$success = true;
+				#Checking if numeric
+				if (is_numeric($id))
+				{
+					#Converting to integer
+					$id = intval($id);
+					#Checking value
+					if ($id > 0)
+					{
+						#Getting competition
+						list($querySuccess, , $resultExists) = $this->competitionsDb->getCompetitionByID($id);
+						#Checking if exists
+						if ($resultExists)
+						{
+							$valid = true;
+							$reasonID = $reasonIDs->Accepted;
+						}
+						elseif (!$querySuccess)
+						{
+							$success = false;
+							$reasonID = $reasonIDs->DatabaseError;
+							$reason = 'Server experienced an error while processing the request (1)';
+						}
+						else#if (!$resultExists)
+						{
+							$reasonID = $reasonIDs->NotFound;
+							$reason = 'Invalid ID';
+						}
+					}
+					else#if ($id <= 0)
+					{
+						$reasonID = $reasonIDs->NotAllowed;
+						$reason = 'Invalid ID';
+					}
+				}
+				elseif (is_null($id))
+				{
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'ID not set';
+				}
+				else
+				{
+					#Not a number
+					$reasonID = $reasonIDs->InvalidType;
+					$reason = 'ID not integer';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = -1;
+				$reason = 'Server experienced an error while processing the request (2)';
+			}
+			return [
+				'success' => $success,
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
 		}
 		#Validates title
 		public function validateTitle($title)
@@ -258,6 +339,60 @@
 				{
 					$reasonID = $reasonIDs->InvalidType;
 					$reason = 'Viewing type is not a string';
+				}
+			}
+			else#if (!$reasonIDs->success)
+			{
+				$reasonID = -1;
+				$reason = 'Server experienced an error while processing the request (1)';
+			}
+			return [
+				'success' => $success,
+				'valid' => $valid,
+				'reasonID' => $reasonID,
+				'reason' => $reason
+			];
+		}
+		#Validates response type
+		public function validateResponseType($type)
+		{
+			#Reasons
+			$reasonIDs = $this->reasonIDs;
+			#Whether is valid
+			$success = false;
+			$valid = false;
+			#ReasonID
+			$reasonID = null;
+			$reason = null;
+
+			#Checking if reasonIDs have loaded
+			if ($reasonIDs->success)
+			{
+				$success = true;
+				#Checking type
+				if (gettype($type) === 'string')
+				{
+					#Checking if type if valid
+					if (in_array($type, CompetitionsValidation::$validResponseTypes))
+					{
+						$valid = true;
+						$reasonID = $reasonIDs->Accepted;
+					}
+					else#if (!in_array($type, CompetitionsValidation::$valiResponseTypes))
+					{
+						$reasonID = $reasonIDs->NotAllowed;
+						$reason = 'Response type doesn\'t exist'; 
+					}
+				}
+				elseif (is_null($type))
+				{
+					$reasonID = $reasonIDs->IsNull;
+					$reason = 'Response type not set';
+				}
+				else#if (gettype($type) !-- 'string' and !is_null($type))
+				{
+					$reasonID = $reasonIDs->InvalidType;
+					$reason = 'Response type is not a string';
 				}
 			}
 			else#if (!$reasonIDs->success)

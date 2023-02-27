@@ -52,6 +52,43 @@
 			);
 			return $querySuccess;
 		}
+		#Get competition by ID
+		public function getCompetitionByID($id)
+		{
+			return $this->db->getData(
+				'SELECT * From Competitions Where ID = :ID Limit 1',
+				[
+					':ID' => $id
+				],
+				true
+			);
+		}
+		#Accept competition
+		public function acceptCompetition($id, $userID)
+		{
+			list($querySuccess, , ) = $this->db->getData(
+				'UPDATE Competitions Set Accepted = :Accepted, AcceptTime = Unix_Timestamp() Where ID = :ID And ReceiverUserID = :UserID And Not Finished',
+				[
+					':Accepted' => true,
+					':ID' => $id,
+					':UserID' => $userID
+				]
+			);
+			return $querySuccess;
+		}
+		#Decline competition
+		public function declineCompetition($id, $userID)
+		{
+			list($querySuccess, , ) = $this->db->getData(
+				'UPDATE Competitions Set Finished = :Finished, FinishTime = Unix_Timestamp() Where ID = :ID And (ReceiverUserID = :UserID Or SenderUserID = :UserID) And Not Accepted',
+				[
+					':Finished' => true,
+					':ID' => $id,
+					':UserID' => $userID
+				]
+			);
+			return $querySuccess;
+		}
 		#Get competitions
 		public function getCompetitions($userID, $viewingType, $page = 0, $pageSize = 3)
 		{

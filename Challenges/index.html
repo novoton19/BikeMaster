@@ -43,6 +43,8 @@ Changes:
 	<!--Javascript for this page-->
 	<script src="main.js"></script>
 	<script src="competitions.js"></script>
+	<script src="archive.js"></script>
+	<script src="invitations.js"></script>
 	<!--Network manager-->
 	<script src="../Resources/Javascript/Application/networkManager.js"></script>
 	<!--Request handler-->
@@ -60,14 +62,9 @@ Changes:
 </head>
 <body>
 	<div id="topbar">
-		<div class="navigation" switcherID="section" switcher>
-			<button class="button noRadiusLeft noBorder unlimitedWidth" switchID="competitions">
-				Competitions
-			</button>
-			<button class="button noMargin noRadiusRight noBorder unlimitedWidth" switchID="achievements">
-				Achievements
-			</button>
-		</div>
+		<h1>
+			Challenges
+		</h1>
 	</div>
 	<div id="content">
 		<div id="sections">
@@ -123,94 +120,20 @@ Changes:
 							</button>-->
 						</div>
 					</div>
-					<div loaderUrl="../Api/Challenges/Competitions/getCompetitions.php?category=invitations" onRequest="onInvitationsRequested" onSuccess="onInvitationsLoaded" onFail="onRequestFailed" loader></div>
-					<div class="list">
-						<div loader onRequest="onCompetitionsRequested" onSuccess="onCompetitionsLoaded" onFail="onRequestFailed"></div>
-							<div class="list">				
-								<div class="competition invitation">
-									<div class="special">
-										<div class="tags">
-											<div class="tag green">
-												Invitation
-											</div>
-										</div>
-										<div class="quickActions">
-											<button class="button mini red">
-												<i class="icon noMargin inverted refuse"></i>
-												Decline
-											</button>
-											<button class="button mini green">
-												<i class="icon noMargin inverted accept"></i>
-												Accept
-											</button>
-										</div>
-									</div>
-									<div class="general">
-										<div class="name">
-											Nase supr sazka
-										</div>
-										<div class="buttons">
-											<button class="detailsButton button green">
-												Details
-											</button>
-										</div>
-									</div>
-									<div class="description">
-										Ten kdo najede min kilaku za jeden mesic zaplati tomu druhemu sud piva
-									</div>
-									<div class="miniDetails">
-										<i class="icon mini start"></i>
-										<div>
-											12h
-										</div>
-									</div>
-								</div>
-								<div class="competition">
-									<div class="general">
-										<div class="name">
-											Basic jizda
-										</div>
-										<div class="buttons">
-											<button class="detailsButton button blue">
-												Details
-											</button>
-										</div>
-									</div>
-									<div class="description">
-										Kdo vyhraje bude mistrem
-									</div>
-									<div class="progress">
-										<div class="team">
-											<div class="miniDetails">
-												<i class="icon mini finish"></i>
-												<div>
-													12 km
-												</div>
-											</div>
-											<div class="name">
-												You
-											</div>
-											<div class="barWrapper">
-												<div class="bar" style="width: 13%;">
-													13%
-												</div>
-												13%
-											</div>
-										</div>
-										<div class="team">
-											<div class="name">
-												Victor
-											</div>
-											<div class="barWrapper">
-												<div class="bar red" style="width: 75%;">
-													75%
-												</div>
-												75%
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
+					<div loader backupTreatment onRequest="onInvitationsPageRequested" onSuccess="onInvitationsPageLoaded" onFail="onInvitationsPageFailed"></div>
+					<div class="recordsWrapper searchResults">
+						<h2>
+							<span>Invitations (</span>
+							<span class="resultsCount">?</span>
+							<span>)</span>
+						</h2>
+						<div id="invitationsList" class="records">
+
+						</div>
+						<div loader continuous backupTreatment relativeID="invitationsList" onRequest="onInvitationsRequested" onSuccess="onInvitationsLoaded" onFail="onInvitationsFailed"></div>
+						<div class="noResults">
+							No more results
+						</div>
 					</div>
 				</div>
 				<div id="archive" class="page">

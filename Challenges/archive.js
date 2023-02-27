@@ -3,8 +3,8 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 02/27/23 02:12am
-	Version: 0.6.2
+	Date: 02/27/23 08:25am
+	Version: 0.6.3
 Updated on
 	Version: 0.6.3
 
@@ -14,7 +14,7 @@ Description:
 Changes:
 
 */
-//Competition html
+/*//Competition html
 var competitionHtmlPath = '../Resources/Html/Application/competition.html';
 //Profile pictures
 var defaultProfilePicturePath = '../Assets/ProfilePictures/Default/default.png';
@@ -164,4 +164,4 @@ $(document).ready(() =>
 	window.onCompetitionsRequested = onCompetitionsRequested;
 	window.onCompetitionsLoaded = onCompetitionsLoaded;
 	window.onCompetitionsFailed = (information) => information.reason;
-});
+});*/

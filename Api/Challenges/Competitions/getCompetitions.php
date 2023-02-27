@@ -227,23 +227,33 @@
 		'reasonID' => $reasonID,
 		'reason' => $reason,
 		'inputs' => $inputs,
-		'inputReasons' => $inputReasons
+		'inputReasons' => $inputReasons,
+		'loginStatusResult' => $loginStatusResult
 	]);
 	unset(
 		$reasonIDs,
+		$settings,
+		$usersDb,
 		$competitionsDb,
 		$friendValidation,
 		$competitionsValidation,
 		$success,
 		$reasonID,
 		$reason,
-		$requestedUserID,
-		$title,
-		$description,
-		$distance,
+		$results,
+		$resultsCount,
+		$viewingType,
+		$page,
+		$loginStatusResult,
+		$pageSize,
 		$account,
 		$accountID,
 		$querySuccess,
+		$queryResults,
+		$queryResultNum,
+		$queryResult,
+		$sender,
+		$receiver,
 		$inputs,
 		$inputReasons
 	);

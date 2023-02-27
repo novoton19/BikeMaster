@@ -6,21 +6,19 @@ Created on
 	Date: 02/21/23 10:42pm
 	Version: 0.3.6
 Updated on
-	Version: 0.3.6
+	Version: 0.6.3
 
 Description:
 	Css for view account page
 */
-#friends .buttons
+/*#friends .buttons
 {
-	border: unset;
 
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 
-	background-color: transparent;
-}
+}*/
 #friends .topbar
 {
 	width: 100%;
@@ -31,6 +29,8 @@ Description:
 
 	display: flex;
 	justify-content: space-between;
+	flex-direction: column;
+	align-items: center;
 }
 #friends .topbar h2
 {
@@ -46,9 +46,13 @@ Description:
 }
 #friends .topbar .buttons
 {
+	border: unset;
+
 	display: flex;
 	flex-direction: row;
 	flex: 1;
+
+	background-color: transparent;
 }
 #friends .topbar .buttons .button
 {
@@ -71,6 +75,7 @@ Description:
 		width: 100%;
 
 		flex-direction: column;
+		align-items: center;
 	}
 	#friends .topbar .buttons .button
 	{
