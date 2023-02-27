@@ -6,7 +6,7 @@ Created on
 	Date: 01/24/23 11:33am
 	Version: 0.2
 Updated on
-	Version: 0.6.2
+	Version: 0.6.4
 
 Description:
 	Competition page containing basic information about user's challenges and achievements
@@ -151,14 +151,22 @@ Changes:
 							</button>-->
 						</div>
 					</div>
-					<div loaderUrl="../Api/Challenges/Competitions/getCompetitions.php?category=archive" onRequest="onArchiveRequested" onSuccess="onArchiveLoaded" onFail="onRequestFailed" loader></div>
-					<div class="list">
+					<div loader backupTreatment onRequest="onArchivePageRequested" onSuccess="onArchivePageLoaded" onFail="onArchivePageFailed"></div>
+					<div class="recordsWrapper searchResults">
+						<h2>
+							<span>Achived competitions (</span>
+							<span class="resultsCount">?</span>
+							<span>)</span>
+						</h2>
+						<div id="archivedCompetitionsList" class="records">
 
+						</div>
+						<div loader continuous backupTreatment relativeID="archivedCompetitionsList" onRequest="onArchiveRequested" onSuccess="onArchiveLoaded" onFail="onArchiveFailed"></div>
+						<div class="noResults">
+							No more results
+						</div>
 					</div>
 				</div>
-			</div>
-			<div id="achievements" class="section">
-				<div loaderUrl="../Api/Challenges/Achievements/getAchivements.php" onRequest="onAchievementsRequested" onSuccess="onAchievementsLoaded" onFail="onRequestFailed" loader></div>
 			</div>
 		</div>
 	</div>

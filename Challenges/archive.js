@@ -3,10 +3,10 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 02/27/23 08:25am
-	Version: 0.6.3
+	Date: 02/27/23 08:13pm
+	Version: 0.6.4
 Updated on
-	Version: 0.6.3
+	Version: 0.6.4
 
 Description:
 	Loads competitions
@@ -14,7 +14,7 @@ Description:
 Changes:
 
 */
-/*//Competition html
+//Competition html
 var competitionHtmlPath = '../Resources/Html/Application/competition.html';
 //Profile pictures
 var defaultProfilePicturePath = '../Assets/ProfilePictures/Default/default.png';
@@ -32,8 +32,8 @@ $(document).ready(() =>
 	//Getting elements
 	const content = $('#content');
 	const competitionsElem = content.find('#competitions');
-	const actual = competitionsElem.find('#actual');
-	const searchResultsElem = actual.find('.searchResults');
+	const archive = competitionsElem.find('#archive');
+	const searchResultsElem = archive.find('.searchResults');
 	const resultsCountElem = searchResultsElem.find('.resultsCount');
 	const records = searchResultsElem.find('.records');
 	const noResults = searchResultsElem.find('.noResults');
@@ -45,7 +45,7 @@ $(document).ready(() =>
 	var accountID = null;
 
 
-	function onCompetitionsPageRequested()
+	function onArchivePageRequested()
 	{
 		searchResultsElem.hide();
 		//Return requested urls
@@ -55,7 +55,7 @@ $(document).ready(() =>
 			url : statusPath
 		}];
 	}
-	function onCompetitionsPageLoaded(responses)
+	function onArchivePageLoaded(responses)
 	{
 		//Getting competition html
 		competitionHtml = responses[0];
@@ -69,17 +69,17 @@ $(document).ready(() =>
 		searchResultsElem.show();
 		records.text(' ');
 	}
-	function onCompetitionsRequested()
+	function onArchiveRequested()
 	{
 		return [{
 			url : competitionsPath,
 			data : {
 				page : nextPage,
-				viewingType : 'actual'
+				viewingType : 'archive'
 			}
 		}];
 	}
-	function onCompetitionsLoaded(responses)
+	function onArchiveLoaded(responses)
 	{
 		//Getting results
 		let result = responses[0];
@@ -158,10 +158,10 @@ $(document).ready(() =>
 		}));
 	}
 
-	window.onCompetitionsPageRequested = onCompetitionsPageRequested;
-	window.onCompetitionsPageLoaded = onCompetitionsPageLoaded;
-	window.onCompetitionsPageFailed = (information) => information.reason;
-	window.onCompetitionsRequested = onCompetitionsRequested;
-	window.onCompetitionsLoaded = onCompetitionsLoaded;
-	window.onCompetitionsFailed = (information) => information.reason;
-});*/
+	window.onArchivePageRequested = onArchivePageRequested;
+	window.onArchivePageLoaded = onArchivePageLoaded;
+	window.onArchivePageFailed = (information) => information.reason;
+	window.onArchiveRequested = onArchiveRequested;
+	window.onArchiveLoaded = onArchiveLoaded;
+	window.onArchiveFailed = (information) => information.reason;
+});
