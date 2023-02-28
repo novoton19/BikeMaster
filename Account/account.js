@@ -89,6 +89,11 @@ $(document).ready(() =>
 		//Adding public profile url
 		publicProfileButton.attr('href', viewAccountUrl + '?' + getParams.toString());
 
+		descriptionElem.text('');
+		descriptionElem.addClass('limited');
+		readMoreButton.hide();
+		readLessButton.hide();
+
 		if (profilePictureUrl)
 		{
 			profilePictureUrl = userProfilePicturesUrl + profilePictureUrl;
@@ -120,6 +125,10 @@ $(document).ready(() =>
 		else
 		{
 			setupDialog.hide();
+		}
+		if (descriptionElem.height() < descriptionElem[0].scrollHeight)
+		{
+			readMoreButton.show();
 		}
 		//Load information
 		profilePictureElem.attr('src', profilePictureUrl);

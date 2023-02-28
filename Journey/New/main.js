@@ -275,7 +275,7 @@ $(document).ready(() =>
 		});
 		//Calculating average speed
 		let avgSpeed = time > 0 ? distance / (time / 1000 / 60 / 60) : 0;
-		let crtSpeed = distanceLastTenSeconds / (10 / 1000 / 60 / 60);
+		let crtSpeed = distanceLastTenSeconds / (10 / 60 / 60);
 		
 		//Getting seconds
 		let seconds = Math.floor(time / 1000);

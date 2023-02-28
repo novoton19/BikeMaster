@@ -3,8 +3,8 @@ Developer: Ondrej Novotny
 Contact: contact.bike@novotnyondrej.com
 
 Created on
-	Date: 02/10/23 09:55pm
-	Version: 0.3
+	Date: 02/28/23 03:30am
+	Version: 1
 Updated on
 	Version: 1
 
@@ -17,16 +17,12 @@ Changes:
 //Waiting for document to load
 $(document).ready(() =>
 {
-	//Getting get params
-	const getParams = new URLSearchParams(window.location.search);
-	const message = getParams.get('message') || 'An error occured. That\'s all we know';
-	const sourceScript = getParams.get('sourceScript') || 'error.js';
-
 	//Getting random accident
 	const randomAccident = $('.randomAccident');
 	//Getting message
 	const messageElem = $('.message');
 	const sourceScriptElem = $('.details .sourceScript');
+	const detailedMessageElem = $('.details .detailedMessage');
 	const backButton = $('.previousPageButton');
 
 	//Random gif number
@@ -37,6 +33,7 @@ $(document).ready(() =>
 	//Showing messages
 	messageElem.text(message);
 	sourceScriptElem.text(sourceScript);
+	detailedMessageElem.text(`\"${detailedMessage}\"`);
 
 	backButton.click(() =>
 	{

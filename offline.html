@@ -28,35 +28,39 @@ Changes:
 	<link rel="icon" href="Assets/Icons/Application/icon-192.png">
 	<link rel="manifest" href="app.webmanifest">
 	<link rel="stylesheet" href="error.css">
+	<link rel="stylesheet" href="Resources/Css/Application/topbar.css">
 	<link rel="stylesheet" href="Resources/Css/Application/general.css">
 	<link rel="stylesheet" href="Resources/Css/Application/buttons.css">
 	<link rel="stylesheet" href="Resources/Css/Application/icons.css">
 
-	<title>Welcome - BikeMaster</title>
+	<title>Offline - BikeMaster</title>
 	<!--jQuery-->
 	<script src="jquery.min.js"></script>
 	<!--Registering service worker-->
 	<script src="registerServiceWorker.js"></script>
+	<!--Javascript for this page-->
+	<script src="offline.js"></script>
 	<!--Bottombar Manager-->
 	<script src="Resources/Javascript/Application/bottombarManager.js"></script>
 </head>
 <body>
 	<div id="topbar">
 		<h1>
-			Welcome!
+			Offline
 		</h1>
 	</div>
 	<div id="content">
+		<div class="row gifWrapper">
+			<img alt="Bike accident" class="randomAccident">
+		</div>
 		<p class="row message">
-			Welcome to BikeMaster!
+			You are currently offline
 		</p>
-		<div class="buttons">
-			<a href="Account/SignIn/" class="button blue">
-				Sign In
-			</a>
-			<a href="Account/SignUp/" class="button green">
-				Sign Up
-			</a>
+		<div class="row buttons">
+			<button href="" class="button previousPageButton gray">
+				<i class="icon back inverted"></i>
+				<span>To previous page</span>
+			</button>
 		</div>
 	</div>
 </body>

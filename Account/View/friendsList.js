@@ -20,7 +20,7 @@ var friendsUrl = '../../Api/Social/Account/getFriends.php';
 var userProfilePicturesUrl = '../../Assets/ProfilePictures/Users/';
 var defaultProfilePictureUrl = '../../Assets/ProfilePictures/Default/default.png';
 var viewAccountUrl = '';
-var returnUrlFromViewAccount = '';
+var challengeUrl = '../../Challenges/Create/';
 
 //Waiting for page to load
 $(document).ready(() =>
@@ -112,6 +112,7 @@ $(document).ready(() =>
 			let username = record.find('.username');
 			let description = record.find('.description');
 			let detailsButton = record.find('.detailsButton');
+			let challengeButton = record.find('.challengeButton');
 
 			//Getting account info
 			let id = friend.id;
@@ -120,7 +121,6 @@ $(document).ready(() =>
 			//Creating get params for details url
 			let getParams = new URLSearchParams();
 			getParams.set('id', id);
-			getParams.set('returnUrl', returnUrlFromViewAccount + '?' + window.location.search);
 			
 			//Getting full profile picture url
 			if (profilePictureUrl)
@@ -136,6 +136,7 @@ $(document).ready(() =>
 			username.text(friend.username);
 			description.text(friend.description);
 			detailsButton.attr('href', viewAccountUrl + '?' + getParams.toString());
+			challengeButton.attr('href', challengeUrl + '?' + getParams.toString());
 			return $(record);
 		}));
 	}

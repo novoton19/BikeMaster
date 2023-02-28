@@ -42,15 +42,13 @@
 			#Insert
 			list($success, ,) = $this->db->getData(
 				'Insert Into TrackPoints
-					(SegmentID, Latitude, Longitude, Accuracy, Altitude, AltitudeAccuracy, Timestamp) Values
-					(:SegmentID, :Latitude, :Longitude, :Accuracy, :Altitude, :AltitudeAccuracy, :Timestamp)',
+					(SegmentID, Latitude, Longitude, Accuracy, Timestamp) Values
+					(:SegmentID, :Latitude, :Longitude, :Accuracy, :Timestamp)',
 				[
 					':SegmentID' => $segmentID,
 					':Latitude' => $latitude,
 					':Longitude' => $longitude,
 					':Accuracy' => $accuracy,
-					':Altitude' => $altitude,
-					':AltitudeAccuracy' => $altitudeAccuracy,
 					':Timestamp' => $timestamp
 				]
 			);

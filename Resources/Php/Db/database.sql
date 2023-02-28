@@ -54,51 +54,6 @@ Create Table BikeMaster.FriendRelations(
     Foreign Key (ReceiverUserID)
     	References BikeMaster.Users(ID)
 );
-/*Table of notification types*/
-Create Table BikeMaster.NotificationTypes(
-  	ID int
-    	Unsigned
-    	Primary Key 
-    	Auto_Increment 
-    	Not Null,
-    NameID varchar(24)
-		Unique
-    	Not Null
-);
-/*Table of notifications*/
-Create Table BikeMaster.Notifications(
-	ID int
-    	Unsigned
-    	Primary Key 
-    	Auto_Increment 
-    	Not Null,
-	TypeID int
-		Unsigned
-		Not Null,
-	TargetUserID int
-		Unsigned
-		Not Null,
-	TriggerUserID int
-		Unsigned
-		Default Null,
-	Viewed tinyint(1)
-		Default 0
-		Not Null,
-	TriggerTime int
-		Unsigned
-		Default Unix_Timestamp()
-		Not Null,
-	ViewTime int
-		Unsigned
-		Default Null,
-
-	Foreign Key (TypeID)
-		References BikeMaster.NotificationTypes(ID),
-	Foreign Key (TargetUserID)
-		References BikeMaster.Users(ID),
-	Foreign Key (TriggerUserID)
-		References BikeMaster.Users(ID)
-);
 /*Table of journeys*/
 Create Table BikeMaster.Journeys(
 	ID int 
@@ -165,12 +120,6 @@ Create Table BikeMaster.TrackPoints(
     /*Accuracy in meters. Up to 999,999 meters Precision 3 decimal places (mm)*/
     Accuracy double(9, 3)
     	Not Null,
-    /*Altitude in meters. Up to 9999 meters. Precision 3 decimal places (mm)*/
-    /*Altitude double(7, 3)
-    	Default Null,*/
-    /*Accuracy in meters. Precision 3 decimal places (mm)*/
-    /*AltitudeAccuracy double(7, 3)
-    	Default Null,*/
     Timestamp bigint
     	Unsigned
     	Not Null,
@@ -255,36 +204,32 @@ Create Table BikeMaster.Settings(
 );
 
 /*Inserts*/
-/*NotificationTypes*/
-Insert Into BikeMaster.NotificationTypes (NameID) Values
-	('SendRequest'),
-	('AcceptRequest'),
-	('Unfriend');
 /*ReasonIDs*/
 Insert Into BikeMaster.ReasonIDs (NameID) Values
-	('DatabaseError'),
-	('Accepted'),
 	('NoPost'),
-	('NoGet'),
+	('InvalidCredentials'),
+	('DatabaseError'),
+	('InvalidInputs'),
+	('NotLoggedIn'),
+	('TimedOut'),
+	('InvalidLogin'),
 	('IsNull'),
 	('InvalidType'),
-	('InvalidInputs'),
-	('InvalidCredentials'),
-	('NotLoggedIn'),
-	('InvalidLogin'),
-	('TimedOut'),
-	('UserNotFound'),
-	('UsernameTaken'),
 	('UsernameNotTaken'),
-	('InvalidCharacters'),
-	('TooManyUnderscores'),
+	('InvalidEmail'),
+	('EmailNotTaken'),
 	('TooShort'),
 	('TooLong'),
-	('InvalidEmail'),
+	('InvalidCharacters'),
+	('TooManyUnderscores'),
+	('UsernameTaken'),
 	('EmailTaken'),
-	('EmailNotTaken'),
 	('TooWeak'),
 	('DoNotMatch'),
+	('Accepted'),
+	('NoReasonAvailable'),
+	('NoGet'),
+	('UserNotFound'),
 	('Empty'),
 	('OutOfRange'),
 	('TooHighSpeed'),
@@ -294,19 +239,34 @@ Insert Into BikeMaster.ReasonIDs (NameID) Values
 	('NotFound'),
 	('AlreadyExists'),
 	('NotAllowed'),
-	('NoReasonAvailable');
+	('InvalidExtension'),
+	('TooSmall'),
+	('TooBig'),
+	('ErrorUploadingImage'),
+	('ErrorUpdatingImage'),
+	('Unauthorized'),
+	('Teleportation');
 /*Settings*/
 Insert Into BikeMaster.Settings (NameID, Value) Values
 	('ProjectName', 'BikeMaster'),
-	('MaximumAccuracy', '150'),
+	/*Maximum altitude: https://www.britannica.com/place/Mount-Everest*/
+	('MaximumAccuracy', '500'),
 	/*Minimum altitude: https://www.universetoday.com/15027/lowest-point-on-earth/*/
 	('MinimumAltitude', '-420'),
-	/*Maximum altitude: https://www.britannica.com/place/Mount-Everest*/
-	/*('MaximumAltitude', '8849'),
-	('MaximumAltitudeAccuracy', '500'),*/
+	('MaximumAltitude', '8849'),
+	('MinimumAltitudeAccuracy', '0'),
+	('MaximumAltitudeAccuracy', '500'),
 	/*Minimum time: First time application introduced (1672948580000), https://www.unixtimestamp.com/
-	Actually, it's not necessary to keep minimum time to application start in case of data from other source
-	*/
-	('MinimumTime', '0'),
+	Actually, it's not necessary to keep minimum time to application start in case of data from other source*/
+	('MinimumTime', '1672948580000'),
 	/*Maximum speed: https://www.moultonbicycles.co.uk/heritage.html#recordsracing*/
-	('MaximumSpeed', '82.54');
+	('MaximumSpeed', '82.54'),
+	('ProfilePicturesLocation', '/Assets/ProfilePictures/Users'),
+	('MinimumProfilePictureWidth', '32'),
+	('MaximumProfilePictureWidth', '4096'),
+	('MinimumProfilePictureHeight', '32'),
+	('MaximumProfilePictureHeight', '4096'),
+	('ProfilePictureWidth', '256'),
+	('ProfilePictureHeight', '256'),
+	('ValidProfilePictureExtensions', 'jpg,png,jpeg,gif'),
+	('PageSize', '3');

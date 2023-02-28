@@ -7,7 +7,7 @@
 		Date: 01/04/23 10:00am
 		Version: 0.0.3.1
 	Updated on
-		Version: 0.1
+		Version: 1
 
 	Description:
 		Verifies login and returns information about login
@@ -104,7 +104,7 @@
 			if ($loginTime <= $time and $time < $timeout)
 			{
 				#Trying to get user by ID
-				list($querySuccess, $account, $accountExists) = $usersDb->getUserByIDSecure($userID);
+				list($querySuccess, $account, $accountExists) = $usersDb->getUserByID($userID);
 				#Checking if success
 				if ($querySuccess and $accountExists)
 				{

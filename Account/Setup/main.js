@@ -6,7 +6,7 @@ Created on
 	Date: 02/10/23 03:55pm
 	Version: 0.3.2
 Updated on
-	Version: 0.3.2
+	Version: 1
 
 Description:
 	Javascript for Setup
@@ -70,38 +70,47 @@ $(document).ready(() =>
 	//Called when user skips the page
 	function onPageSkipped(button)
 	{
-		//Getting next page
-		let nextPage = $(button).attr('nextPage');
+		//Proceed to the next page
+		$(`#${currentPage}`).hide();
 
-		$(`#${currentPage}`).hide(200);
-		$(`#${nextPage}`).show(200);
-		currentPage = nextPage;
+		//Getting current index of page
+		let index = missingPages.indexOf(currentPage);
+		//Checking if next index exists
+		if (index === -1 || index + 1 >= missingPages.length)
+		{
+			currentPage = 'complete';
+		}
+		else
+		{
+			currentPage = missingPages[index + 1];
+		}
+		$(`#${currentPage}`).show();
 		onPageChanged();
 	}
 	function onPageFinished()
 	{
 		//Proceed to the next page
-		$(`#${currentPage}`).hide(200);
-		
-		//Get index of page
+		$(`#${currentPage}`).hide();
+
+		//Getting current index of page
 		let index = missingPages.indexOf(currentPage);
-		//Checking if last
-		if (index + 1 === currentPage.length)
+		//Checking if next index exists
+		if (index === -1 || index + 1 >= missingPages.length)
 		{
-			$('#complete');
+			currentPage = 'complete';
 		}
 		else
 		{
 			currentPage = missingPages[index + 1];
-			$(`#${currentPage}`).show(200);
 		}
+		$(`#${currentPage}`).show();
 		onPageChanged();
 	}
 	//Called when user requests refresh
 	function onRefresh()
 	{
 		//Hide all pages
-		$('.page').hide(200);
+		$('.page').hide();
 
 		//Removing current page from get params
 		//Getting get params
@@ -153,7 +162,7 @@ $(document).ready(() =>
 				currentPage = missingPages[0];
 			}
 		}
-		$(`#${currentPage}`).show(200);
+		$(`#${currentPage}`).show();
 		onPageChanged();
 	}
 

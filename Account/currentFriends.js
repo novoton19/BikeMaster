@@ -6,7 +6,7 @@ Created on
 	Date: 02/20/23 02:39pm
 	Version: 0.3.5
 Updated on
-	Version: 0.3.6
+	Version: 1
 
 Description:
 	Loads friend list
@@ -21,7 +21,7 @@ var friendsUrl = '../Api/Social/Account/getFriends.php';
 var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
 var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
 var viewAccountUrl = 'View/';
-var returnUrlFromViewAccount = '../';
+var challengeUrl = '../Challenges/Create/';
 //Getting current script name
 var friendsName = document.currentScript.src.split('/').pop();
 
@@ -117,6 +117,7 @@ $(document).ready(() =>
 			let username = record.find('.username');
 			let description = record.find('.description');
 			let detailsButton = record.find('.detailsButton');
+			let challengeButton = record.find('.challengeButton');
 
 			//Getting account info
 			let id = friend.id;
@@ -125,7 +126,6 @@ $(document).ready(() =>
 			//Creating get params for details url
 			let getParams = new URLSearchParams();
 			getParams.set('id', id);
-			getParams.set('returnUrl', returnUrlFromViewAccount + '?' + window.location.search);
 			
 			//Getting full profile picture url
 			if (profilePictureUrl)
@@ -141,6 +141,7 @@ $(document).ready(() =>
 			username.text(friend.username);
 			description.text(friend.description);
 			detailsButton.attr('href', viewAccountUrl + '?' + getParams.toString());
+			challengeButton.attr('href', challengeUrl + '?' + getParams.toString());
 			return $(record);
 		}));
 	}

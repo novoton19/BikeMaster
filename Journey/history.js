@@ -6,7 +6,7 @@ Created on
 	Date: 02/24/23 04:44pm
 	Version: 0.4.4
 Updated on
-	Version: 0.4.4.1
+	Version: 1
 
 Description:
 	Loads journey history
@@ -14,34 +14,43 @@ Description:
 Changes:
 	Version 0.4.4.1 - Download button
 */
-//Url to journey html
-var journeyHtmlUrl = '../Resources/Html/Application/journey.html';
-var viewJourneyUrl = 'View/';
-//Url to get journeys
-var getJourneysUrl = '../Api/Journey/getJourneys.php';
-//Url to change archivation
-var changeArchivationUrl = '../Api/Journey/changeArchivation.php';
+//Files
+//Html files
+var journeyHtmlPath = '../Resources/Html/Application/journey.html';
+//Api requestes
+var getJourneysPath = '../Api/Journey/getJourneys.php';
+var changeArchivationPath = '../Api/Journey/changeArchivation.php';
+//Redirects
+var viewJourneyPath = 'View/';
 
 //Waiting for document to load
 $(document).ready(() =>
 {
+	//Getting page elements
 	var history = $('#history');
 	var recordsWrapper = history.find('.recordsWrapper');
 	var journeysCountElem = recordsWrapper.find('.journeysCount');
 	var records = recordsWrapper.find('.records');
 	var noResults = recordsWrapper.find('.noResults');
 
+	//Journey.html
 	var journeyHtml = null;
+	//Current page
 	var currentPage = 0;
+	//Whether on last page
 	var lastPage = false;
 
+	//On page requested
 	function onHistoryPageRequested()
 	{
+		//Hiding previous results
 		recordsWrapper.hide();
+		//Return required files
 		return [{
-			url : journeyHtmlUrl
+			url : journeyHtmlPath
 		}];
 	}
+	//On page loaded
 	function onHistoryPageLoaded(responses)
 	{
 		//Getting journey html
@@ -56,28 +65,34 @@ $(document).ready(() =>
 		noResults.hide();
 		recordsWrapper.show();
 	}
+	//On history requested
 	function onHistoryRequested()
 	{
+		//Checking if on last page
 		if (lastPage)
 		{
+			//Return empty set
 			return [];
 		}
+		//Return reuqest
 		return [{
-			url : getJourneysUrl,
+			url : getJourneysPath,
 			data : {
 				page : currentPage,
 				type : 'current'
 			}
 		}];
 	}
+	//On results loaded
 	function onHistoryLoaded(responses)
 	{
+		//Checking if reached last page
 		if (lastPage)
 		{
 			return;
 		}
 		//Getting result
-		let journeysResult = responses[0]
+		let journeysResult = responses[0];
 		let journeysCount = journeysResult.resultsCount;
 		let journeys = journeysResult.result;
 		let page = journeysResult.inputs.page;
@@ -109,30 +124,38 @@ $(document).ready(() =>
 			//Getting elements
 			let userDetails = record.find('.userDetails');
 			let map = record.find('.map');
-			let title = record.find('.title');
-			let description = record.find('.description');
+			//Journey information
+			let titleElem = record.find('.title');
+			let descriptionElem = record.find('.description');
+			let dateElem = record.find('span.date');
+			let durationElem = record.find('span.duration');
+			let lengthElem = record.find('span.distance');
+			let speedElem = record.find('span.speed');
+			//Action buttons
 			let downloadButton = record.find('.downloadButton');
 			let detailsButton = record.find('.detailsButton');
 			let archiveButton = record.find('.archiveButton');
 			let unarchiveButton = record.find('.unarchiveButton');
-			let dateElem = record.find('span.date');
-			let durationElem = record.find('span.duration');
-			let length = record.find('span.distance');
 
+			//Hide information about owner (owner is known)
 			userDetails.hide();
+			//Journey cannot be unarchived
 			unarchiveButton.hide();
 			
-			//Getting journey info
+			//Getting journey information
 			let id = journey.id;
-			let date = new Date(journey.creationTime * 1000).toLocaleDateString();
-			//Converting to gpx
-			let gpx = GpxConverter.toGpx(journey);
+			let title = journey.title;
+			let description = journey.description;
+			let creationTime = journey.creationTime;
+			let startTime = journey.startTime;
+			let endTime = journey.endTime;
+			let duration = endTime - startTime;
+			let length = journey.length;
+			
 
-			//Getting seconds
-			let seconds = journey.endTime - journey.startTime;
-			//Getting minutes
+			//Calculating journey time
+			let seconds = duration;
 			let minutes = Math.floor(seconds / 60);
-			//Getting hours
 			let hours = Math.floor(minutes / 60);
 			//Updating values
 			seconds -= minutes * 60 + hours * 60 * 60;
@@ -142,12 +165,42 @@ $(document).ready(() =>
 			minutes = minutes >= 10 ? minutes : '0' + minutes;
 			hours = hours >= 10 ? hours : '0' + hours;
 
+			
+			//Getting texts
+			let dateText = new Date(creationTime * 1000).toLocaleDateString();
+			let durationText = `${hours}:${minutes}:${seconds}`
+			let lengthText = `${Math.floor(length * 100) / 100}km`;
+			let speedText = `${Math.floor(length / (duration / 3600) * 100) / 100}km/h`;
+			
+			//Getting journey GPX
+			let gpx = GpxConverter.toGpx(journey);
+			//Creating get params for details url
+			let getParams = new URLSearchParams();
+			getParams.set('id', id);
+			
 
-			//Adding button click events
+			//Adding ID to map
+			map.attr('id', 'onlineSource_' + id);
+			//Adding texts
+			dateElem.text(dateText);
+			durationElem.text(durationText);
+			lengthElem.text(lengthText);
+			speedElem.text(speedText);
+			titleElem.text(title);
+			descriptionElem.text(description);
+
+
+			//Loading buttons
+			//https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
+			downloadButton.attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(gpx));
+			downloadButton.attr('download', 'downloadedJourney_onlineSource_' + id + '.gpx');
+			detailsButton.attr('href', viewJourneyPath + '?' + getParams.toString());
+			
+			//On archive button pressed
 			archiveButton.click(() =>
 			{
 				//Send to archive
-				sendRequest(changeArchivationUrl, { id : id }).then(() =>
+				sendRequest(changeArchivationPath, { id : id }).then(() =>
 				{
 					archiveButton.hide();
 					unarchiveButton.show();
@@ -156,10 +209,11 @@ $(document).ready(() =>
 
 				});
 			});
+			//On unarchive button pressed
 			unarchiveButton.click(() =>
 			{
 				//Send back to history
-				sendRequest(changeArchivationUrl, { id : id }).then(() =>
+				sendRequest(changeArchivationPath, { id : id }).then(() =>
 				{
 					unarchiveButton.hide();
 					archiveButton.show();
@@ -168,27 +222,7 @@ $(document).ready(() =>
 
 				});
 			});
-
-			
-		
-			//Adding ID to map
-			map.attr('id', 'onlineSource_' + id);
-			//Adding texts
-			dateElem.text(date);
-			durationElem.text(`${hours}:${minutes}:${seconds}`);
-			length.text(`${Math.round(journey.length * 100) / 100} km`);
-			
-			//Creating get params for details url
-			let getParams = new URLSearchParams();
-			getParams.set('id', id);
-			
-			title.text(journey.title);
-			description.text(journey.description);
-			//https://ourcodeworld.com/articles/read/189/how-to-create-a-file-and-generate-a-download-with-javascript-in-the-browser-without-a-server
-			downloadButton.attr('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(gpx));
-			downloadButton.attr('download', 'downloadedJourney_onlineSource_' + id + '.gpx');
-			detailsButton.attr('href', viewJourneyUrl + '?' + getParams.toString());
-			
+			//Adding record to the page
 			records.append($(record));
 			//Creating map manager
 			let mapManager = new MapManager('onlineSource_' + id, false);

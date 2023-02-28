@@ -23,7 +23,6 @@ var respondUrl = '../Api/Social/Account/respondToFriendRequest.php';
 var userProfilePicturesUrl = '../Assets/ProfilePictures/Users/';
 var defaultProfilePictureUrl = '../Assets/ProfilePictures/Default/default.png';
 var viewAccountUrl = 'View/';
-var returnUrlFromViewAccount = '../';
 //Getting current script name
 var friendsName = document.currentScript.src.split('/').pop();
 
@@ -138,7 +137,6 @@ $(document).ready(() =>
 			//Creating get params for details url
 			let getParams = new URLSearchParams();
 			getParams.set('id', id);
-			getParams.set('returnUrl', returnUrlFromViewAccount + '?section=friends&type=requests');
 			
 			//Getting full profile picture url
 			if (profilePictureUrl)
