@@ -4,7 +4,7 @@
 	"start_url" : "/Pwa/BikeMaster/index.html",
 	"display" : "standalone",
 	"lang" : "en-US",
-	"theme_color" : "#d17702",
+	"theme_color" : "#2664b1",
 	"background_color" : "#eee",
 	"icons" :
 	[
