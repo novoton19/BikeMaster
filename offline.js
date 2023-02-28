@@ -19,21 +19,12 @@ $(document).ready(() =>
 {
 	//Getting random accident
 	const randomAccident = $('.randomAccident');
-	//Getting message
-	const messageElem = $('.message');
-	const sourceScriptElem = $('.details .sourceScript');
-	const detailedMessageElem = $('.details .detailedMessage');
 	const backButton = $('.previousPageButton');
 
 	//Random gif number
 	const accidentNum = Math.floor(Math.random() * 20) + 1;
 	//Adding source to accident
 	randomAccident.attr('src', `Assets/Gifs/BikeCrashes/${accidentNum}.gif`);
-
-	//Showing messages
-	messageElem.text(message);
-	sourceScriptElem.text(sourceScript);
-	detailedMessageElem.text(`\"${detailedMessage}\"`);
 
 	backButton.click(() =>
 	{
